@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="874079484">
+    <data-source source="LOCAL" name="Rails busted-ruby: production" product="" version="" jdbc-version="" driver-name="" driver-version="" uuid="5ca0b529-f800-4172-9d22-bfb12102cb34">
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql:busted-server</jdbc-url>
+      <user-name>busted-server</user-name>
+      <user-password>dfd3dfecdf99df99dfeedfdbdfe8dfe2df9ddfc8df93dfdedfe4dfc2dfdedfd2</user-password>
+      <libraries>
+        <library>
+          <url>file://$USER_HOME$/.RubyMine50/config/jdbc-drivers/postgresql-driver-license.txt</url>
+        </library>
+        <library>
+          <url>file://$USER_HOME$/.RubyMine50/config/jdbc-drivers/postgresql-9.2-1002.jdbc4.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="Rails busted-ruby: development" product="PostgreSQL" version="9.3.1" jdbc-version="4.0" driver-name="PostgreSQL Native Driver" driver-version="PostgreSQL 9.2 JDBC4 (build 1002)" uuid="0ed5b853-2c48-48eb-94da-421c11f39eb3">
+      <identifier-quote-string>&quot;</identifier-quote-string>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql:busted-server</jdbc-url>
+      <user-name>busted-server</user-name>
+      <user-password>dfd3dfecdf99df99dfeedfdbdfe8dfe2df9ddfc8df93dfdedfe4dfc2dfdedfd2</user-password>
+      <libraries>
+        <library>
+          <url>file://$USER_HOME$/.RubyMine50/config/jdbc-drivers/postgresql-driver-license.txt</url>
+        </library>
+        <library>
+          <url>file://$USER_HOME$/.RubyMine50/config/jdbc-drivers/postgresql-9.2-1002.jdbc4.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="Rails busted-ruby: test" product="" version="" jdbc-version="" driver-name="" driver-version="" uuid="6f56b42d-8384-4c7b-a654-10aaa5691da7">
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql:busted-server</jdbc-url>
+      <user-name>busted-server</user-name>
+      <user-password>dfd3dfecdf99df99dfeedfdbdfe8dfe2df9ddfc8df93dfdedfe4dfc2dfdedfd2</user-password>
+      <libraries>
+        <library>
+          <url>file://$USER_HOME$/.RubyMine50/config/jdbc-drivers/postgresql-driver-license.txt</url>
+        </library>
+        <library>
+          <url>file://$USER_HOME$/.RubyMine50/config/jdbc-drivers/postgresql-9.2-1002.jdbc4.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+  </component>
+</project>
+

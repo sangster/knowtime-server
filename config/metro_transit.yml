@@ -1,0 +1,6 @@
+development:
+  zip_url: http://localhost/google_transit.zip
+test:
+  zip_url: http://localhost/google_transit.zip
+production:
+  zip_url: http://www.halifax.ca/metrotransit/googletransitfeed/google_transit.zip

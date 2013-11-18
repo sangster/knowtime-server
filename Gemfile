@@ -5,6 +5,9 @@ gem 'rails', '4.0.1'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
+gem 'rubyzip'
+gem 'uuidtools'
+gem 'dalli'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'

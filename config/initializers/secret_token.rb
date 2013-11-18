@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-BustedRuby::Application.config.secret_key_base = '8ba1b4c529037b684df38635a1fbeea08d1f100bcedf22e2c8cbf3f33014591c4ffdbca2f3069002d316885331c12eef381d4a86a536173cee3df303e16716a8'
+BustedRuby::Application.config.secret_key_base = '8ba1b4c529037b684df38635a1fbeea08d1f100bcedf22e2c8cbf3f33014591c4ffdbca2f3069002dbbb885331c12eef381d4a86a536173cee3df303e16716a8'

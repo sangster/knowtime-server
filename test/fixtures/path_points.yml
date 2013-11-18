@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  path_id: 
+  lat: 1.5
+  lng: 1.5
+  index: 1
+
+two:
+  path_id: 
+  lat: 1.5
+  lng: 1.5
+  index: 1

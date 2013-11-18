@@ -1,9 +1,8 @@
 class CreateUuids < ActiveRecord::Migration
   def change
     create_table :uuids do |t|
-      t.uuid :uuid
-      t.int :idable_id
-      t.string :idable_type
+      t.uuid :uuid, index: true
+      t.references :idable, polymorphic: true
       t.timestamps
     end
   end

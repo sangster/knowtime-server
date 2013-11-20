@@ -8,6 +8,7 @@ class Route < ActiveRecord::Base
     route
   end
 
+
   def self.uuid_namespace
     Uuid.create_namespace 'Routes'
   end

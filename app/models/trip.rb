@@ -4,6 +4,7 @@ class Trip < ActiveRecord::Base
   belongs_to :calendar
   belongs_to :path
 
+
   def self.new_from_csv row
     route_id = Uuid.get_id Route.uuid_namespace, row[:route_id]
     calendar_id = Uuid.get_id Calendar.uuid_namespace, row[:service_id]
@@ -20,7 +21,7 @@ class Trip < ActiveRecord::Base
       Path.create
     else
       uuid = Uuid.get Path.uuid_namespace, row[:shape_id]
-      unless uuid.nil? then
+      unless uuid.nil?
         uuid.idable
       else
         Path.create

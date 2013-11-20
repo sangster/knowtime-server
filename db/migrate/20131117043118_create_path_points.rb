@@ -5,8 +5,6 @@ class CreatePathPoints < ActiveRecord::Migration
       t.float :lat
       t.float :lng
       t.integer :index
-
-      t.timestamps
     end
   end
 end

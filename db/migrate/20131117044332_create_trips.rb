@@ -5,8 +5,6 @@ class CreateTrips < ActiveRecord::Migration
       t.references :route, index: true
       t.references :calendar, index: true
       t.references :path, index: true
-
-      t.timestamps
     end
   end
 end

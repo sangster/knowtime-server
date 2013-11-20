@@ -12,6 +12,7 @@ class Calendar < ActiveRecord::Base
     cal
   end
 
+
   def self.uuid_namespace
     Uuid.create_namespace 'Calendars'
   end

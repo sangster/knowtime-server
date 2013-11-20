@@ -5,13 +5,13 @@ require 'csv'
 
 
 class DataPull < ActiveRecord::Base
-  BULK_INSERT_SIZE = 4096
+  BULK_INSERT_SIZE = 1024
 
   def self.check_remote_zip
     url = URI METRO_TRANSIT['zip_url']
 
     logger.info "Checking remote zip #{url} for updates"
-    server_etag = fetch_remote_etag url
+    server_etag = fetch_remote_etag(url)[1..-2]
 
     pull = DataPull.last
 
@@ -47,21 +47,20 @@ class DataPull < ActiveRecord::Base
         models << model_class.new_from_csv(row)
 
         if models.length == BULK_INSERT_SIZE
-          transaction do
-            models.each {|model| model.save }
-          end
+          transaction { models.each &:save }
+          #transaction { model_class.import models, synchronize: models, validate: false }
+          #models.each { |m| m.idable.save } if model_class.method_defined? :idable
           total = total + models.length
-          models = []
+          models.clear
           logger.info "Inserted #{BULK_INSERT_SIZE} objects for #{model_class} (total: #{total})"
         end
       end
     end
 
     unless models.empty? # whatever is left
-      #model_class.import models
-      transaction do
-        models.each {|model| model.save }
-      end
+      transaction { models.each &:save }
+      #transaction { model_class.import models, synchronize: models, validate: false }
+      #models.each { |m| m.idable.save } if model_class.method_defined? :idable
       logger.info "Inserted #{models.length} objects for #{model_class} (total: #{total + models.length})"
     end
   end

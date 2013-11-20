@@ -6,8 +6,6 @@ class CreateStopTimes < ActiveRecord::Migration
       t.integer :index
       t.integer :arrival, index: true
       t.integer :departure, index: true
-
-      t.timestamps
     end
   end
 end

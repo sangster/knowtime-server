@@ -3,8 +3,6 @@ class CreateDataPulls < ActiveRecord::Migration
     create_table :data_pulls do |t|
       t.text :url
       t.text :etag
-
-      t.timestamps
     end
   end
 end

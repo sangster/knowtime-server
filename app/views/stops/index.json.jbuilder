@@ -1,0 +1,1 @@
+json.partial! partial: 'public', collection: @stops, as: :stop

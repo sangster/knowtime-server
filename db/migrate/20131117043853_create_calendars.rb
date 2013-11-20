@@ -10,8 +10,6 @@ class CreateCalendars < ActiveRecord::Migration
       t.boolean :friday
       t.boolean :saturday
       t.boolean :sunday
-
-      t.timestamps
     end
   end
 end

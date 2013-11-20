@@ -5,8 +5,6 @@ class CreateStops < ActiveRecord::Migration
       t.text :name
       t.float :lat
       t.float :lng
-
-      t.timestamps
     end
   end
 end

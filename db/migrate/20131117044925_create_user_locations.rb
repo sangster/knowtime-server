@@ -4,8 +4,6 @@ class CreateUserLocations < ActiveRecord::Migration
       t.references :user, index: true
       t.float :lat
       t.float :lng
-
-      t.timestamps
     end
   end
 end

@@ -3,7 +3,6 @@ class PathPoint < ActiveRecord::Base
 
 
   def self.new_from_csv row
-    path = nil
     path_id = Uuid.get_id Path.uuid_namespace, row[:shape_id]
     if path_id.nil?
       path = Path.new

@@ -17,87 +17,69 @@ ActiveRecord::Schema.define(version: 20131117045256) do
   enable_extension "plpgsql"
 
   create_table "calendar_exceptions", force: true do |t|
-    t.integer  "calendar_id"
-    t.date     "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "calendar_id"
+    t.date    "date"
   end
 
   add_index "calendar_exceptions", ["calendar_id"], name: "index_calendar_exceptions_on_calendar_id", using: :btree
 
   create_table "calendars", force: true do |t|
-    t.date     "start_date"
-    t.date     "end_date"
-    t.boolean  "monday"
-    t.boolean  "tuesday"
-    t.boolean  "wednesday"
-    t.boolean  "thursday"
-    t.boolean  "friday"
-    t.boolean  "saturday"
-    t.boolean  "sunday"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.date    "start_date"
+    t.date    "end_date"
+    t.boolean "monday"
+    t.boolean "tuesday"
+    t.boolean "wednesday"
+    t.boolean "thursday"
+    t.boolean "friday"
+    t.boolean "saturday"
+    t.boolean "sunday"
   end
 
   create_table "data_pulls", force: true do |t|
-    t.text     "url"
-    t.text     "etag"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text "url"
+    t.text "etag"
   end
 
   create_table "path_points", force: true do |t|
-    t.integer  "path_id"
-    t.float    "lat"
-    t.float    "lng"
-    t.integer  "index"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "path_id"
+    t.float   "lat"
+    t.float   "lng"
+    t.integer "index"
   end
 
   add_index "path_points", ["path_id"], name: "index_path_points_on_path_id", using: :btree
 
   create_table "paths", force: true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "routes", force: true do |t|
-    t.text     "short_name"
-    t.text     "long_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text "short_name"
+    t.text "long_name"
   end
 
   create_table "stop_times", force: true do |t|
-    t.integer  "stop_id"
-    t.integer  "trip_id"
-    t.integer  "index"
-    t.integer  "arrival"
-    t.integer  "departure"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "stop_id"
+    t.integer "trip_id"
+    t.integer "index"
+    t.integer "arrival"
+    t.integer "departure"
   end
 
   add_index "stop_times", ["stop_id"], name: "index_stop_times_on_stop_id", using: :btree
   add_index "stop_times", ["trip_id"], name: "index_stop_times_on_trip_id", using: :btree
 
   create_table "stops", force: true do |t|
-    t.integer  "stop_number"
-    t.text     "name"
-    t.float    "lat"
-    t.float    "lng"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "stop_number"
+    t.text    "name"
+    t.float   "lat"
+    t.float   "lng"
   end
 
   create_table "trips", force: true do |t|
-    t.text     "headsign"
-    t.integer  "route_id"
-    t.integer  "calendar_id"
-    t.integer  "path_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.text    "headsign"
+    t.integer "route_id"
+    t.integer "calendar_id"
+    t.integer "path_id"
   end
 
   add_index "trips", ["calendar_id"], name: "index_trips_on_calendar_id", using: :btree
@@ -105,28 +87,22 @@ ActiveRecord::Schema.define(version: 20131117045256) do
   add_index "trips", ["route_id"], name: "index_trips_on_route_id", using: :btree
 
   create_table "user_locations", force: true do |t|
-    t.integer  "user_id"
-    t.float    "lat"
-    t.float    "lng"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer "user_id"
+    t.float   "lat"
+    t.float   "lng"
   end
 
   add_index "user_locations", ["user_id"], name: "index_user_locations_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.uuid     "uuid"
-    t.text     "short_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.uuid "uuid"
+    t.text "short_name"
   end
 
   create_table "uuids", force: true do |t|
-    t.uuid     "uuid"
-    t.integer  "idable_id"
-    t.string   "idable_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.uuid    "uuid"
+    t.integer "idable_id"
+    t.string  "idable_type"
   end
 
 end

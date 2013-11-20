@@ -13,6 +13,13 @@ class Calendar < ActiveRecord::Base
   end
 
 
+  def self.for_date date
+    Rails.cache.fetch("calendars_for_date_#{date.strftime('%F')}", expires_in: 12.hours) do
+      Calendar.where("? BETWEEN start_date AND end_date AND #{date.strftime('%A').downcase} = TRUE", date)
+    end
+  end
+
+
   def self.uuid_namespace
     Uuid.create_namespace 'Calendars'
   end

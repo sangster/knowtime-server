@@ -38,4 +38,19 @@ class Trip < ActiveRecord::Base
   def self.get str
     Rails.cache.fetch("trip_#{str}") { Uuid.get(Trip.uuid_namespace, str).idable }
   end
+
+
+  def route_uuid
+    Uuid.from_route_id route_id
+  end
+
+
+  def calendar_uuid
+    Uuid.from_calendar_id calendar_id
+  end
+
+
+  def path_uuid
+    Uuid.from_path_id path_id
+  end
 end

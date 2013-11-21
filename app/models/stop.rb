@@ -1,4 +1,9 @@
+require 'ostruct'
+
 class Stop < ActiveRecord::Base
+  has_many :stop_times
+  belongs_to :trips
+
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
 
 
@@ -15,19 +20,46 @@ class Stop < ActiveRecord::Base
   end
 
 
+  def self.get stop_number
+    Rails.cache.fetch("stop_#{stop_number}", expire_in: 1.day) do
+      Stop.find_by_stop_number stop_number
+    end
+  end
+
+
   def self.get_id stop_number
-    Rails.cache.fetch("stop_id_#{stop_number}", eternal: true) do
-      Stop.find_by_stop_number(stop_number, select: 'id').id
+    get(stop_number).id
+  end
+
+
+  def find_visitors calendars
+    Rails.cache.fetch("stop_#{id}_visitors_#{calendars.collect(&:id).join ','}", expires_in: 1.hour) do
+      uncached_find_visitors calendars
     end
   end
 
 
   def route_short_names
-    Route.joins(:trips, :stop_times).where('stop_times.stop_id = ?', id).uniq.pluck :short_name
+    Rails.cache.fetch("route_short_names_#{id}") do
+      Route.joins(:trips, :stop_times).where('stop_times.stop_id = ?', id).uniq.pluck :short_name
+    end
   end
 
 
-  def trips
-    Trip.joins(:stop_times).where stop: id
+  private
+
+
+  def uncached_find_visitors calendars
+    trips = Trip.joins('JOIN stop_times on trip_id = trips.id') \
+      .where(calendar_id: calendars).where('stop_id = ?', id).order 'arrival'
+
+    routes_with_visitors = {}
+    StopTime.for_stop_and_trips(self, trips).collect do |st|
+      route = st.trip.route
+      struct = routes_with_visitors[route.id] ||= OpenStruct.new(route: st.trip.route, stop_times: [])
+      struct.stop_times << OpenStruct.new(arrival: st.arrival_str, departure: st.departure_str)
+    end
+
+    routes_with_visitors.values
   end
 end

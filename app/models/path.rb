@@ -1,6 +1,7 @@
 class Path < ActiveRecord::Base
   has_one :uuid, as: :idable
   has_many :path_points, inverse_of: :path
+  has_many :trips, inverse_of: :path
 
   alias_method :uncached_path_points, :path_points
 

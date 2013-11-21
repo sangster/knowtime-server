@@ -1,8 +1,11 @@
 class Trip < ActiveRecord::Base
   has_one :uuid, as: :idable
-  belongs_to :route
-  belongs_to :calendar
-  belongs_to :path
+  has_many :stop_times, inverse_of: :trip
+  belongs_to :route, inverse_of: :trips
+  belongs_to :calendar, inverse_of: :trips
+  belongs_to :path, inverse_of: :trips
+
+  has_many :stops, through: :stop_times
 
 
   def self.new_from_csv row

@@ -1,5 +1,6 @@
 class Calendar < ActiveRecord::Base
   has_one :uuid, as: :idable, :autosave => true, :dependent => :destroy
+  has_many :trips, inverse_of: :calendar
 
   def self.new_from_csv row
     cal = Calendar.new start_date: to_date(row[:start_date]), end_date: to_date(row[:end_date]),
@@ -11,7 +12,7 @@ class Calendar < ActiveRecord::Base
   end
 
 
-  def self.for_date_params
+  def self.for_date_params params
     for_date Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
   end
 

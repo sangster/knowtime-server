@@ -1,0 +1,1 @@
+json.public! 'uuids_only', trip: @trip

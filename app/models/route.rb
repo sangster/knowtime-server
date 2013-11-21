@@ -1,5 +1,6 @@
 class Route < ActiveRecord::Base
   has_one :uuid, as: :idable
+  has_many :trips, inverse_of: :route
 
 
   def self.new_from_csv row

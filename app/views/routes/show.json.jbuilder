@@ -1,0 +1,1 @@
+json.partial! 'public', route: @route

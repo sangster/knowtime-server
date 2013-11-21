@@ -15,6 +15,7 @@ BustedRuby::Application.routes.draw do
     get 'routes', to: 'routes#index'
     get 'routes/names', to: 'routes#names'
     get 'routes/:short_name/:year-:month-:day', to: 'routes#index_for_short_name_and_date'
+    get 'routes/:key::value', to: 'routes#index_by_query'
 
     get 'calendars/:year-:month-:day', to: 'calendars#index_for_date'
 

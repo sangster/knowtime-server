@@ -11,6 +11,7 @@ BustedRuby::Application.routes.draw do
     get 'paths/:year-:month-day/:route_uuid', to: 'paths#show_for_route_and_date'
 
     get 'routes', to: 'routes#index'
+    get 'routes/names', to: 'routes#names'
 
     get 'calendars/:year-:month-:day', to: 'calendars#index_for_date'
 

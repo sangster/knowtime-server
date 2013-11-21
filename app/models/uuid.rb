@@ -5,7 +5,9 @@ class Uuid < ActiveRecord::Base
 
 
   def self.create_namespace str
-    UUIDTools::UUID.sha1_create UUIDTools::UUID_OID_NAMESPACE, str
+    Rails.cache.fetch("uuid_namespace_#{str}", expires_in: 24.hours) do
+      UUIDTools::UUID.sha1_create UUIDTools::UUID_OID_NAMESPACE, str
+    end
   end
 
 

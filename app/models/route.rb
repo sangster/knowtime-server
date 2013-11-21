@@ -53,4 +53,22 @@ class Route < ActiveRecord::Base
       uniq.joins(:trips).where('trips.calendar_id' => calendars, short_name: short_name).to_a
     end
   end
+
+
+  def self.simple_query key, val
+    case key
+      when 'short'
+        where short_name: val
+      when 'long'
+        where long_name: val
+      when 'stop'
+        stop = Stop.get val.to_i
+        uniq.joins(:trips, :stop_times).where 'stop_times.stop_id' => stop
+      when 'date'
+        calendars = Calendar.for_date Date.parse(val)
+        uniq.joins(:trips).where 'trips.calendar_id' => calendars
+      else
+        raise ActiveRecord::RecordNotFound
+    end
+  end
 end

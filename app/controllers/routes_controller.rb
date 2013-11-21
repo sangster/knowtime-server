@@ -34,8 +34,21 @@ class RoutesController < ApplicationController
 
 
   def index_by_query_with_headsigns
-    calendars = Calendar.for_date_params(params)
-    @routes = Route.simple_query params[:key], params[:value]
+    query_with_headsigns Calendar.for_date_params(params), params[:key], params[:value]
+  end
+
+
+  def index_by_date_with_headsigns
+    date_str = "#{params[:year]}-#{params[:month]}-#{params[:day]}"
+    query_with_headsigns Calendar.for_date_params(params), 'date', date_str
+  end
+
+
+  private
+
+
+  def query_with_headsigns calendars, key, value
+    @routes = Route.simple_query key, value
 
     @route_trips = {}
     @routes.each do |r|

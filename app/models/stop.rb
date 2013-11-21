@@ -23,12 +23,11 @@ class Stop < ActiveRecord::Base
 
 
   def route_short_names
-    Route.joins('JOIN trips ON routes.id = route_id JOIN stop_times ON trips.id = trip_id').where('stop_times.stop_id
- = ?', id).uniq.pluck :short_name
+    Route.joins(:trips, :stop_times).where('stop_times.stop_id = ?', id).uniq.pluck :short_name
   end
 
 
   def trips
-    Trip.joins('JOIN stop_times ON trips.id = trip_id').where 'stop_id = ?', id
+    Trip.joins(:stop_times).where stop: id
   end
 end

@@ -14,6 +14,20 @@ class Uuid < ActiveRecord::Base
   end
 
 
+  def self.find_idable uuid_str
+    key = "idable_#{uuid_str}"
+    idable = Rails.cache.read key
+    return idable unless idable.nil?
+
+    idable = Uuid.find_by(uuid: uuid_str).idable
+    unless idable.nil?
+      idable.prepare_for_caching if idable.respond_to? :prepare_for_caching
+      Rails.cache.write key, idable, expires_in: 1.hour
+    end
+    idable
+  end
+
+
   def self.get_id namespace, str
     uuid_str = UUIDTools::UUID.sha1_create(namespace, str).to_s
     key = "uuid_id_#{uuid_str}"

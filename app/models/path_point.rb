@@ -1,5 +1,5 @@
 class PathPoint < ActiveRecord::Base
-  belongs_to :path
+  belongs_to :path, inverse_of: :path_points
 
 
   def self.new_from_csv row

@@ -18,8 +18,8 @@ class Calendar < ActiveRecord::Base
 
 
   def self.for_date date
-    Rails.cache.fetch("calendars_for_date_#{date.strftime('%F')}", expires_in: 1.hour) do
-      Calendar.where "? BETWEEN start_date AND end_date AND #{date.strftime('%A').downcase} = TRUE", date
+    Rails.cache.fetch("calendars_for_date_#{date.to_s}", expires_in: 12.hour) do
+      Calendar.where("? BETWEEN start_date AND end_date AND #{date.strftime('%A').downcase} = TRUE", date).to_a
     end
   end
 

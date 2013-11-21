@@ -46,4 +46,11 @@ class Route < ActiveRecord::Base
 
 
   private_class_method :uncached_names, :'is_int?'
+
+
+  def self.for_short_name_and_calendars short_name, calendars
+    Rails.cache.fetch("routes_#{short_name}_#{calendars.collect(&:id).join ','}", expires_in: 6.hours) do
+      uniq.joins(:trips).where('trips.calendar_id' => calendars, short_name: short_name).to_a
+    end
+  end
 end

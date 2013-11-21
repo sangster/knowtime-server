@@ -21,4 +21,8 @@ class RoutesController < ApplicationController
   def names
     @names = Route.names
   end
+
+  def index_for_short_name_and_date
+    @routes = Route.for_short_name_and_calendars params[:short_name], Calendar.for_date_params(params)
+  end
 end

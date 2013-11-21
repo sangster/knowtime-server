@@ -17,6 +17,6 @@ class Path < ActiveRecord::Base
 
 
   def path_points
-    Rails.cache.fetch("path_points_#{id}") { uncached_path_points }
+    Rails.cache.fetch("path_points_#{id}") { uncached_path_points.to_a }
   end
 end

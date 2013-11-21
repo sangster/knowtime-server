@@ -24,11 +24,7 @@ class Trip < ActiveRecord::Base
       Path.create
     else
       uuid = Uuid.get Path.uuid_namespace, row[:shape_id]
-      unless uuid.nil?
-        uuid.idable
-      else
-        Path.create
-      end
+      uuid.nil? ? Path.create : uuid.idable
     end
   end
 

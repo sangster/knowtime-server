@@ -41,7 +41,7 @@ class Stop < ActiveRecord::Base
 
   def route_short_names
     Rails.cache.fetch("route_short_names_#{id}") do
-      Route.joins(:trips, :stop_times).where('stop_times.stop_id = ?', id).uniq.pluck :short_name
+      Route.joins(:trips, :stop_times).where('stop_times.stop_id = ?', id).uniq.pluck(:short_name).to_a
     end
   end
 

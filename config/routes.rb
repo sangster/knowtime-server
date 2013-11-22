@@ -18,6 +18,9 @@ BustedRuby::Application.routes.draw do
     get 'routes/:key::value', to: 'routes#index_by_query'
     get 'routes/:key::value/headsigns/:year-:month-:day', to: 'routes#index_by_query_with_headsigns'
     get 'routes/date::year-:month-:day/headsigns', to: 'routes#index_by_date_with_headsigns'
+    get 'routes/:key::value/headsigns/:year-:month-:day/:hours::minutes',
+        to: 'routes#index_by_query_and_time_with_headsigns'
+    get 'routes/date::year-:month-:day/headsigns/:hours::minutes', to: 'routes#index_by_date_and_time_with_headsigns'
 
     get 'calendars/:year-:month-:day', to: 'calendars#index_for_date'
 

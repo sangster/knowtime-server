@@ -44,6 +44,17 @@ class RoutesController < ApplicationController
   end
 
 
+  def index_by_query_and_time_with_headsigns
+    index_by_query_with_headsigns
+    @minutes = params[:hours].to_i * 60 + params[:minutes].to_i
+  end
+
+
+  def index_by_date_and_time_with_headsigns
+    index_by_date_with_headsigns
+    @minutes = params[:hours].to_i * 60 + params[:minutes].to_i
+  end
+
   private
 
 

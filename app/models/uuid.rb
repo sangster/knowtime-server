@@ -21,7 +21,7 @@ class Uuid < ActiveRecord::Base
     idable = Rails.cache.read key
     return idable unless idable.nil?
 
-    idable = Uuid.find_by(uuid: uuid_str).idable
+    idable = Uuid.find_by(uuid: UUIDTools::UUID.parse(uuid_str).raw).idable
     unless idable.nil?
       idable.prepare_for_caching if idable.respond_to? :prepare_for_caching
       Rails.cache.write key, idable, expires_in: 1.hour
@@ -31,11 +31,12 @@ class Uuid < ActiveRecord::Base
 
 
   def self.get_id namespace, str
-    uuid_str = UUIDTools::UUID.sha1_create(namespace, str).to_s
+    uuid_obj = UUIDTools::UUID.sha1_create(namespace, str)
+    uuid_str = uuid_obj.to_s
     key = "uuid_id_#{uuid_str}"
 
-    uuid_id = Rails.cache.fetch(key, eternal: true) do
-      uuid = Uuid.find_by uuid: uuid_str
+    uuid_id = Rails.cache.fetch(key, expires_in: 6.hours) do
+      uuid = Uuid.find_by uuid: uuid_obj.raw
       uuid.nil? ? nil : uuid.idable_id
     end
 
@@ -45,9 +46,10 @@ class Uuid < ActiveRecord::Base
 
 
   def self.get namespace, str
-    uuid_str = UUIDTools::UUID.sha1_create(namespace, str).to_s
+    uuid_obj = UUIDTools::UUID.sha1_create(namespace, str)
+    uuid_str = uuid_obj.to_s
     key = "uuid_#{uuid_str}"
-    uuid = Rails.cache.fetch(key, eternal: true) { Uuid.find_by uuid: uuid_str }
+    uuid = Rails.cache.fetch(key, expires_in: 6.hours) { Uuid.find_by uuid: uuid_obj.raw }
 
     Rails.cache.delete key if uuid.nil?
     uuid
@@ -77,8 +79,13 @@ class Uuid < ActiveRecord::Base
   def self.pluck_uuid type, id
     key = "uuid_#{type}_id_#{id}"
     Rails.cache.fetch(key, eternal: true) do
-      Uuid.where('idable_type = ? AND idable_id = ?', type, id).pluck(:uuid).first
+      u = Uuid.where('idable_type = ? AND idable_id = ?', type, id).pluck(:uuid).first
+      UUIDTools::UUID.parse_raw u
     end
   end
 
+
+  def raw
+    @_raw ||= uuid.raw
+  end
 end

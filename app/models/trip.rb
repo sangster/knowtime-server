@@ -11,20 +11,21 @@ class Trip < ActiveRecord::Base
   def self.new_from_csv row
     route_id = Uuid.get_id Route.uuid_namespace, row[:route_id]
     calendar_id = Uuid.get_id Calendar.uuid_namespace, row[:service_id]
+    path_id = get_path_id row
 
-    trip = Trip.new headsign: row[:trip_headsign], route_id: route_id, calendar_id: calendar_id, path: get_path(row)
-    trip.build_uuid uuid: Uuid.create(uuid_namespace, row[:trip_id]).to_s
+    trip = Trip.new headsign: row[:trip_headsign], route_id: route_id, calendar_id: calendar_id, path_id: path_id
+    trip.build_uuid uuid: Uuid.create(uuid_namespace, row[:trip_id]).raw
     trip
   end
 
 
   # Ferries do not have paths, so create a blank one
-  def self.get_path row
+  def self.get_path_id row
     if row[:shape_id].nil?
-      Path.create
+      Path.create.id
     else
-      uuid = Uuid.get Path.uuid_namespace, row[:shape_id]
-      uuid.nil? ? Path.create : uuid.idable
+      uuid_id = Uuid.get_id Path.uuid_namespace, row[:shape_id]
+      uuid_id.nil? ? Path.create.id : uuid_id
     end
   end
 

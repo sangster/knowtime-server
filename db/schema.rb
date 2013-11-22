@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20131117045256) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "calendar_exceptions", force: true do |t|
     t.integer "calendar_id"
     t.date    "date"
@@ -87,20 +84,22 @@ ActiveRecord::Schema.define(version: 20131117045256) do
   add_index "trips", ["route_id"], name: "index_trips_on_route_id", using: :btree
 
   create_table "user_locations", force: true do |t|
-    t.integer "user_id"
-    t.float   "lat"
-    t.float   "lng"
+    t.integer  "user_id"
+    t.float    "lat"
+    t.float    "lng"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_locations", ["user_id"], name: "index_user_locations_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.uuid "uuid"
-    t.text "short_name"
+    t.binary "uuid",       limit: 16
+    t.text   "short_name"
   end
 
   create_table "uuids", force: true do |t|
-    t.uuid    "uuid"
+    t.binary  "uuid",        limit: 16
     t.integer "idable_id"
     t.string  "idable_type"
   end

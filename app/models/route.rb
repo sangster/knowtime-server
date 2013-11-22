@@ -5,7 +5,7 @@ class Route < ActiveRecord::Base
 
   def self.new_from_csv row
     route = Route.new short_name: row[:route_short_name], long_name: row[:route_long_name]
-    route.build_uuid uuid: Uuid.create(uuid_namespace, row[:route_id]).to_s
+    route.build_uuid uuid: Uuid.create(uuid_namespace, row[:route_id]).raw
     route
   end
 
@@ -69,6 +69,13 @@ class Route < ActiveRecord::Base
         uniq.joins(:trips).where 'trips.calendar_id' => calendars
       else
         raise ActiveRecord::RecordNotFound
+    end
+  end
+
+
+  def self.short_name_exists? short_name
+    Rails.cache.fetch("short_name_exists_#{short_name}", expires_in: 1.hour) do
+      Route.exists? short_name: short_name
     end
   end
 end

@@ -1,0 +1,1 @@
+json.partial! partial: 'user_location', collection: @user_locations, as: :user_location

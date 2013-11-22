@@ -25,6 +25,10 @@ BustedRuby::Application.routes.draw do
     get 'calendars/:year-:month-:day', to: 'calendars#index_for_date'
 
     get 'pollrate', to: 'user_configurations#pollrate'
+
+    post 'users/new/:short_name', to: 'users#create'
+    post 'user/:user_uuid', to: 'users#create_location'
+    get 'user/:user_uuid', to: 'users#show'
   end
 
 end

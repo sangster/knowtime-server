@@ -7,7 +7,7 @@ class Calendar < ActiveRecord::Base
                        monday: to_bool(row[:monday]), tuesday: to_bool(row[:tuesday]), wednesday: to_bool(row[:wednesday]),
                        thursday: to_bool(row[:thursday]), friday: to_bool(row[:friday]), saturday: to_bool(row[:saturday]),
                        sunday: to_bool(row[:sunday])
-    cal.build_uuid uuid: Uuid.create(uuid_namespace, row[:service_id]).to_s
+    cal.build_uuid uuid: Uuid.create(uuid_namespace, row[:service_id]).raw
     cal
   end
 

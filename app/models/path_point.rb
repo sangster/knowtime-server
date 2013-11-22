@@ -6,7 +6,7 @@ class PathPoint < ActiveRecord::Base
     path_id = Uuid.get_id Path.uuid_namespace, row[:shape_id]
     if path_id.nil?
       path = Path.new
-      path.build_uuid uuid: Uuid.create(Path.uuid_namespace, row[:shape_id]).to_s
+      path.build_uuid uuid: Uuid.create(Path.uuid_namespace, row[:shape_id]).raw
       path.save
       path_id = path.id
     end

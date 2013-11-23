@@ -1,3 +1,5 @@
+@routes.delete_if { |route| @route_trips[route.id].empty? }
+
 json.array! @routes do |route|
   json.partial! 'public', route: route
   json.tripHeadsigns do

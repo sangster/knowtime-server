@@ -1,11 +1,12 @@
+@routes.each do |route|
+  (@route_trips[route.id] || []).keep_if { |trip| trip.is_running? @minutes }
+  @route_trips.delete_if { |_, trips| trips.empty? }
+end
+@routes.keep_if { |route| @route_trips.has_key? route.id }
+
 json.array! @routes do |route|
   json.partial! 'public', route: route
   json.tripHeadsigns do
-    @route_trips[route.id].each do |trip|
-      startTime = trip.stop_times.order(:index).first
-      endTime = trip.stop_times.order(:index).last
-
-      json.partial! 'trips/start_and_end_stops', trip: trip if trip.is_running? @minutes
-    end
+    json.partial! partial: 'trips/start_and_end_stops', collection: @route_trips[route.id], as: :trip
   end
 end

@@ -15,6 +15,11 @@ class Route < ActiveRecord::Base
   end
 
 
+  def self.for_uuid uuid_str
+    Uuid.find_idable 'Route', uuid_str
+  end
+
+
   def self.names
     Rails.cache.fetch("route_names", expire_in: 24.hours) { uncached_names }
   end
@@ -25,9 +30,19 @@ class Route < ActiveRecord::Base
       OpenStruct.new short_name: names[0], long_name: names[1]
     end
 
-    names.sort! do |name_1, name_2|
-      s1 = name_1.short_name
-      s2 = name_2.short_name
+    sort_by_names! names
+  end
+
+  def self.sort_by_names! arr
+    get_short_name = if block_given? then
+                       lambda { |o| yield o }
+                     else
+                       lambda &:short_name
+                     end
+
+    arr.sort! do |o1, o2|
+      s1 = get_short_name.call o1
+      s2 = get_short_name.call o2
 
       if is_int? s1
         (is_int? s2) ? s1.to_i <=> s2.to_i : -1
@@ -50,26 +65,28 @@ class Route < ActiveRecord::Base
 
   def self.for_short_name_and_calendars short_name, calendars
     Rails.cache.fetch("routes_#{short_name}_#{calendars.collect(&:id).join ','}", expires_in: 6.hours) do
-      uniq.joins(:trips).where('trips.calendar_id' => calendars, short_name: short_name).to_a
+      sort_by_names! uniq.joins(:trips).where('trips.calendar_id' => calendars, short_name: short_name)
     end
   end
 
 
   def self.simple_query key, val
-    case key
-      when 'short'
-        where short_name: val
-      when 'long'
-        where long_name: val
-      when 'stop'
-        stop = Stop.get val.to_i
-        uniq.joins(:trips, :stop_times).where 'stop_times.stop_id' => stop
-      when 'date'
-        calendars = Calendar.for_date Date.parse(val)
-        uniq.joins(:trips).where 'trips.calendar_id' => calendars
-      else
-        raise ActiveRecord::RecordNotFound
-    end
+    routes = case key
+               when 'short'
+                 where short_name: val
+               when 'long'
+                 where long_name: val
+               when 'stop'
+                 stop = Stop.get val.to_i
+                 uniq.joins(:trips, 'JOIN stop_times on trip_id = trips.id').where 'stop_times.stop_id = ?', stop.id
+               when 'date'
+                 calendars = Calendar.for_date Date.parse(val)
+                 uniq.joins(:trips).where 'trips.calendar_id' => calendars
+               else
+                 raise ActiveRecord::RecordNotFound
+             end
+
+    sort_by_names! routes
   end
 
 
@@ -78,4 +95,5 @@ class Route < ActiveRecord::Base
       Route.exists? short_name: short_name
     end
   end
+
 end

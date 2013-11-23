@@ -5,9 +5,7 @@ json.array! @routes do |route|
       startTime = trip.stop_times.order(:index).first
       endTime = trip.stop_times.order(:index).last
 
-      if @minutes >= startTime.arrival and @minutes <= endTime.departure
-        json.partial! 'trips/start_and_end_stops', trip: trip
-      end
+      json.partial! 'trips/start_and_end_stops', trip: trip if trip.is_running? @minutes
     end
   end
 end

@@ -1,6 +1,15 @@
 development:
   zip_url: http://localhost/google_transit.zip
+  precision_formats:
+    paths: "%0.10f"
+    stops: "%0.6f"
 test:
   zip_url: http://localhost/google_transit.zip
+  precision_formats:
+    paths: "%0.10f"
+    stops: "%0.6f"
 production:
   zip_url: http://www.halifax.ca/metrotransit/googletransitfeed/google_transit.zip
+  precision_formats:
+    paths: "%0.10f"
+    stops: "%0.6f"

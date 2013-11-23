@@ -36,4 +36,9 @@ class Calendar < ActiveRecord::Base
   def self.to_bool str
     return str == '1'
   end
+
+
+  def self.for_uuid uuid_str
+    Uuid.find_idable 'Calendar', uuid_str
+  end
 end

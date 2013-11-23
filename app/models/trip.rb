@@ -19,6 +19,11 @@ class Trip < ActiveRecord::Base
   end
 
 
+  def self.for_uuid uuid_str
+    Uuid.find_idable 'Trip', uuid_str
+  end
+
+
   # Ferries do not have paths, so create a blank one
   def self.get_path_id row
     if row[:shape_id].nil?
@@ -52,5 +57,25 @@ class Trip < ActiveRecord::Base
 
   def path_uuid
     Uuid.from_path_id path_id
+  end
+
+
+  alias_method :uncached_stop_times, :stop_times
+
+  def stop_times
+    Rails.cache.fetch("trip_#{id}_stop_times", expires_in: 1.hour) { uncached_stop_times }
+  end
+
+
+  def is_running? time
+    minutes = case time
+                when Integer
+                  time
+                when Date
+                  time.hour * 60 + time.minute
+              end
+
+    stops = stop_times.order :index
+    (stops.first.arrival..stops.last.departure) === minutes
   end
 end

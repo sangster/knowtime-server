@@ -16,12 +16,12 @@ class Uuid < ActiveRecord::Base
   end
 
 
-  def self.find_idable uuid_str
-    key = "idable_#{uuid_str}"
+  def self.find_idable idable_type, uuid_str
+    key = "idable_#{idable_type}_#{uuid_str}"
     idable = Rails.cache.read key
     return idable unless idable.nil?
 
-    idable = Uuid.find_by(uuid: UUIDTools::UUID.parse(uuid_str).raw).idable
+    idable = Uuid.find_by(idable_type: idable_type, uuid: UUIDTools::UUID.parse(uuid_str).raw).idable rescue nil
     unless idable.nil?
       idable.prepare_for_caching if idable.respond_to? :prepare_for_caching
       Rails.cache.write key, idable, expires_in: 1.hour
@@ -35,13 +35,17 @@ class Uuid < ActiveRecord::Base
     uuid_str = uuid_obj.to_s
     key = "uuid_id_#{uuid_str}"
 
-    uuid_id = Rails.cache.fetch(key, expires_in: 6.hours) do
+    idable_id = Rails.cache.fetch(key, expires_in: 6.hours) do
       uuid = Uuid.find_by uuid: uuid_obj.raw
-      uuid.nil? ? nil : uuid.idable_id
+      if uuid.nil? then
+        nil
+      else
+        uuid.idable_id
+      end
     end
 
-    Rails.cache.delete key if uuid_id.nil?
-    uuid_id
+    Rails.cache.delete key if idable_id.nil?
+    idable_id
   end
 
 

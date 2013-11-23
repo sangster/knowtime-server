@@ -2,7 +2,6 @@ require 'ostruct'
 
 class Stop < ActiveRecord::Base
   has_many :stop_times
-  belongs_to :trips
 
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
 
@@ -41,10 +40,16 @@ class Stop < ActiveRecord::Base
 
   def route_short_names
     Rails.cache.fetch("route_short_names_#{id}") do
-      Route.joins(:trips, :stop_times).where('stop_times.stop_id = ?', id).uniq.pluck(:short_name).to_a
+      Route.joins(:trips, 'JOIN stop_times on trip_id = trips.id').where('stop_times.stop_id = ?',
+                                                                         id).uniq.pluck(:short_name).to_a
     end
   end
 
+  def trips
+    Rails.cache.fetch("stop_#{id}_trips", expires_in: 1.hour) do
+      Trip.uniq.joins(:stop_times).where('stop_times.stop_id = ?', id).to_a
+    end
+  end
 
   private
 
@@ -60,6 +65,7 @@ class Stop < ActiveRecord::Base
       struct.stop_times << OpenStruct.new(arrival: st.arrival_str, departure: st.departure_str)
     end
 
+    routes_with_visitors.values.each{ |visitor| visitor.stop_times.uniq! }
     routes_with_visitors.values
   end
 end

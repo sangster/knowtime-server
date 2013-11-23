@@ -11,8 +11,15 @@ class Path < ActiveRecord::Base
   end
 
 
+  def self.for_uuid uuid_str
+    Uuid.find_idable 'Path', uuid_str
+  end
+
+
   def self.for_route_and_calendars route, calendars
-    Path.joins(:trips, :calendars).where route: route, calendar: calendars
+    Rails.cache.fetch("path_for_route_#{route.id}_calendar_#{calendars.collect(&:id).join ','}", expires_in: 1.hour) do
+      Trip.where(route_id: route.id, calendar_id: calendars).collect(&:path).uniq
+    end
   end
 
 

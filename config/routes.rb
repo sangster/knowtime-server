@@ -8,7 +8,7 @@ BustedRuby::Application.routes.draw do
     get 'stoptimes/:stop_number/:year-:month-:day', to: 'stop_times#visitors_for_stop_and_date'
 
     get 'path/:path_uuid', to: 'paths#show'
-    get 'paths/:year-:month-day/:route_uuid', to: 'paths#show_for_route_and_date'
+    get 'paths/:year-:month-:day/:route_uuid', to: 'paths#index_for_route_and_date'
 
     get 'route/:route_uuid', to: 'routes#show'
     get 'route/:route_uuid/:year-:month-:day', to: 'routes#show_with_trips_on_date'
@@ -22,6 +22,9 @@ BustedRuby::Application.routes.draw do
         to: 'routes#index_by_query_and_time_with_headsigns'
     get 'routes/date::year-:month-:day/headsigns/:hours::minutes', to: 'routes#index_by_date_and_time_with_headsigns'
 
+    get 'trip/:trip_uuid', to: 'trips#show'
+
+    get 'calendar/:calendar_uuid', to: 'calendars#show'
     get 'calendars/:year-:month-:day', to: 'calendars#index_for_date'
 
     get 'pollrate', to: 'user_configurations#pollrate'

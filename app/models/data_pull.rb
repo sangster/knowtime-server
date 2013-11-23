@@ -7,7 +7,12 @@ require 'csv'
 class DataPull < ActiveRecord::Base
   BULK_INSERT_SIZE = 1024
 
+  # TODO replace with cron job
   def self.check_remote_zip
+    Rails.cache.fetch('check_remote_zip', expires_in: 5.minutes) { uncached_check_remote_zip }
+  end
+
+  def self.uncached_check_remote_zip
     url = URI METRO_TRANSIT['zip_url']
 
     logger.info "Checking remote zip #{url} for updates"
@@ -33,6 +38,8 @@ class DataPull < ActiveRecord::Base
     else
       logger.info "Current database is up to date. Latest etag: #{pull.etag}"
     end
+
+    true # for the cache
   end
 
 
@@ -48,8 +55,6 @@ class DataPull < ActiveRecord::Base
 
         if models.length == BULK_INSERT_SIZE
           transaction { models.each &:save }
-          #transaction { model_class.import models, synchronize: models, validate: false }
-          #models.each { |m| m.idable.save } if model_class.method_defined? :idable
           total = total + models.length
           models.clear
           logger.info "Inserted #{BULK_INSERT_SIZE} objects for #{model_class} (total: #{total})"
@@ -59,8 +64,6 @@ class DataPull < ActiveRecord::Base
 
     unless models.empty? # whatever is left
       transaction { models.each &:save }
-      #transaction { model_class.import models, synchronize: models, validate: false }
-      #models.each { |m| m.idable.save } if model_class.method_defined? :idable
       logger.info "Inserted #{models.length} objects for #{model_class} (total: #{total + models.length})"
     end
   end

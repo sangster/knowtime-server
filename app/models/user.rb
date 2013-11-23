@@ -8,4 +8,10 @@ class User < ActiveRecord::Base
       find_by uuid: UUIDTools::UUID.parse(user_uuid_str).raw
     end
   end
+
+
+  def uuid_str
+    @_uuid_str ||= UUIDTools::UUID.parse_raw uuid
+  end
+
 end

@@ -11,7 +11,8 @@ class UsersController < ApplicationController
 
     @user = User.new short_name: short_name, uuid: UUIDTools::UUID.random_create.raw
     if @user.save
-      redirect_to @user
+      redirect_to "/user/#{@user.uuid_str}", status: :created
+      response_body = ''
     else
       raise 'could not save user'
     end
@@ -21,5 +22,6 @@ class UsersController < ApplicationController
   def create_location
     user = User.get params[:user_uuid]
     user.user_locations.create lat: params[:lat], lng: params[:lng]
+    render nothing: true
   end
 end

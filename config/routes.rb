@@ -1,6 +1,6 @@
 BustedRuby::Application.routes.draw do
 
-  scope '/api/alpha_1/', {defaults: {format: 'json'}} do
+  scope '/alpha_1/', {defaults: {format: 'json'}} do
     get 'stop/:stop_number', to: 'stops#show'
     get 'stop/:stop_number/trips', to: 'stops#show_with_trip_uuids'
     get 'stops', to: 'stops#index'

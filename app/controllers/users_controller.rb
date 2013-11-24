@@ -11,7 +11,7 @@ class UsersController < ApplicationController
 
     @user = User.new short_name: short_name, uuid: UUIDTools::UUID.random_create.raw
     if @user.save
-      redirect_to "/user/#{@user.uuid_str}", status: :created
+      redirect_to "/alpha_1/user/#{@user.uuid_str}", status: :created
       response_body = ''
     else
       raise 'could not save user'

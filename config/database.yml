@@ -20,6 +20,6 @@ production:
   encoding: utf8
   database: busted_server
   pool: 5
-  host: 50.16.8.136
+  host: ip-10-31-199-254.ec2.internal
   username: busted_server
   password: zdgzvbzkt9

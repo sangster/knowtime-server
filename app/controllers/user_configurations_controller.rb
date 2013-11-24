@@ -8,5 +8,6 @@ class UserConfigurationsController < ApplicationController
       Rails.cache.clear
       DataPull.check_remote_zip
     end
+    render text: 'OK'
   end
 end

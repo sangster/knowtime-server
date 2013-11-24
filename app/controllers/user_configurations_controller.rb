@@ -1,5 +1,5 @@
 class UserConfigurationsController < ApplicationController
-  include rakeable
+  include Rakeable
 
   def pollrate
     @pollrate = 3

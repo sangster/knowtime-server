@@ -1,5 +1,6 @@
 task environment: :disable_initializer
 
-task :disable_initializer do
-  ENV['DISABLE_INITIALIZER_FROM_RAKE'] = 'true'
+task :update_from_remote_zip do
+  Rails.cache.clear
+  DataPull.update_from_remote_zip
 end

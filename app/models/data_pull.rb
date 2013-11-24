@@ -8,38 +8,32 @@ class DataPull < ActiveRecord::Base
   BULK_INSERT_SIZE = 1024
 
   # TODO replace with cron job
-  def self.check_remote_zip
-    Rails.cache.fetch('check_remote_zip', expires_in: 5.minutes) { uncached_check_remote_zip }
-  end
-
-  def self.uncached_check_remote_zip
+  def self.remote_zip_new?
     url = URI METRO_TRANSIT['zip_url']
 
     logger.info "Checking remote zip #{url} for updates"
     server_etag = fetch_remote_etag(url)[1..-2]
 
     pull = DataPull.last
+    pull.nil? or pull.etag != server_etag
+  end
 
-    if pull.nil? or pull.etag != server_etag
-      logger.info 'Previous data pull does not exist or is out of date'
+  def self.update_from_remote_zip
+    url = URI METRO_TRANSIT['zip_url']
+    logger.info "Updating data from #{url}"
 
-      DataPull.download_zip url do |zip|
-        bulk_insert_rows zip, 'stops.txt', Stop
-        bulk_insert_rows zip, 'shapes.txt', PathPoint
-        bulk_insert_rows zip, 'routes.txt', Route
-        bulk_insert_rows zip, 'calendar.txt', Calendar
-        bulk_insert_rows zip, 'calendar_dates.txt', CalendarException
-        bulk_insert_rows zip, 'trips.txt', Trip
-        bulk_insert_rows zip, 'stop_times.txt', StopTime
+    DataPull.download_zip url do |zip|
+      bulk_insert_rows zip, 'stops.txt', Stop
+      bulk_insert_rows zip, 'shapes.txt', PathPoint
+      bulk_insert_rows zip, 'routes.txt', Route
+      bulk_insert_rows zip, 'calendar.txt', Calendar
+      bulk_insert_rows zip, 'calendar_dates.txt', CalendarException
+      bulk_insert_rows zip, 'trips.txt', Trip
+      bulk_insert_rows zip, 'stop_times.txt', StopTime
 
-        DataPull.create url: METRO_TRANSIT['zip_url'], etag: server_etag
-        logger.info 'Finished reading CSV files'
-      end
-    else
-      logger.info "Current database is up to date. Latest etag: #{pull.etag}"
+      DataPull.create url: METRO_TRANSIT['zip_url'], etag: server_etag
+      logger.info 'Finished reading CSV files'
     end
-
-    true # for the cache
   end
 
 

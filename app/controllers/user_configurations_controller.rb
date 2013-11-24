@@ -1,13 +1,16 @@
 class UserConfigurationsController < ApplicationController
+  include rakeable
+
   def pollrate
     @pollrate = 3
   end
 
   def check_remote_zip
-    unless ENV['DISABLE_INITIALIZER_FROM_RAKE']
-      Rails.cache.clear
-      DataPull.check_remote_zip
+    if DataPull.remote_zip_new?
+      call_rake :update_from_remote_zip
+      render text: 'updating data from metro transit'
+    else
+      render text: 'current data is up-to-date'
     end
-    render text: 'OK'
   end
 end

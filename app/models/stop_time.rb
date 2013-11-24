@@ -21,6 +21,14 @@ class StopTime < ActiveRecord::Base
     str[0, 2].to_i * 60 + str[3, 2].to_i
   end
 
+  def self.for_short_name_and_calendars short_name, calendars
+    Rails.cache.fetch("stop_times_route_#{short_name}_calendars_#{calendars.collect(&:id).join ','}",
+                      expires_in: 1.hour) do
+      StopTime.uniq.joins('JOIN trips ON trip_id = trips.id', 'JOIN routes ON route_id = routes.id') \
+        .where('short_name = ?', short_name).where 'trips.calendar_id' => calendars
+    end
+  end
+
 
   def arrival_str
     minutes_to_time arrival

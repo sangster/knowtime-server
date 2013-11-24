@@ -3,8 +3,8 @@ class CreateStops < ActiveRecord::Migration
     create_table :stops do |t|
       t.integer :stop_number, index: true
       t.text :name
-      t.float :lat
-      t.float :lng
+      t.decimal :lat, precision: 14, scale: 10
+      t.decimal :lng, precision: 14, scale: 10
     end
   end
 end

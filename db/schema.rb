@@ -39,8 +39,8 @@ ActiveRecord::Schema.define(version: 20131117045256) do
 
   create_table "path_points", force: true do |t|
     t.integer "path_id"
-    t.float   "lat"
-    t.float   "lng"
+    t.decimal "lat",     precision: 14, scale: 10
+    t.decimal "lng",     precision: 14, scale: 10
     t.integer "index"
   end
 
@@ -68,8 +68,8 @@ ActiveRecord::Schema.define(version: 20131117045256) do
   create_table "stops", force: true do |t|
     t.integer "stop_number"
     t.text    "name"
-    t.float   "lat"
-    t.float   "lng"
+    t.decimal "lat",         precision: 14, scale: 10
+    t.decimal "lng",         precision: 14, scale: 10
   end
 
   create_table "trips", force: true do |t|
@@ -85,8 +85,8 @@ ActiveRecord::Schema.define(version: 20131117045256) do
 
   create_table "user_locations", force: true do |t|
     t.integer  "user_id"
-    t.float    "lat"
-    t.float    "lng"
+    t.decimal  "lat",        precision: 14, scale: 10
+    t.decimal  "lng",        precision: 14, scale: 10
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -34,11 +34,7 @@ class Route < ActiveRecord::Base
   end
 
   def self.sort_by_names! arr
-    get_short_name = if block_given? then
-                       lambda { |o| yield o }
-                     else
-                       lambda &:short_name
-                     end
+    get_short_name = block_given? ? lambda { |o| yield o } : lambda &:short_name
 
     arr.sort! do |o1, o2|
       s1 = get_short_name.call o1

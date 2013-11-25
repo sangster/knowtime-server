@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
 
   IS_MOVING_DELTA = 10 # metres
   AVERAGE_OLDER_WEIGHT = 0.25
+  RECENT_ENTRIES_TIME = 30.seconds
+
 
   def self.get user_uuid_str
     Rails.cache.fetch("user_#{user_uuid_str}", expires_in: 10.minutes) do
@@ -13,11 +15,9 @@ class User < ActiveRecord::Base
     end
   end
 
-
   def uuid_str
     @_uuid_str ||= UUIDTools::UUID.parse_raw uuid
   end
-
 
   def is_moving?
     locs = user_locations
@@ -26,7 +26,6 @@ class User < ActiveRecord::Base
     first = locs.first
     locs[1..-1].find(false) { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
   end
-
 
   def average_location
     @_average_location ||= calculate_average_location
@@ -37,14 +36,15 @@ class User < ActiveRecord::Base
 
 
   def calculate_average_location
-    if user_locations.empty?
+    newest_locations = user_locations.where 'created_at > ?', (DateTime.now - RECENT_ENTRIES_TIME)
+    if newest_locations.empty?
       nil
     else
-      first = user_locations.first
+      first = newest_locations.first
       lat = first.lat
       lng = first.lng
 
-      user_locations[1..-1].each do |loc|
+      newest_locations[1..-1].each do |loc|
         lat = lat + AVERAGE_OLDER_WEIGHT * (loc.lat - lat)
         lng = lng + AVERAGE_OLDER_WEIGHT * (loc.lng - lng)
       end

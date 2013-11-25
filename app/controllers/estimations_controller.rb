@@ -22,7 +22,7 @@ class EstimationsController < ApplicationController
     estimates = []
     options = next_stops.dup
 
-    groups.each do |group|
+    groups.select { |g| not g.average_location.nil? }.each do |group|
       group_loc = group.average_location
 
       closest_index = 0
@@ -56,6 +56,6 @@ class EstimationsController < ApplicationController
       end
     end
 
-    estimates
+    estimates.uniq! { |e| e.next_stop.stop_number }
   end
 end

@@ -112,6 +112,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   mysql2
   rails (= 4.0.1)
+  rake
   rubyzip
   sdoc
   uuidtools

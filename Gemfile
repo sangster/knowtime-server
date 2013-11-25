@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '4.0.1'
+gem 'rake'
 
 gem 'mysql2'
 gem 'rubyzip'

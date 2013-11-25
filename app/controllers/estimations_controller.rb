@@ -18,7 +18,7 @@ class EstimationsController < ApplicationController
   private
 
 
-  def map_estimates groups, next_stops
+  def map_estimates(groups, next_stops)
     estimates = []
     options = next_stops.dup
 

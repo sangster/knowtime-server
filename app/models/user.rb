@@ -24,16 +24,16 @@ class User < ActiveRecord::Base
     return false if locs.length < 2
 
     first = locs.first
-    locs[1..-1].find(false) { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
+    first_distant_location locs[1..-1].find { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
+
+    not first_distant_location.nil?
   end
 
   def average_location
     @_average_location ||= calculate_average_location
   end
 
-
   private
-
 
   def calculate_average_location
     newest_locations = user_locations.where 'created_at > ?', (DateTime.now - RECENT_ENTRIES_TIME)

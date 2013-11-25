@@ -65,6 +65,6 @@ class UserGroup
       lng_sum = lng_sum + loc.lng
     end
 
-    Location.new lat_sum/@users.length, lng_sum/@users.length
+    Location.new lat_sum/active_users.length, lng_sum/active_users.length
   end
 end

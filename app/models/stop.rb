@@ -1,7 +1,7 @@
 require 'ostruct'
 
 class Stop < ActiveRecord::Base
-  has_many :stop_times
+  has_many :stop_times, inverse_of: :stop
 
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
 

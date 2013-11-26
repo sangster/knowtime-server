@@ -4,8 +4,7 @@ class EstimationsController < ApplicationController
     now_minutes = now.hour * 60 + now.minute
     short_name = params[:short_name]
 
-    stop_times = StopTime.for_short_name_and_calendars short_name, Calendar.for_date(now)
-    next_stops = stop_times.select { |st| st.departure >= now_minutes }.sort! { |x, y| x.arrival <=> y.arrival }
+    next_stops = StopTime.next_stops short_name, now, 30.minutes
 
     users = User.where short_name: short_name
     groups = UserGroup.create_groups users
@@ -20,7 +19,7 @@ class EstimationsController < ApplicationController
 
   def map_estimates(groups, next_stops)
     estimates = []
-    options = next_stops.dup
+    options = next_stops
 
     groups.select { |g| not g.average_location.nil? }.each do |group|
       group_loc = group.average_location

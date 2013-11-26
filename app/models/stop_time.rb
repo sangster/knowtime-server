@@ -1,5 +1,5 @@
 class StopTime < ActiveRecord::Base
-  belongs_to :stop
+  belongs_to :stop, inverse_of: :stop_times
   belongs_to :trip
 
 
@@ -19,11 +19,18 @@ class StopTime < ActiveRecord::Base
     str[0, 2].to_i * 60 + str[3, 2].to_i
   end
 
-  def self.for_short_name_and_calendars short_name, calendars
-    Rails.cache.fetch("stop_times_route_#{short_name}_calendars_#{calendars.collect(&:id).join ','}",
-                      expires_in: 1.hour) do
-      StopTime.uniq.joins('JOIN trips ON trip_id = trips.id', 'JOIN routes ON route_id = routes.id') \
-        .where('short_name = ?', short_name).where 'trips.calendar_id' => calendars
+  def self.next_stops(short_name, time, duration = nil)
+    Rails.cache.fetch("next_stops_#{short_name}_#{time.strftime '%F_%R'}_#{duration}", expires_in: 2.minutes) do
+      minutes = time.hour * 60 + time.minute
+      st = StopTime.uniq.joins(:trip, trip: :route).includes(:stop)
+      st.order(:arrival)
+      st = st.where('short_name = ?', short_name).where 'trips.calendar_id' => Calendar.for_date(time)
+      if duration
+        st.where departure: (minutes..(minutes + duration/60))
+      else
+        st.where 'departure >= ?', minutes
+      end
+      st.to_a
     end
   end
 
@@ -37,7 +44,7 @@ class StopTime < ActiveRecord::Base
 
   private
 
-  def minutes_to_time minutes
+  def minutes_to_time(minutes)
     "%02d:%02d" % [minutes/60, minutes%60]
   end
 end

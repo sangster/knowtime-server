@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131117045256) do
+ActiveRecord::Schema.define(version: 20131126025545) do
 
   create_table "calendar_exceptions", force: true do |t|
     t.integer "calendar_id"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 20131117045256) do
     t.datetime "updated_at"
   end
 
+  add_index "user_locations", ["created_at"], name: "index_user_locations_on_created_at", using: :btree
   add_index "user_locations", ["user_id"], name: "index_user_locations_on_user_id", using: :btree
 
   create_table "users", force: true do |t|

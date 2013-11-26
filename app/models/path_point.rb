@@ -2,7 +2,7 @@ class PathPoint < ActiveRecord::Base
   belongs_to :path, inverse_of: :path_points
 
 
-  def self.new_from_csv row
+  def self.new_from_csv(row)
     path_id = Uuid.get_id Path.uuid_namespace, row[:shape_id]
     if path_id.nil?
       path = Path.new

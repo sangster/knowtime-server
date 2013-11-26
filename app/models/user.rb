@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   AVERAGE_OLDER_WEIGHT = 0.25
 
 
-  def self.get user_uuid_str
+  def self.get(user_uuid_str)
     Rails.cache.fetch("user_#{user_uuid_str}", expires_in: 10.minutes) do
       find_by uuid: UUIDTools::UUID.parse(user_uuid_str).raw
     end
@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
         lng = lng + AVERAGE_OLDER_WEIGHT * (loc.lng - lng)
       end
 
-      OpenStruct.new created_at: first.created_at, lat: lat, lng: lng
+      Location.new lat, lng, first.created_at
     end
   end
 end

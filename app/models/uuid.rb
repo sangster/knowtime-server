@@ -4,19 +4,17 @@ class Uuid < ActiveRecord::Base
   belongs_to :idable, polymorphic: true, autosave: true
 
 
-  def self.create_namespace str
+  def self.create_namespace(str)
     Rails.cache.fetch("uuid_namespace_#{str}", expires_in: 24.hours) do
       UUIDTools::UUID.sha1_create UUIDTools::UUID_OID_NAMESPACE, str
     end
   end
 
-
-  def self.create namespace, str
+  def self.create(namespace, str)
     UUIDTools::UUID.sha1_create namespace, str
   end
 
-
-  def self.find_idable idable_type, uuid_str
+  def self.find_idable(idable_type, uuid_str)
     key = "idable_#{idable_type}_#{uuid_str}"
     idable = Rails.cache.read key
     return idable unless idable.nil?
@@ -29,8 +27,7 @@ class Uuid < ActiveRecord::Base
     idable
   end
 
-
-  def self.get_id namespace, str
+  def self.get_id(namespace, str)
     uuid_obj = UUIDTools::UUID.sha1_create(namespace, str)
     uuid_str = uuid_obj.to_s
     key = "uuid_id_#{uuid_str}"
@@ -48,8 +45,7 @@ class Uuid < ActiveRecord::Base
     idable_id
   end
 
-
-  def self.get namespace, str
+  def self.get(namespace, str)
     uuid_obj = UUIDTools::UUID.sha1_create(namespace, str)
     uuid_str = uuid_obj.to_s
     key = "uuid_#{uuid_str}"
@@ -59,35 +55,29 @@ class Uuid < ActiveRecord::Base
     uuid
   end
 
-
-  def self.from_trip_id trip_id
+  def self.from_trip_id(trip_id)
     pluck_uuid 'Trip', trip_id
   end
 
-
-  def self.from_route_id route_id
+  def self.from_route_id(route_id)
     pluck_uuid 'Route', route_id
   end
 
-
-  def self.from_calendar_id calendar_id
+  def self.from_calendar_id(calendar_id)
     pluck_uuid 'Calendar', calendar_id
   end
 
-
-  def self.from_path_id path_id
+  def self.from_path_id(path_id)
     pluck_uuid 'Path', path_id
   end
 
-
-  def self.pluck_uuid type, id
+  def self.pluck_uuid(type, id)
     key = "uuid_#{type}_id_#{id}"
     Rails.cache.fetch(key, eternal: true) do
       u = Uuid.where('idable_type = ? AND idable_id = ?', type, id).pluck(:uuid).first
       UUIDTools::UUID.parse_raw u
     end
   end
-
 
   def raw
     @_raw ||= uuid.raw

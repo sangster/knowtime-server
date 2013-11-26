@@ -3,27 +3,23 @@ class Route < ActiveRecord::Base
   has_many :trips, inverse_of: :route
 
 
-  def self.new_from_csv row
+  def self.new_from_csv(row)
     route = Route.new short_name: row[:route_short_name], long_name: row[:route_long_name]
     route.build_uuid uuid: Uuid.create(uuid_namespace, row[:route_id]).raw
     route
   end
 
-
   def self.uuid_namespace
     Uuid.create_namespace 'Routes'
   end
 
-
-  def self.for_uuid uuid_str
+  def self.for_uuid(uuid_str)
     Uuid.find_idable 'Route', uuid_str
   end
-
 
   def self.names
     Rails.cache.fetch("route_names", expire_in: 24.hours) { uncached_names }
   end
-
 
   def self.uncached_names
     names = Route.uniq.pluck(:short_name, :long_name).collect do |names|
@@ -33,7 +29,7 @@ class Route < ActiveRecord::Base
     sort_by_names! names
   end
 
-  def self.sort_by_names! arr
+  def self.sort_by_names!(arr)
     get_short_name = block_given? ? lambda { |o| yield o } : lambda(&:short_name)
 
     arr.sort! do |o1, o2|
@@ -50,11 +46,9 @@ class Route < ActiveRecord::Base
     end
   end
 
-
-  def self.is_int? str
+  def self.is_int?(str)
     true if Integer(str) rescue false
   end
-
 
   private_class_method :uncached_names, :'is_int?'
 
@@ -65,8 +59,7 @@ class Route < ActiveRecord::Base
     end
   end
 
-
-  def self.simple_query key, val
+  def self.simple_query(key, val)
     routes = case key
                when 'short'
                  where short_name: val
@@ -85,8 +78,7 @@ class Route < ActiveRecord::Base
     sort_by_names! routes
   end
 
-
-  def self.short_name_exists? short_name
+  def self.short_name_exists?(short_name)
     Rails.cache.fetch("short_name_exists_#{short_name}", expires_in: 1.hour) do
       Route.exists? short_name: short_name
     end

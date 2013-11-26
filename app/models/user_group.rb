@@ -4,7 +4,7 @@ class UserGroup
 
   GROUP_RADIUS = 20 # metres
 
-  def self.create_groups users
+  def self.create_groups(users)
     groups = []
     users.select(&:is_moving?).each do |user|
       group = closest_group(groups, user) || (groups << UserGroup.new and groups.last)
@@ -13,7 +13,7 @@ class UserGroup
     groups
   end
 
-  def self.closest_group groups, user
+  def self.closest_group(groups, user)
     user_location = user.average_location
     closest = nil
     closest_distance = Distanceable::EARTH_DIAMETER
@@ -34,7 +34,7 @@ class UserGroup
     @average_location = nil
   end
 
-  def add user
+  def add(user)
     self.users << user
     @average_location = nil
   end

@@ -36,7 +36,6 @@ class DataPull < ActiveRecord::Base
     end
   end
 
-
   def self.bulk_insert_rows(zip, zip_filename, model_class)
     logger.info "Deleting all rows from #{model_class}"
     model_class.delete_all
@@ -62,11 +61,9 @@ class DataPull < ActiveRecord::Base
     end
   end
 
-
-  def self.fetch_remote_etag url
+  def self.fetch_remote_etag(url)
     Net::HTTP.start(url.host) { |http| http.request_head(url.path)['etag'] }
   end
-
 
   def self.download_zip(url, &block)
     file = Tempfile.new 'metro_transit'

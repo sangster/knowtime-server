@@ -6,28 +6,28 @@ class Stop < ActiveRecord::Base
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
 
 
-  def self.new_from_csv row
+  def self.new_from_csv(row)
     Stop.new stop_number: row[:stop_id], name: format_short_name(row[:stop_name]), lat: row[:stop_lat], lng: row[:stop_lon]
   end
 
-  def self.format_short_name str
+  def self.format_short_name(str)
     str.strip!
     TO_LOWER.each { |lower| str.gsub! /\b#{lower}\b/, lower.downcase }
     str[0] = str[0].upcase
     str
   end
 
-  def self.get stop_number
+  def self.get(stop_number)
     Rails.cache.fetch("stop_#{stop_number}", expire_in: 1.day) do
       Stop.find_by_stop_number stop_number
     end
   end
 
-  def self.get_id stop_number
+  def self.get_id(stop_number)
     get(stop_number).id
   end
 
-  def find_visitors calendars
+  def find_visitors(calendars)
     Rails.cache.fetch("stop_#{id}_visitors_#{calendars.collect(&:id).join ','}", expires_in: 1.hour) do
       uncached_find_visitors calendars
     end
@@ -61,7 +61,7 @@ class Stop < ActiveRecord::Base
   private
 
 
-  def uncached_find_visitors calendars
+  def uncached_find_visitors(calendars)
     trips = Trip.joins('JOIN stop_times on trip_id = trips.id') \
       .where(calendar_id: calendars).where('stop_id = ?', id).order 'arrival'
 

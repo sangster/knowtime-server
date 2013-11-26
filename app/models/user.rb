@@ -4,11 +4,8 @@ require 'ostruct'
 class User < ActiveRecord::Base
   has_many :user_locations, inverse_of: :user
 
-  scope :newest_locations, -> { where 'created_at > ?', (DateTime.now - RECENT_ENTRIES_TIME) }
-
   IS_MOVING_DELTA = 10 # metres
   AVERAGE_OLDER_WEIGHT = 0.25
-  RECENT_ENTRIES_TIME = 30.seconds
 
 
   def self.get user_uuid_str
@@ -22,7 +19,7 @@ class User < ActiveRecord::Base
   end
 
   def is_moving?
-    locs = self.newest_locations
+    locs = self.user_locations.newest
     return false if locs.length < 2
 
     first = locs.first
@@ -38,14 +35,16 @@ class User < ActiveRecord::Base
   private
 
   def calculate_average_location
-    if self.newest_locations.empty?
+    newest_locations = self.user_locations.newest
+
+    if newest_locations.empty?
       nil
     else
-      first = self.newest_locations.first
+      first = newest_locations.first
       lat = first.lat
       lng = first.lng
 
-      self.newest_locations[1..-1].each do |loc|
+      newest_locations[1..-1].each do |loc|
         lat = lat + AVERAGE_OLDER_WEIGHT * (loc.lat - lat)
         lng = lng + AVERAGE_OLDER_WEIGHT * (loc.lng - lng)
       end

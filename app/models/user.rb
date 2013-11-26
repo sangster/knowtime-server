@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
     return false if locs.length < 2
 
     first = locs.first
-    first_distant_location = locs[1..-1].find { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
+    first_distant_location = locs[1..-1].find { |loc| not loc.nil? and loc.distance_from(first) > IS_MOVING_DELTA }
 
     not first_distant_location.nil?
   end

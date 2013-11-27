@@ -1,20 +1,27 @@
-class Trip < ActiveRecord::Base
-  has_one :uuid, as: :idable
-  has_many :stop_times, inverse_of: :trip
-  belongs_to :route, inverse_of: :trips
-  belongs_to :calendar, inverse_of: :trips
-  belongs_to :path, inverse_of: :trips
-  has_many :stops, through: :stop_times
+class Trip
+  include Mongoid::Document
+
+  field :_id, type: String
+  field :h, as: :headsign, type: String
+
+  #belongs_to :route
+  belongs_to :calendar
+  belongs_to :path
+
+  embeds_one :route
+  has_many :stop_times
+
+  #has_one :uuid, as: :idable
+  #has_many :stop_times, inverse_of: :trip
+  #belongs_to :route, inverse_of: :trips
+  #belongs_to :calendar, inverse_of: :trips
+  #belongs_to :path, inverse_of: :trips
+  #has_many :stops, through: :stop_times
 
 
   def self.new_from_csv(row)
-    route_id = Uuid.get_id Route.uuid_namespace, row[:route_id]
-    calendar_id = Uuid.get_id Calendar.uuid_namespace, row[:service_id]
-    path_id = get_path_id row
-
-    trip = Trip.new headsign: row[:trip_headsign], route_id: route_id, calendar_id: calendar_id, path_id: path_id
-    trip.build_uuid uuid: Uuid.create(uuid_namespace, row[:trip_id]).raw
-    trip
+    {_id: row[:trip_id], headsign: row[:trip_headsign],
+     route: Route.find(row[:route_id]), calendar_id: row[:service_id], path_id: row[:shape_id]}
   end
 
   def self.for_uuid(uuid_str)
@@ -26,8 +33,8 @@ class Trip < ActiveRecord::Base
     if row[:shape_id].nil?
       Path.create.id
     else
-      uuid_id = Uuid.get_id Path.uuid_namespace, row[:shape_id]
-      uuid_id.nil? ? Path.create.id : uuid_id
+      uuid_id = Uuid.get_id Path.uuid_namespace,
+                            uuid_id.nil? ? Path.create.id : uuid_id
     end
   end
 

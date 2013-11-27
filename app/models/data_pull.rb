@@ -4,7 +4,13 @@ require 'zip/filesystem'
 require 'csv'
 
 
-class DataPull < ActiveRecord::Base
+class DataPull
+  include Mongoid::Document
+
+  field :url, type: String
+  field :etag, type: String
+
+
   BULK_INSERT_SIZE = 1024
 
   # TODO replace with cron job
@@ -24,14 +30,14 @@ class DataPull < ActiveRecord::Base
 
     DataPull.download_zip url do |zip|
       bulk_insert_rows zip, 'stops.txt', Stop
-      bulk_insert_rows zip, 'shapes.txt', PathPoint
+      bulk_insert_rows zip, 'shapes.txt', Path
       bulk_insert_rows zip, 'routes.txt', Route
       bulk_insert_rows zip, 'calendar.txt', Calendar
       bulk_insert_rows zip, 'calendar_dates.txt', CalendarException
       bulk_insert_rows zip, 'trips.txt', Trip
       bulk_insert_rows zip, 'stop_times.txt', StopTime
 
-      DataPull.create url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
+      DataPull.create! url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
       logger.info 'Finished reading CSV files'
     end
   end
@@ -47,7 +53,8 @@ class DataPull < ActiveRecord::Base
         models << model_class.new_from_csv(row)
 
         if models.length == BULK_INSERT_SIZE
-          transaction { models.each &:save }
+          model_class.create! models unless (model_class.skip_bulk_insert? rescue false)
+          #transaction { models.each &:save }
           total = total + models.length
           models.clear
           logger.info "Inserted #{BULK_INSERT_SIZE} objects for #{model_class} (total: #{total})"
@@ -56,7 +63,8 @@ class DataPull < ActiveRecord::Base
     end
 
     unless models.empty? # whatever is left
-      transaction { models.each &:save }
+      model_class.create! models unless (model_class.skip_final_bulk_insert? rescue false)
+      #transaction { models.each &:save }
       logger.info "Inserted #{models.length} objects for #{model_class} (total: #{total + models.length})"
     end
   end

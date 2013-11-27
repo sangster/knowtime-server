@@ -3,11 +3,11 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.1'
 gem 'rake'
 
-gem 'mysql2'
+gem 'sepastian-mongoid-rails4', '~> 4.0.1.alpha'
+
 gem 'rubyzip'
 gem 'uuidtools'
 gem 'dalli'
-gem 'activerecord-import'
 gem 'jbuilder', '~> 1.2'
 
 group :doc do

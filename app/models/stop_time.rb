@@ -1,14 +1,22 @@
-class StopTime < ActiveRecord::Base
-  belongs_to :stop, inverse_of: :stop_times
-  belongs_to :trip
+class StopTime
+  include Mongoid::Document
+
+  field :n, as: :stop_number, type: Integer
+  field :i, as: :index, type: Integer
+  field :a, as: :arrival, type: Integer
+  field :d, as: :departure, type: Integer
+
+  index stop_number: 1
+  index arrival: 1
+  index departure: 1
+
+  #belongs_to :stop, inverse_of: :stop_times
+  belongs_to :trip, index: true
 
 
   def self.new_from_csv(row)
-    trip_id = Uuid.get_id Trip.uuid_namespace, row[:trip_id]
-    stop_id = Stop.get_id row[:stop_id].to_i
-
-    StopTime.new trip_id: trip_id, stop_id: stop_id, index: row[:stop_sequence],
-                 arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time])
+    {trip_id: row[:trip_id], stop_number: row[:stop_id].to_i, index: row[:stop_sequence],
+     arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time])}
   end
 
   def self.for_stop_and_trips(stop, trips)

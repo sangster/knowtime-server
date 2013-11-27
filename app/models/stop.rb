@@ -1,13 +1,25 @@
 require 'ostruct'
 
-class Stop < ActiveRecord::Base
-  has_many :stop_times, inverse_of: :stop
+class Stop
+  include Mongoid::Document
+
+  field :_id, type: Integer
+  field :n, as: :name, type: String
+  field :t, as: :lat, type: Float
+  field :g, as: :lng, type: Float
 
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
 
 
   def self.new_from_csv(row)
-    Stop.new stop_number: row[:stop_id], name: format_short_name(row[:stop_name]), lat: row[:stop_lat], lng: row[:stop_lon]
+    {_id: row[:stop_id],
+     name: format_short_name(row[:stop_name]),
+     lat: row[:stop_lat],
+     lng: row[:stop_lon]}
+  end
+
+  def stop_number
+    self._id
   end
 
   def self.format_short_name(str)

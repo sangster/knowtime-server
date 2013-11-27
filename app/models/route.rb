@@ -1,12 +1,20 @@
-class Route < ActiveRecord::Base
-  has_one :uuid, as: :idable
-  has_many :trips, inverse_of: :route
+class Route
+  include Mongoid::Document
+
+  field :_id, type: String
+  field :s, as: :short_name, type: String
+  field :l, as: :long_name, type: String
+
+  index short_name: 1
+
+  has_one :trip
+
+  #has_one :uuid, as: :idable
+  #has_many :trips, inverse_of: :route
 
 
   def self.new_from_csv(row)
-    route = Route.new short_name: row[:route_short_name], long_name: row[:route_long_name]
-    route.build_uuid uuid: Uuid.create(uuid_namespace, row[:route_id]).raw
-    route
+    {_id: row[:route_id], short_name: row[:route_short_name], long_name: row[:route_long_name]}
   end
 
   def self.uuid_namespace
@@ -18,7 +26,7 @@ class Route < ActiveRecord::Base
   end
 
   def self.names
-    Rails.cache.fetch("route_names", expire_in: 24.hours) { uncached_names }
+    Rails.cache.fetch('route_names', expire_in: 24.hours) { uncached_names }
   end
 
   def self.uncached_names

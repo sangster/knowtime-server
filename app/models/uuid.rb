@@ -1,7 +1,7 @@
 require 'uuidtools'
 
-class Uuid < ActiveRecord::Base
-  belongs_to :idable, polymorphic: true, autosave: true
+class Uuid
+  #belongs_to :idable, polymorphic: true, autosave: true
 
 
   def self.create_namespace(str)

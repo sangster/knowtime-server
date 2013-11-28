@@ -1,21 +1,28 @@
 require 'uuidtools'
 require 'ostruct'
 
-class User < ActiveRecord::Base
-  has_many :user_locations, inverse_of: :user
+class User
+  include Mongoid::Document
+
+  field :s, as: :short_name, type: String
+  field :u, as: :uuid, type: BSON::Binary
+
+  embeds_many :user_locations, inverse_of: :user
 
   IS_MOVING_DELTA = 10 # metres
   AVERAGE_OLDER_WEIGHT = 0.25
 
 
   def self.get(user_uuid_str)
-    Rails.cache.fetch("user_#{user_uuid_str}", expires_in: 10.minutes) do
-      find_by uuid: UUIDTools::UUID.parse(user_uuid_str).raw
-    end
+    uuid = BSON::Binary.new UUIDTools::UUID.parse(user_uuid_str).raw, :uuid
+
+    #Rails.cache.fetch("user_#{user_uuid_str}", expires_in: 10.minutes) do
+    where(uuid: uuid).first rescue nil
+    #end
   end
 
   def uuid_str
-    @_uuid_str ||= UUIDTools::UUID.parse_raw uuid
+    @_uuid_str ||= UUIDTools::UUID.parse_raw uuid.data
   end
 
   def is_moving?

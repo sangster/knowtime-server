@@ -1,58 +1,32 @@
 require 'uuidtools'
 
 class Uuid
+  include Mongoid::Document
+
+  field :_id, type: String
+  field :u, as: :uuid, type: BSON::Binary
+
+  index uuid: 1
+
   #belongs_to :idable, polymorphic: true, autosave: true
 
 
-  def self.create_namespace(str)
-    Rails.cache.fetch("uuid_namespace_#{str}", expires_in: 24.hours) do
-      UUIDTools::UUID.sha1_create UUIDTools::UUID_OID_NAMESPACE, str
-    end
-  end
+  def self.for key
+    Rails.cache.fetch "uuid_for_#{key}", expires_in: 1.hour do
+      key = key.id if Mongoid::Document === key
 
-  def self.create(namespace, str)
-    UUIDTools::UUID.sha1_create namespace, str
-  end
-
-  def self.find_idable(idable_type, uuid_str)
-    key = "idable_#{idable_type}_#{uuid_str}"
-    idable = Rails.cache.read key
-    return idable unless idable.nil?
-
-    idable = Uuid.find_by(idable_type: idable_type, uuid: UUIDTools::UUID.parse(uuid_str).raw).idable rescue nil
-    unless idable.nil?
-      idable.prepare_for_caching if idable.respond_to? :prepare_for_caching
-      Rails.cache.write key, idable, expires_in: 1.hour
-    end
-    idable
-  end
-
-  def self.get_id(namespace, str)
-    uuid_obj = UUIDTools::UUID.sha1_create(namespace, str)
-    uuid_str = uuid_obj.to_s
-    key = "uuid_id_#{uuid_str}"
-
-    idable_id = Rails.cache.fetch(key, expires_in: 6.hours) do
-      uuid = Uuid.find_by uuid: uuid_obj.raw
-      if uuid.nil? then
-        nil
-      else
-        uuid.idable_id
+      u = Uuid.where(_id: key).first_or_create! do |u|
+        u.uuid = BSON::Binary.new UUIDTools::UUID.random_create.raw, :uuid
       end
+      UUIDTools::UUID.parse_raw u.uuid.data
     end
-
-    Rails.cache.delete key if idable_id.nil?
-    idable_id
   end
 
-  def self.get(namespace, str)
-    uuid_obj = UUIDTools::UUID.sha1_create(namespace, str)
-    uuid_str = uuid_obj.to_s
-    key = "uuid_#{uuid_str}"
-    uuid = Rails.cache.fetch(key, expires_in: 6.hours) { Uuid.find_by uuid: uuid_obj.raw }
-
-    Rails.cache.delete key if uuid.nil?
-    uuid
+  def self.key_for uuid_str
+    uuid = BSON::Binary.new UUIDTools::UUID.parse(uuid_str).raw, :uuid
+    Uuid.where(uuid: uuid).first.id
+  rescue
+    nil
   end
 
   def self.from_trip_id(trip_id)

@@ -2,13 +2,13 @@ class Path
   include Mongoid::Document
 
   field :_id, type: String
-  embeds_many :path_points
+  embeds_many :path_points, inverse_of: :path
 
   #has_one :uuid, as: :idable
   #has_many :path_points, inverse_of: :path
   #has_many :trips, inverse_of: :path
 
-  #alias_method :uncached_path_points, :path_points
+  alias_method :uncached_path_points, :path_points
 
   @@_p = nil
   @@_id = nil
@@ -39,25 +39,22 @@ class Path
     true
   end
 
-
-  def self.uuid_namespace
-    Uuid.create_namespace 'Paths'
-  end
-
-
   def self.for_uuid uuid_str
-    Uuid.find_idable 'Path', uuid_str
+    key = Uuid.key_for uuid_str
+    Path.find key unless key.nil?
   end
-
 
   def self.for_route_and_calendars(route, calendars)
     Rails.cache.fetch("path_for_route_#{route.id}_calendar_#{calendars.collect(&:id).join ','}", expires_in: 1.hour) do
-      Trip.where(route_id: route.id, calendar_id: calendars).collect(&:path).uniq
+      Trip.where('route._id' => route.id).where(:calendar_id.in => calendars).collect(&:path).uniq
     end
   end
 
+  def uuid
+    Uuid.for self
+  end
 
-  #def path_points
-  #  Rails.cache.fetch("path_points_#{id}") { uncached_path_points.to_a }
-  #end
+  def path_points
+    Rails.cache.fetch("path_points_#{id}") { uncached_path_points.to_a }
+  end
 end

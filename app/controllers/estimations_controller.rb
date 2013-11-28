@@ -41,12 +41,12 @@ class EstimationsController < ApplicationController
     end
 
     options.each do |opt|
-      estimates << BusEstimation.new(opt.stop, opt.arrival, 0, 0)
+      estimates << BusEstimation.new(opt.stop_number, opt.arrival, 0, 0)
     end
 
     stop_numbers_seen = []
     estimates.each do |est|
-      stop_number = est.next_stop.stop_number
+      stop_number = est.stop_number
 
       if stop_numbers_seen.include? stop_number
         estimates.delete est
@@ -55,6 +55,6 @@ class EstimationsController < ApplicationController
       end
     end
 
-    estimates.uniq! { |e| e.next_stop.stop_number }
+    estimates.uniq! { |e| e.stop_number }
   end
 end

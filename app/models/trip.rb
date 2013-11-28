@@ -4,19 +4,11 @@ class Trip
   field :_id, type: String
   field :h, as: :headsign, type: String
 
-  #belongs_to :route
   belongs_to :calendar
   belongs_to :path
 
   embeds_one :route
   has_many :stop_times
-
-  #has_one :uuid, as: :idable
-  #has_many :stop_times, inverse_of: :trip
-  #belongs_to :route, inverse_of: :trips
-  #belongs_to :calendar, inverse_of: :trips
-  #belongs_to :path, inverse_of: :trips
-  #has_many :stops, through: :stop_times
 
 
   def self.new_from_csv(row)
@@ -25,37 +17,12 @@ class Trip
   end
 
   def self.for_uuid(uuid_str)
-    Uuid.find_idable 'Trip', uuid_str
-  end
-
-  # Ferries do not have paths, so create a blank one
-  def self.get_path_id(row)
-    if row[:shape_id].nil?
-      Path.create.id
-    else
-      uuid_id = Uuid.get_id Path.uuid_namespace,
-                            uuid_id.nil? ? Path.create.id : uuid_id
-    end
-  end
-
-  def self.uuid_namespace
-    Uuid.create_namespace 'Trips'
+    key = Uuid.key_for uuid_str
+    Trip.find key unless key.nil?
   end
 
   def self.get(str)
     Rails.cache.fetch("trip_#{str}") { Uuid.get(Trip.uuid_namespace, str).idable }
-  end
-
-  def route_uuid
-    Uuid.from_route_id route_id
-  end
-
-  def calendar_uuid
-    Uuid.from_calendar_id calendar_id
-  end
-
-  def path_uuid
-    Uuid.from_path_id path_id
   end
 
   alias_method :uncached_stop_times, :stop_times
@@ -66,13 +33,17 @@ class Trip
 
   def is_running?(time)
     minutes = case time
-                when Integer
-                  time
                 when Date
                   time.hour * 60 + time.minute
+                else
+                  time.to_i
               end
 
-    stops = stop_times.order :index
+    stops = stop_times.asc :index
     (stops.first.arrival..stops.last.departure) === minutes
+  end
+
+  def uuid
+    Uuid.for self
   end
 end

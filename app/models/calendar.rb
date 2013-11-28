@@ -15,6 +15,7 @@ class Calendar
   index sunday: 1
 
   embeds_many :calendar_exceptions
+  has_many :trips
 
   def self.new_from_csv(row)
 
@@ -38,11 +39,18 @@ class Calendar
     for_date Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
   end
 
-  def self.uuid_namespace
-    Uuid.create_namespace 'Calendars'
+  def self.for_date(date)
+    Rails.cache.fetch("calendars_for_date_#{date.to_s}", expires_in: 1.hour) do
+      Calendar.where(:start_date.lte => date).where(:end_date.gte => date).to_a
+    end
   end
 
   def self.for_uuid(uuid_str)
-    Uuid.find_idable 'Calendar', uuid_str
+    key = Uuid.key_for uuid_str
+    Calendar.find key unless key.nil?
+  end
+
+  def uuid
+    Uuid.for self
   end
 end

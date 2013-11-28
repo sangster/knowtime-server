@@ -3,5 +3,5 @@ json.location do
   json.lng est.lng
 end
 
-json.nextStopNumber est.next_stop.stop_number
+json.nextStopNumber est.stop_number
 json.estimateArrival est.arrival_str

@@ -7,32 +7,25 @@ class Route
 
   index short_name: 1
 
-  has_one :trip
-
-  #has_one :uuid, as: :idable
-  #has_many :trips, inverse_of: :route
-
 
   def self.new_from_csv(row)
     {_id: row[:route_id], short_name: row[:route_short_name], long_name: row[:route_long_name]}
   end
 
-  def self.uuid_namespace
-    Uuid.create_namespace 'Routes'
-  end
-
   def self.for_uuid(uuid_str)
-    Uuid.find_idable 'Route', uuid_str
+    key = Uuid.key_for uuid_str
+    Route.find key unless key.nil?
   end
 
   def self.names
-    Rails.cache.fetch('route_names', expire_in: 24.hours) { uncached_names }
+    Rails.cache.fetch('route_names', expire_in: 1.hour) { uncached_names }
+    #uncached_names
   end
 
   def self.uncached_names
-    names = Route.uniq.pluck(:short_name, :long_name).collect do |names|
+    names = Route.all.pluck(:short_name, :long_name).collect do |names|
       OpenStruct.new short_name: names[0], long_name: names[1]
-    end
+    end.uniq
 
     sort_by_names! names
   end
@@ -63,7 +56,8 @@ class Route
 
   def self.for_short_name_and_calendars short_name, calendars
     Rails.cache.fetch("routes_#{short_name}_#{calendars.collect(&:id).join ','}", expires_in: 6.hours) do
-      sort_by_names! uniq.joins(:trips).where('trips.calendar_id' => calendars, short_name: short_name)
+      trips = Trip.where('route.s' => short_name).where(:calendar.in => calendars)
+      sort_by_names! trips.distinct(:route).collect { |r| Route.new r }
     end
   end
 
@@ -74,22 +68,26 @@ class Route
                when 'long'
                  where long_name: val
                when 'stop'
-                 stop = Stop.get val.to_i
-                 uniq.joins(:trips, 'JOIN stop_times on trip_id = trips.id').where 'stop_times.stop_id = ?', stop.id
+                 StopTime.includes(:trip).where(stop_number: val.to_i).collect {|st| st.trip.route }.uniq
                when 'date'
                  calendars = Calendar.for_date Date.parse(val)
-                 uniq.joins(:trips).where 'trips.calendar_id' => calendars
+                 Trip.where(:calendar.in => calendars).distinct(:route).collect { |r| Route.new r }.uniq
                else
-                 raise ActiveRecord::RecordNotFound
+                 []
              end
 
     sort_by_names! routes
   end
 
   def self.short_name_exists?(short_name)
-    Rails.cache.fetch("short_name_exists_#{short_name}", expires_in: 1.hour) do
-      Route.exists? short_name: short_name
-    end
+    Route.where(short_name: short_name).exists?
   end
 
+  def uuid
+    Uuid.for self
+  end
+
+  def trips
+    Trip.where('route._id' => id) #.to_a
+  end
 end

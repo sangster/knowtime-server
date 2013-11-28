@@ -1,1 +1,1 @@
-json.public! 'uuids_only', trip: @trip
+json.partial! 'uuids_only', trip: @trip

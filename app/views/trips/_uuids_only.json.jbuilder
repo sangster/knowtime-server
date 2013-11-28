@@ -1,5 +1,5 @@
-json.tripId Uuid.from_trip_id trip.id
+json.tripId trip.uuid
 json.tripHeadsign trip.headsign
-json.routeId trip.route_uuid
-json.calendarId trip.calendar_uuid
-json.pathId trip.path_uuid
+json.routeId trip.route.uuid
+json.calendarId trip.calendar.uuid
+json.pathId trip.path.uuid

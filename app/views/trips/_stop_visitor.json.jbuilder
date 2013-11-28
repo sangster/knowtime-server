@@ -1,2 +1,2 @@
-json.tripId Uuid.from_trip_id trip.id
+json.tripId trip.uuid
 json.headsign trip.headsign

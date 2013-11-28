@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
   def show
     @trip = Trip.for_uuid params[:trip_uuid]
-    raise ActiveRecord::RecordNotFound if @trip.nil?
+    render_error :not_found, "no trip found for UUID: #{params[:trip_uuid]}" if @trip.nil?
   end
 end

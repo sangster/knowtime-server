@@ -8,18 +8,17 @@ class Stop
   field :t, as: :lat, type: Float
   field :g, as: :lng, type: Float
 
+  has_many :stop_times, inverse_of: :stops, foreign_key: 'stop_number'
+
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
 
+  alias_method :stop_number, :id
 
   def self.new_from_csv(row)
     {_id: row[:stop_id],
      name: format_short_name(row[:stop_name]),
      lat: row[:stop_lat],
      lng: row[:stop_lon]}
-  end
-
-  def stop_number
-    self._id
   end
 
   def self.format_short_name(str)
@@ -31,12 +30,8 @@ class Stop
 
   def self.get(stop_number)
     Rails.cache.fetch("stop_#{stop_number}", expire_in: 1.day) do
-      Stop.find_by_stop_number stop_number
+      Stop.find stop_number
     end
-  end
-
-  def self.get_id(stop_number)
-    get(stop_number).id
   end
 
   def find_visitors(calendars)
@@ -47,16 +42,13 @@ class Stop
 
   def route_short_names
     Rails.cache.fetch("route_short_names_#{id}") do
-      query = Route.joins :trips, 'JOIN stop_times on trip_id = trips.id'
-      query = query.where('stop_times.stop_id = ?', id).uniq.pluck :short_name
-
-      Route.sort_by_names!(query.to_a) { |e| e }
+      Route.sort_by_names!(trips_criteria.only('route.s').collect { |t| t.route.short_name }.uniq) { |e| e }
     end
   end
 
   def trips
     Rails.cache.fetch("stop_#{id}_trips", expires_in: 1.hour) do
-      Trip.uniq.joins(:stop_times).where('stop_times.stop_id = ?', id).to_a
+      trips_criteria.to_a
     end
   end
 
@@ -64,18 +56,19 @@ class Stop
     @_location ||= Location.new lat, lng
   end
 
-  def location= loc
+  def location=(loc)
     self.lat = loc.lat
     self.lng = loc.lng
   end
 
-
   private
 
+  def trips_criteria
+    Trip.where :id.in => StopTime.where(stop_number: id).pluck(:trip_id)
+  end
 
   def uncached_find_visitors(calendars)
-    trips = Trip.joins('JOIN stop_times on trip_id = trips.id') \
-      .where(calendar_id: calendars).where('stop_id = ?', id).order 'arrival'
+    trips = trips_criteria.where(:calendar_id.in => calendars).to_a
 
     routes_with_visitors = {}
     StopTime.for_stop_and_trips(self, trips).collect do |st|

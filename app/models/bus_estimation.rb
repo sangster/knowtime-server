@@ -1,9 +1,9 @@
 class BusEstimation
   include Distanceable
-  attr_accessor :next_stop, :arrival, :lat, :lng
+  attr_accessor :stop_number, :arrival, :lat, :lng
 
-  def initialize(next_stop, arrival, lat, lng)
-    self.next_stop = next_stop
+  def initialize(stop_number, arrival, lat, lng)
+    self.stop_number = stop_number
     self.arrival = arrival
     self.lat = lat
     self.lng = lng

@@ -1,4 +1,4 @@
-json.pathId Uuid.from_path_id path.id
+json.pathId path.uuid
 
 json.pathPoints do
   json.array! path.path_points do |location|

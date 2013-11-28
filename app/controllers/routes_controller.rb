@@ -1,13 +1,13 @@
 class RoutesController < ApplicationController
   def show
     @route = Route.for_uuid params[:route_uuid]
-    raise ActiveRecord::RecordNotFound if @route.nil?
+    render_error :not_found, "no route found for UUID: #{params[:route_uuid]}" if @route.nil?
   end
 
 
   def show_with_trips_on_date
     @route = Route.for_uuid params[:route_uuid]
-    raise ActiveRecord::RecordNotFound if @route.nil?
+    render_error :not_found, "no route found for UUID: #{params[:route_uuid]}" if @route.nil?
 
     @calendars = Calendar.for_date_params params
   end
@@ -63,9 +63,9 @@ class RoutesController < ApplicationController
 
     @route_trips = {}
     @routes.each do |r|
-      trips = r.trips.where(calendar_id: calendars).sort! do |x, y|
-        x_arrival = x.stop_times.order(:index).first.arrival
-        y_arrival = y.stop_times.order(:index).first.arrival
+      trips = r.trips.where(:calendar.in => calendars).sort! do |x, y|
+        x_arrival = x.stop_times.asc(:index).first.arrival
+        y_arrival = y.stop_times.asc(:index).first.arrival
         x_arrival <=> y_arrival
       end
       @route_trips[r.id] = trips

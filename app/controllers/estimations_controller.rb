@@ -6,11 +6,11 @@ class EstimationsController < ApplicationController
 
     next_stops = StopTime.next_stops short_name, now, 30.minutes
 
-    users = User.where short_name: short_name
-    groups = UserGroup.create_groups users
+    #users = User.where short_name: short_name
+    #groups = UserGroup.create_groups users
 
 
-    @estimations = map_estimates groups, next_stops
+    #@estimations = map_estimates groups, next_stops
   end
 
 

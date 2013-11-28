@@ -8,7 +8,7 @@ class Trip
   belongs_to :path
 
   embeds_one :route
-  has_many :stop_times
+  embeds_many :stop_times, inverse_of: :trip
 
 
   def self.new_from_csv(row)
@@ -25,11 +25,11 @@ class Trip
     Rails.cache.fetch("trip_#{str}") { Uuid.get(Trip.uuid_namespace, str).idable }
   end
 
-  alias_method :uncached_stop_times, :stop_times
-
-  def stop_times
-    Rails.cache.fetch("trip_#{id}_stop_times", expires_in: 1.hour) { uncached_stop_times }
-  end
+  #alias_method :uncached_stop_times, :stop_times
+  #
+  #def stop_times
+  #  Rails.cache.fetch("trip_#{id}_stop_times", expires_in: 1.hour) { uncached_stop_times }
+  #end
 
   def is_running?(time)
     minutes = case time

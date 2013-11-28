@@ -10,13 +10,14 @@ class StopTime
   index arrival: 1
   index departure: 1
 
-  belongs_to :stop, inverse_of: :stop_times, foreign_key: :n
-  belongs_to :trip, index: true
+  embedded_in :trip, inverse_of: :stop_times
+  belongs_to :stop, inverse_of: :stop_times, foreign_key: :n, index: true
 
 
   def self.new_from_csv(row)
-    {trip_id: row[:trip_id], stop_number: row[:stop_id].to_i, index: row[:stop_sequence],
-     arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time])}
+    tr = trip row[:trip_id]
+    tr << StopTime.new(stop_number: row[:stop_id].to_i, index: row[:stop_sequence],
+                       arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time]))
   end
 
   def self.for_stop_and_trips(stop, trips)
@@ -27,19 +28,51 @@ class StopTime
     str[0, 2].to_i * 60 + str[3, 2].to_i
   end
 
-  def self.next_stops(short_name, time, duration = nil)
-    Rails.cache.fetch("next_stops_#{short_name}_#{time.strftime '%F_%R'}_#{duration}", expires_in: 1.minute) do
-      trips = Trip.where('route.s' => short_name).where(:calendar.in => Calendar.for_date(time))
+  @@_tr = []
+  @@_id = nil
 
-      st = StopTime.where(:trip_id.in => trips.to_a).asc(:arrival)
-      minutes = time.hour * 60 + time.minute
-      if duration
-        st.where departure: (minutes..(minutes + duration/60))
-      else
-        st.where :departure.gte => minutes
+  def self.trip(trip_id)
+    if @@_id.nil? or @@_id != trip_id
+      unless @@_tr.empty?
+        t = Trip.find(@@_id)
+        t.stop_times = @@_tr
+        t.save!
       end
-      st.to_a
+      @@_tr.clear
+      @@_id = trip_id
     end
+    @@_tr
+  end
+
+  def self.skip_bulk_insert?
+    true
+  end
+
+  def self.skip_final_bulk_insert?
+    unless @@_tr.empty?
+      t = Trip.find(@@_id)
+      t.stop_times = @@_tr
+      t.save!
+    end
+    @@_tr = nil
+    @@_id = nil
+    true
+  end
+
+
+  def self.next_stops(short_name, time, duration = nil)
+    #Rails.cache.fetch("next_stops_#{short_name}_#{time.strftime '%F_%R'}_#{duration}", expires_in: 1.minute) do
+    trips = Trip.where('route.s' => short_name).where(:calendar.in => Calendar.for_date(time))
+
+    st = StopTime.where(:trip_id.in => trips.to_a) #.asc(:arrival)
+    minutes = time.hour * 60 + time.minute
+    if duration
+      st.where departure: (minutes..(minutes + duration/60))
+    else
+      st.where :departure.gte => minutes
+    end
+    st.to_a
+    #end
   end
 
   def arrival_str

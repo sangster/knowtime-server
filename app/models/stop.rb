@@ -8,7 +8,7 @@ class Stop
   field :t, as: :lat, type: Float
   field :g, as: :lng, type: Float
 
-  has_many :stop_times, inverse_of: :stops, foreign_key: 'stop_number'
+  #has_many :stop_times, inverse_of: :stops, foreign_key: 'stop_number'
 
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
 

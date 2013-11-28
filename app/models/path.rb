@@ -8,21 +8,24 @@ class Path
   #has_many :path_points, inverse_of: :path
   #has_many :trips, inverse_of: :path
 
-  alias_method :uncached_path_points, :path_points
+  #alias_method :uncached_path_points, :path_points
 
-  @@_p = nil
+  @@_p = []
   @@_id = nil
 
   def self.new_from_csv(row)
     p = path row[:shape_id]
-    p.path_points.build(index: row[:shape_pt_sequence].to_i, lat: row[:shape_pt_lat].to_f,
-                        lng: row[:shape_pt_lon].to_f)
+    p << PathPoint.new(index: row[:shape_pt_sequence].to_i, lat: row[:shape_pt_lat].to_f, lng: row[:shape_pt_lon].to_f)
   end
 
   def self.path(shape_id)
     if @@_id.nil? or @@_id != shape_id
-      @@_p.save! unless @@_p.nil?
-      @@_p = Path.new _id: shape_id
+      unless @@_p.empty?
+        p = Path.new _id: @@_id
+        p.path_points = @@_p
+        p.save
+      end
+      @@_p.clear
       @@_id = shape_id
     end
     @@_p
@@ -33,7 +36,11 @@ class Path
   end
 
   def self.skip_final_bulk_insert?
-    @@_p.save! unless @@_p.nil?
+    unless @@_p.empty?
+      p = Path.new _id: @@_id
+      p.path_points = @@_p
+      p.save
+    end
     @@_p = nil
     @@_id = nil
     true
@@ -54,7 +61,7 @@ class Path
     Uuid.for self
   end
 
-  def path_points
-    Rails.cache.fetch("path_points_#{id}") { uncached_path_points.to_a }
-  end
+  #def path_points
+  #  Rails.cache.fetch("path_points_#{id}") { uncached_path_points.to_a }
+  #end
 end

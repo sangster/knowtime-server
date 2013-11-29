@@ -68,7 +68,7 @@ class Route
                when 'long'
                  where long_name: val
                when 'stop'
-                 StopTime.includes(:trip).where(stop_number: val.to_i).collect { |st| st.trip.route }.uniq
+                 Trip.where('stop_times.n' => val.to_i ).distinct(:route).collect {|r| Route.new r}.uniq
                when 'date'
                  calendars = Calendar.for_date Date.parse(val)
                  Trip.where(:calendar.in => calendars).distinct(:route).collect { |r| Route.new r }.uniq

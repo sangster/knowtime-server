@@ -2,7 +2,7 @@ class UserGroup
   include Distanceable
   attr_accessor :users
 
-  GROUP_RADIUS = 20 # metres
+  GROUP_RADIUS = 40 # metres
 
   def self.create_groups(users)
     groups = []

@@ -64,7 +64,7 @@ class Stop
   private
 
   def trips_criteria
-    Trip.where :id.in => StopTime.where(stop_number: id).pluck(:trip_id)
+    Trip.where(:'stop_times.n' => self.stop_number)
   end
 
   def uncached_find_visitors(calendars)

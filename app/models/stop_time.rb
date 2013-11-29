@@ -21,8 +21,6 @@ class StopTime
   end
 
   def self.for_stop_and_trips(stop, trips)
-    where(stop_number: stop.stop_number).where(:trip.in => trips).asc(:arrival).to_a
-
     stop_number = stop.stop_number
     trips.collect do |t|
       t.stop_times.select { |st| st.stop_number == stop_number }

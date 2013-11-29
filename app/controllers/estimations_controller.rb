@@ -37,7 +37,7 @@ class EstimationsController < ApplicationController
       end
 
       opt = options.delete_at closest_index
-      estimates << BusEstimation.new(opt.stop, opt.arrival, group_loc.lat, group_loc.lng)
+      estimates << BusEstimation.new(opt.stop_number, opt.arrival, group_loc.lat, group_loc.lng)
     end
 
     options.each do |opt|

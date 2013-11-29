@@ -88,8 +88,6 @@ class Route
   end
 
   def trips
-    Rails.cache.fetch "route_#{id}_trips", expires_in: 1.hour do
-      Trip.where('route._id' => id).to_a
-    end
+      Trip.where('route._id' => id)
   end
 end

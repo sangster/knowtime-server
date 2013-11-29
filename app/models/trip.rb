@@ -10,6 +10,10 @@ class Trip
   embeds_one :route
   embeds_many :stop_times, inverse_of: :trip
 
+  scope :route_day_trips, ->(short_name, time) do
+    where('route.s' => short_name).where(:calendar.in => Calendar.for_date(time))
+  end
+
 
   def self.new_from_csv(row)
     {_id: row[:trip_id], headsign: row[:trip_headsign],
@@ -23,6 +27,12 @@ class Trip
 
   def self.get(str)
     Rails.cache.fetch("trip_#{str}") { Uuid.get(Trip.uuid_namespace, str).idable }
+  end
+
+  def self.day_trips(short_name, time)
+    Rails.cache.fetch "day_trips_#{short_name}_#{time.strftime '%F_%R'}", expires_in: 1.hour do
+      Trip.route_day_trips short_name, time
+    end
   end
 
   #alias_method :uncached_stop_times, :stop_times

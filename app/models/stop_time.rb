@@ -61,18 +61,28 @@ class StopTime
 
 
   def self.next_stops(short_name, time, duration = nil)
-    #Rails.cache.fetch("next_stops_#{short_name}_#{time.strftime '%F_%R'}_#{duration}", expires_in: 1.minute) do
-    trips = Trip.where('route.s' => short_name).where(:calendar.in => Calendar.for_date(time))
-
-    st = StopTime.where(:trip_id.in => trips.to_a) #.asc(:arrival)
     minutes = time.hour * 60 + time.minute
-    if duration
-      st.where departure: (minutes..(minutes + duration/60))
-    else
-      st.where :departure.gte => minutes
+
+    Rails.cache.fetch("next_stops_#{short_name}_#{minutes}_#{duration}", expires_in: 1.minute) do
+      trips = Trip.day_trips(short_name, time)
+
+      if duration
+        range = (minutes..(minutes + duration/60)) if duration
+        trips.where(:'stop_times.d' => range)
+      else
+        trips.where(:'stop_times.d'.gte => minutes)
+      end
+
+      trips.collect do |t|
+        t.stop_times.select do |st|
+          if duration
+            range === st.departure
+          else
+            st.departure >= minutes
+          end
+        end
+      end.flatten.sort_by! &:arrival
     end
-    st.to_a
-    #end
   end
 
   def arrival_str

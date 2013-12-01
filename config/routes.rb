@@ -33,6 +33,7 @@ BustedRuby::Application.routes.draw do
     post 'users/new/:short_name', to: 'users#create'
     post 'user/:user_uuid', to: 'users#create_location'
     get 'user/:user_uuid', to: 'users#show'
+    get 'users', to: 'users#index'
 
     get 'estimates/short::short_name', to: 'estimations#index_for_short_name'
   end

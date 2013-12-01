@@ -8,7 +8,8 @@ class UserLocation
 
   embedded_in :user, inverse_of: :user_locations
 
-  scope :newest, -> { where :created_at.gt => (DateTime.now - 30.seconds) }
+  scope :newer_than, -> (age) { where :created_at.gt => (DateTime.now - age) }
+  scope :newest, -> { newer_than 30.seconds }
 
   def to_s
     "<UserLocation: lat: #{lat}, lng: #{lng}>"

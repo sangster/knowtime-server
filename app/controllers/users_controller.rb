@@ -36,4 +36,8 @@ class UsersController < ApplicationController
       render nothing: true
     end
   end
+
+  def index
+    @bus_riders_map = User.recent_users_bus_map 1.hour
+  end
 end

@@ -7,6 +7,8 @@ class User
   field :s, as: :short_name, type: String
   field :u, as: :uuid, type: BSON::Binary
 
+  scope :recent, -> (age) { elem_match( :user_locations => { :created_at.gt => (DateTime.now - age) } ) }
+
   embeds_many :user_locations, inverse_of: :user
 
   IS_MOVING_DELTA = 10 # metres
@@ -19,6 +21,13 @@ class User
     #Rails.cache.fetch("user_#{user_uuid_str}", expires_in: 10.minutes) do
     where(uuid: uuid).first rescue nil
     #end
+  end
+
+  def self.recent_users_bus_map(age)
+    User.recent(age).inject({}) do |map,user|
+      (map[user.short_name] ||= []) << user unless user.user_locations.empty?
+      map
+    end
   end
 
   def uuid_str

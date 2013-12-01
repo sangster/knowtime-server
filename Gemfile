@@ -14,6 +14,12 @@ group :doc do
   gem 'sdoc', require: false # bundle exec rake doc:rails
 end
 
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0.0.beta'
+  gem 'factory_girl_rails', '~> 4.3.0'
+end
+
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

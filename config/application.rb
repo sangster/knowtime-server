@@ -27,5 +27,7 @@ module BustedRuby
     to_remove = %W(ActionDispatch::RequestId )
     to_remove.each { |w| config.middleware.delete w }
     config.action_dispatch.default_headers = {}
+
+    config.time_zone = 'America/Halifax'
   end
 end

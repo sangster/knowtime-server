@@ -19,9 +19,11 @@ describe Stop do
   		expect(@stop.location.lng).to eq loc.lng
   	end  
   	
-  	it do 
-  		expect{ @stop.location = Location.new(10, 20) }.to \
-  		change{ @stop.location.lat}.to 10
+  	it :change do 
+  		expect{ @stop.location = Location.new(10, 20) }.
+  		to change{ @stop.location.lat}.to 10
+  		expect{ @stop.location = Location.new(10, 20) }.
+  		to change{ @stop.location.lng}.to 21
   	end	
   end
 

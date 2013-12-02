@@ -27,5 +27,13 @@ module BustedRuby
     to_remove = %W(ActionDispatch::RequestId )
     to_remove.each { |w| config.middleware.delete w }
     config.action_dispatch.default_headers = {}
-  end
+
+    config.generators do |g|
+        g.orm             :mongoid
+        g.template_engine :jbuilder
+        g.test_framework  :rspec, fixture: false
+        g.stylesheets false
+        g.fixture_replacement :factory_girl, dir: 'spec/factories'
+    end
+end
 end

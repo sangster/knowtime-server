@@ -59,6 +59,7 @@ class Stop
   def location=(loc)
     self.lat = loc.lat
     self.lng = loc.lng
+    @_location = nil
   end
 
   private

@@ -10,7 +10,7 @@ class Stop
 
   #has_many :stop_times, inverse_of: :stops, foreign_key: 'stop_number'
 
-  TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr.)
+  TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr)
 
   alias_method :stop_number, :id
 
@@ -19,13 +19,6 @@ class Stop
      name: format_short_name(row[:stop_name]),
      lat: row[:stop_lat],
      lng: row[:stop_lon]}
-  end
-
-  def self.format_short_name(str)
-    str.strip!
-    TO_LOWER.each { |lower| str.gsub! /\b#{lower}\b/, lower.downcase }
-    str[0] = str[0].upcase
-    str
   end
 
   def self.get(stop_number)
@@ -53,7 +46,7 @@ class Stop
   end
 
   def location
-    @_location ||= Location.new lat, lng
+    @_location ||= Location.new lat, lng, nil
   end
 
   def location=(loc)
@@ -63,6 +56,13 @@ class Stop
   end
 
   private
+
+  def self.format_short_name(str)
+    str.strip!
+    TO_LOWER.each { |lower| str.gsub! /\b#{lower}\b/, lower.downcase }
+    str[0] = str[0].upcase
+    str
+  end
 
   def trips_criteria
     Trip.where(:'stop_times.n' => self.stop_number)

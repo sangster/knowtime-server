@@ -63,7 +63,7 @@ class RoutesController < ApplicationController
 
     @route_trips = {}
     @routes.each do |r|
-      trips = r.trips.where(:calendar.in => calendars).sort! do |x, y|
+      trips = r.trips.where(:calendar.in => calendars.to_a).sort! do |x, y|
         x_arrival = x.stop_times.asc(:index).first.arrival
         y_arrival = y.stop_times.asc(:index).first.arrival
         x_arrival <=> y_arrival

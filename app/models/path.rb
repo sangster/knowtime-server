@@ -53,7 +53,7 @@ class Path
 
   def self.for_route_and_calendars(route, calendars)
     Rails.cache.fetch("path_for_route_#{route.id}_calendar_#{calendars.collect(&:id).join ','}", expires_in: 1.hour) do
-      Trip.where('route._id' => route.id).where(:calendar_id.in => calendars).collect(&:path).uniq
+      Trip.where('route._id' => route.id).where(:calendar_id.in => calendars.to_a).collect(&:path).uniq
     end
   end
 

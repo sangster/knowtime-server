@@ -18,16 +18,15 @@ class Calendar
   has_many :trips
 
   def self.new_from_csv(row)
-
     {_id: row[:service_id],
      start_date: to_date(row[:start_date]),
      end_date: to_date(row[:end_date]),
      weekday: to_bool(row[:monday]),
      saturday: to_bool(row[:saturday]),
      sunday: to_bool(row[:sunday])}
-  end
+   end
 
-  def self.to_date(str)
+   def self.to_date(str)
     Date.strptime str, '%Y%m%d'
   end
 
@@ -40,8 +39,13 @@ class Calendar
   end
 
   def self.for_date(date)
-    Rails.cache.fetch("calendars_for_date_#{date.to_s}", expires_in: 1.hour) do
-      Calendar.where(:start_date.lte => date).where(:end_date.gte => date).to_a
+    criteria = Calendar.where(:start_date.lte => date).where(:end_date.gte => date)
+    if date.saturday?
+      criteria = criteria.where saturday: true
+    elsif date.sunday?
+      criteria = criteria.where sunday: true
+    else
+      criteria = criteria.where weekday: true
     end
   end
 

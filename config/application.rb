@@ -35,5 +35,6 @@ module BustedRuby
         g.stylesheets false
         g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
-end
+    
+    config.time_zone = 'America/Halifax'
 end

@@ -69,7 +69,7 @@ class Stop
   end
 
   def uncached_find_visitors(calendars)
-    trips = trips_criteria.where(:calendar_id.in => calendars).to_a
+    trips = trips_criteria.where(:calendar_id.in => calendars.to_a).to_a
 
     routes_with_visitors = {}
     StopTime.for_stop_and_trips(self, trips).collect do |st|

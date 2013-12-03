@@ -65,7 +65,7 @@ class StopTime
 
   def self.next_stops(short_name, time, duration = nil)
     time = Time.zone.at(time).time
-    minutes = time.hour * 60 + time.minute
+    minutes = time.seconds_since_midnight / 60
 
     Rails.cache.fetch("next_stops_#{short_name}_#{minutes}_#{duration}", expires_in: 1.minute) do
       trips = Trip.day_trips(short_name, time)

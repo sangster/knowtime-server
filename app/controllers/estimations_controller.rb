@@ -1,7 +1,6 @@
 class EstimationsController < ApplicationController
   def index_for_short_name
-    now = DateTime.now
-    now_minutes = now.hour * 60 + now.minute
+    now = Time.zone.at( DateTime.now ).time
     short_name = params[:short_name]
 
     next_stops = StopTime.next_stops short_name, now, 30.minutes

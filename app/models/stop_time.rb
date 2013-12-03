@@ -64,20 +64,20 @@ class StopTime
 
 
   def self.next_stops(short_name, time, duration = nil)
-    minutes = time.hour * 60 + time.minute
+    minutes = time.seconds_since_midnight / 60
 
     Rails.cache.fetch("next_stops_#{short_name}_#{minutes}_#{duration}", expires_in: 1.minute) do
       trips = Trip.day_trips(short_name, time)
 
       if duration
-        range = (minutes..(minutes + duration/60)) if duration
+        range = (minutes..(minutes + duration/60))
         trips.where(:'stop_times.d' => range)
       else
         trips.where(:'stop_times.d'.gte => minutes)
       end
 
-      trips.collect do |t|
-        t.stop_times.select do |st|
+      trips.collect do |trip|
+        trip.stop_times.select do |st|
           if duration
             range === st.departure
           else

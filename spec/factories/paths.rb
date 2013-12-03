@@ -13,7 +13,7 @@ FactoryGirl.define do
 
   factory :path_point do
     sequence(:index)
-    sequence(:lat) {|n| 10.000000 + (n/10.0) }
-    sequence(:lng) {|n| 200.000000 + (n/10.0) }
+    sequence(:lat) {|n| 10.0000123456 + (n/10.0) }
+    sequence(:lng) {|n| 200.0000123456 + (n/10.0) }
   end
 end

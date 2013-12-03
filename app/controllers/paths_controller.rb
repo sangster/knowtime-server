@@ -1,7 +1,11 @@
 class PathsController < ApplicationController
+  respond_to :json
+
   def show
     @path = Path.for_uuid params[:path_uuid]
     render_error :not_found, "no path found for UUID: #{params[:path_uuid]}" if @path.nil?
+
+    respond_with @path
   end
 
 

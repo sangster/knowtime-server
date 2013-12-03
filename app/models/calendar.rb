@@ -41,12 +41,12 @@ class Calendar
   def self.for_date(date)
     criteria = Calendar.where(:start_date.lte => date).where(:end_date.gte => date)
     if date.saturday?
-      criteria = criteria.where saturday: true
+      criteria.where saturday: true
     elsif date.sunday?
-      criteria = criteria.where sunday: true
+      criteria.where sunday: true
     else
-      criteria = criteria.where weekday: true
-    end
+      criteria.where weekday: true
+    end.to_a
   end
 
   def self.for_uuid(uuid_str)

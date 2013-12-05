@@ -7,12 +7,8 @@ gem 'sepastian-mongoid-rails4', '~> 4.0.1.alpha'
 
 gem 'rubyzip'
 gem 'uuidtools'
-gem 'dalli'
+gem 'dalli' # memcached
 gem 'jbuilder', '~> 1.2'
-
-group :doc do
-  gem 'sdoc', require: false # bundle exec rake doc:rails
-end
 
 # Use unicorn as the app server
 # gem 'unicorn'

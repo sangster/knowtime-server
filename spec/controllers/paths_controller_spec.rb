@@ -78,17 +78,20 @@ describe PathsController do
     end
 
     context 'when paths exist' do
+      before(:each) { @trips = [create(:trip), create(:trip)]}
+
       subject do
         [create(:path_with_points), create(:path_with_points)]
       end
+
       it 'should return 404 for bad date' do
-        params = {year: 1990, month: 1, day: 1, route_uuid: @route.uuid.to_s}
+        params = {year: 1990, month: 1, day: 1, route_uuid: @trips.first.route.uuid.to_s}
         get :index_for_route_and_date, params
         expect(response).to be_not_found
       end
 
       it 'should return message for bad date' do
-        params = {year: 1990, month: 1, day: 1, route_uuid: @route.uuid.to_s}
+        params = {year: 1990, month: 1, day: 1, route_uuid: @trips.first.route.uuid.to_s}
         get :index_for_route_and_date, params
         expect(JSON.parse(response.body)['error']).to match(/no calendars found/)
       end
@@ -106,10 +109,10 @@ describe PathsController do
       end
 
       it 'should return paths' do
-        params = {year: 2014, month: 1, day: 1, route_uuid: @route.uuid.to_s}
+        params = {year: 2014, month: 1, day: 1, route_uuid: @trips.first.route.uuid.to_s}
         get :index_for_route_and_date, params
         json = JSON.parse(response.body)
-        expect(json.length).to be(2)
+        expect(json.length).to eq(2)
       end
     end    
   end

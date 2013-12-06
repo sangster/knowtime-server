@@ -13,7 +13,7 @@ BustedRuby::Application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local = false
 
-  config.cache_store = :mem_cache_store, 'ip-10-30-140-248.ec2.internal', {value_max_bytes: 16.megabytes}
+  config.cache_store = :mem_cache_store, 'localhost', {value_max_bytes: 16.megabytes}
   config.action_controller.perform_caching = true
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application

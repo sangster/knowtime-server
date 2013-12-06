@@ -15,3 +15,6 @@ gem 'jbuilder', '~> 1.2'
 
 # Use Capistrano for deployment
 gem 'capistrano', group: :development
+gem 'capistrano-rails', group: :development
+gem 'capistrano-ext', group: :development
+gem 'capistrano-rbenv', github: 'capistrano/rbenv', group: :development

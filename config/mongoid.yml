@@ -3,7 +3,7 @@ production:
     default:
       database: busted
       hosts:
-        - 10.30.168.56:27017
+        - localhost:27017
       options:
   options:
 

@@ -10,6 +10,8 @@ gem 'uuidtools'
 gem 'dalli' # memcached
 gem 'jbuilder', '~> 1.2'
 
+gem 'rb-readline'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

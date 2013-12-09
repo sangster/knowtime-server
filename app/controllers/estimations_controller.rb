@@ -17,10 +17,12 @@ class EstimationsController < ApplicationController
 
 
   def map_estimates(groups, next_stops)
+    return [] if next_stops.empty?
+
     estimates = []
     options = next_stops
 
-    groups.select { |g| not g.average_location.nil? }.each do |group|
+    groups.select(&:average_location).each do |group|
       group_loc = group.average_location
 
       closest_index = 0

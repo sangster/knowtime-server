@@ -58,7 +58,7 @@ class UserGroup
     lat_sum = 0
     lng_sum = 0
 
-    active_users = self.users.select { |u| not u.average_location.nil? }
+    active_users = self.users.select &:average_location
     return nil if active_users.empty?
 
     active_users.each do |user|

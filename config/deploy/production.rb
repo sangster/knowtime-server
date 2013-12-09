@@ -5,9 +5,9 @@ set :stage, :production
 # Supports bulk-adding hosts to roles, the primary
 # server in each group is considered to be the first
 # unless any hosts have the primary property set.
-role :app, %w{ubuntu@ec2-50-19-230-211.compute-1.amazonaws.com}
-role :web, %w{ubuntu@ec2-50-19-230-211.compute-1.amazonaws.com}
-role :db,  %w{ubuntu@ec2-50-19-230-211.compute-1.amazonaws.com}
+role :app, %w{ubuntu@api.knowtime.ca}
+role :db,  %w{ubuntu@api.knowtime.ca}
+role :web, %w{ubuntu@api.knowtime.ca}
 
 # Extended Server Syntax
 # ======================

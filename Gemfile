@@ -10,6 +10,15 @@ gem 'uuidtools'
 gem 'dalli' # memcached
 gem 'jbuilder', '~> 1.2'
 
+gem 'rb-readline', '~> 0.4.2'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0.0.beta'
+  gem 'factory_girl_rails', '~> 4.3.0'
+  gem 'metric_fu'
+  gem 'database_cleaner'
+end
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

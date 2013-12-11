@@ -14,7 +14,7 @@ class Route
 
   def self.for_uuid(uuid_str)
     key = Uuid.key_for uuid_str
-    Route.find key unless key.nil?
+    Route.find key unless key.nil? rescue nil
   end
 
   def self.names

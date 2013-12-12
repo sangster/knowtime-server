@@ -62,6 +62,20 @@ describe User do
           expect(subject.average_location).to be_nil
         end
       end
+
+      context 'that are in the same place' do
+        subject do 
+          user = create :user
+          create_list(:user_location, 10, user: user, lat: 1, lng: 2)
+          user
+        end
+
+        it { expect(subject.moving).to be false }
+
+        it 'to have an average location' do
+          expect(subject.average_location).to be_a_kind_of Location
+        end
+      end
     end
   end
 

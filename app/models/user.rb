@@ -48,11 +48,11 @@ class User
 
 
   def check_is_moving
-    locs = self.user_locations.newest
+    locs = self.user_locations
     return false if locs.length < 2
 
     first = locs.first
-    moving = locs[1..-1].find { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
+    moving = locs[1..-1].any? { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
 
     if moving
       self.moving = true

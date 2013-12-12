@@ -18,5 +18,9 @@ FactoryGirl.define do
     created_at { DateTime.now }
     sequence(:lat) {|n| 10.0000123456 + (n/10.0) }
     sequence(:lng) {|n| 200.0000123456 + (n/10.0) }
+
+    trait :old do 
+      created_at { DateTime.now - 1.week }
+    end
   end
 end

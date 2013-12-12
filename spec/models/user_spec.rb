@@ -48,6 +48,20 @@ describe User do
           expect(subject.moving).to be true
         end
       end
+
+      context 'that are old' do
+        subject do 
+          user = create :user
+          create_list(:user_location, 10, :old, user: user)
+          user
+        end
+
+        it { expect(subject).to be_moving }
+
+        it 'to have no average location' do
+          expect(subject.average_location).to be_nil
+        end
+      end
     end
   end
 

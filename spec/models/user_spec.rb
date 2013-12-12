@@ -24,8 +24,8 @@ describe User do
       expect(subject.user_locations).to be_a_kind_of Array
     end
 
-    it 'to have no average location' do
-      expect(subject.average_location).to be_nil
+    it 'to have no newest location' do
+      expect(subject.newest_location).to be_nil
     end
 
     it 'moving state not persisted' do
@@ -35,8 +35,8 @@ describe User do
     context 'with user locations' do
       subject { create :user_with_locations }
 
-      it 'to have an average location' do
-        expect(subject.average_location).to be_a_kind_of Location
+      it 'to have an newest location' do
+        expect(subject.newest_location).to be_a_kind_of UserLocation
       end
 
       it { expect(subject).to be_moving }
@@ -57,10 +57,6 @@ describe User do
         end
 
         it { expect(subject).to be_moving }
-
-        it 'to have no average location' do
-          expect(subject.average_location).to be_nil
-        end
       end
 
       context 'that are in the same place' do
@@ -72,8 +68,8 @@ describe User do
 
         it { expect(subject.moving).to be false }
 
-        it 'to have an average location' do
-          expect(subject.average_location).to be_a_kind_of Location
+        it 'to have an newest location' do
+          expect(subject.newest_location).to be_a_kind_of UserLocation
         end
       end
     end

@@ -35,8 +35,4 @@ BustedRuby::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.active_support.encode_big_decimal_as_string = false
-
-  RSpec.configure do |config|
-    config.include FactoryGirl::Syntax::Methods
-  end
 end

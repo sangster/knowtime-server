@@ -6,7 +6,7 @@ class UserGroup
 
   def self.create_groups(users)
     groups = []
-    users.select(&:is_moving?).each do |user|
+    users.select(&:moving?).each do |user|
       group = closest_group(groups, user) || (groups << UserGroup.new and groups.last)
       group.add user
     end

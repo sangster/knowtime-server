@@ -22,8 +22,8 @@ class EstimationsController < ApplicationController
     estimates = []
     options = next_stops
 
-    groups.select(&:average_location).each do |group|
-      group_loc = group.average_location
+    groups.select(&:location).each do |group|
+      group_loc = group.location
 
       closest_index = 0
       closest_dist = Distanceable::EARTH_DIAMETER

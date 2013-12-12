@@ -43,6 +43,10 @@ class User
     @_newest_location ||= user_locations.last
   end
 
+  def active?
+    newest_location.created_at > (DateTime.now - 10.seconds) rescue false
+  end
+
 
   private
 

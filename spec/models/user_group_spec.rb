@@ -70,7 +70,7 @@ describe UserGroup do
         expect(subject.lng).to be Float::NAN
       end
 
-      it do
+      it 'should still have no location when an inactive user is added' do
         expect{ subject << new_user }.not_to change(subject, :location)
       end
     end

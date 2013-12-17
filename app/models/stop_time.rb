@@ -13,78 +13,81 @@ class StopTime
   embedded_in :trip, inverse_of: :stop_times
   belongs_to :stop, inverse_of: :stop_times, foreign_key: :n, index: true
 
+  class << self
+    @@_unsaved_times = []
+    @@_id = nil
 
-  def self.new_from_csv(row)
-    tr = trip row[:trip_id]
-    tr << StopTime.new(stop_number: row[:stop_id].to_i, index: row[:stop_sequence],
-                       arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time]))
-  end
+    def new_from_csv(row)
+      tr = unsaved_stop_times row[:trip_id]
+      tr << StopTime.new(stop_number: row[:stop_id].to_i, index: row[:stop_sequence],
+       arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time]))
+    end
 
-  def self.for_stop_and_trips(stop, trips)
-    stop_number = stop.stop_number
-    trips.collect do |t|
-      t.stop_times.select { |st| st.stop_number == stop_number }
-    end.flatten.sort_by! &:arrival
-  end
+    def for_stop_and_trips(stop, trips)
+      stop_number = stop.stop_number
+      trips.collect do |t|
+        t.stop_times.select { |st| st.stop_number == stop_number }
+      end.flatten.sort_by! &:arrival
+    end
 
-  def self.to_minutes(str)
-    str[0, 2].to_i * 60 + str[3, 2].to_i
-  end
+    def skip_bulk_insert?
+      true
+    end
 
-  @@_tr = []
-  @@_id = nil
-
-  def self.trip(trip_id)
-    if @@_id.nil? or @@_id != trip_id
-      unless @@_tr.empty?
+    def skip_final_bulk_insert?
+      unless @@_unsaved_times.empty?
         t = Trip.find(@@_id)
-        t.stop_times = @@_tr
+        t.stop_times = @@_unsaved_times
         t.save!
       end
-      @@_tr.clear
-      @@_id = trip_id
+      @@_unsaved_times = []
+      @@_id = nil
+      true
     end
-    @@_tr
-  end
-
-  def self.skip_bulk_insert?
-    true
-  end
-
-  def self.skip_final_bulk_insert?
-    unless @@_tr.empty?
-      t = Trip.find(@@_id)
-      t.stop_times = @@_tr
-      t.save!
-    end
-    @@_tr = nil
-    @@_id = nil
-    true
-  end
 
 
-  def self.next_stops(short_name, time, duration = nil)
-    minutes = time.seconds_since_midnight / 60
+    def next_stops(short_name, time, duration = nil)
+      minutes = time.seconds_since_midnight / 60
 
-    Rails.cache.fetch("next_stops_#{short_name}_#{minutes}_#{duration}", expires_in: 1.minute) do
-      trips = Trip.day_trips(short_name, time)
+      Rails.cache.fetch("next_stops_#{short_name}_#{minutes}_#{duration}", expires_in: 1.minute) do
+        trips = Trip.day_trips(short_name, time)
 
-      if duration
-        range = (minutes..(minutes + duration/60))
-        trips.where(:'stop_times.d' => range)
-      else
-        trips.where(:'stop_times.d'.gte => minutes)
-      end
-
-      trips.collect do |trip|
-        trip.stop_times.select do |st|
-          if duration
-            range === st.departure
-          else
-            st.departure >= minutes
-          end
+        if duration
+          range = (minutes..(minutes + duration/60))
+          trips.where(:'stop_times.d' => range)
+        else
+          trips.where(:'stop_times.d'.gte => minutes)
         end
-      end.flatten.sort_by! &:arrival
+
+        trips.collect do |trip|
+          trip.stop_times.select do |st|
+            if duration
+              range === st.departure
+            else
+              st.departure >= minutes
+            end
+          end
+        end.flatten.sort_by! &:arrival
+      end
+    end
+
+    private 
+
+    def to_minutes(str)
+      str[0, 2].to_i * 60 + str[3, 2].to_i
+    end
+
+    def unsaved_stop_times(trip_id)
+      if @@_id.nil? or @@_id != trip_id
+        unless @@_unsaved_times.empty?
+          t = Trip.find(@_id)
+          t.stop_times = @_tr
+          t.save!
+        end
+        @@_unsaved_times.clear
+        @@_id = trip_id
+      end
+      @@_unsaved_times
     end
   end
 

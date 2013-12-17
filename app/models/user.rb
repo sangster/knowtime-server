@@ -6,8 +6,9 @@ class User
 
   field :s, as: :short_name, type: String
   field :u, as: :uuid, type: BSON::Binary
+  field :m, as: :moving, type: Boolean, default: false
 
-  scope :recent, -> (age) { elem_match( :user_locations => { :created_at.gt => (DateTime.now - age) } ) }
+  scope :recent, -> (age) { elem_match( user_locations: { :created_at.gt => (DateTime.now - age) } ) }
 
   embeds_many :user_locations, inverse_of: :user
 
@@ -31,41 +32,36 @@ class User
   end
 
   def uuid_str
-    @_uuid_str ||= UUIDTools::UUID.parse_raw uuid.data
+    @_uuid_str ||= UUIDTools::UUID.parse_raw(uuid.data).to_s
   end
 
-  def is_moving?
-    locs = self.user_locations.newest
-    return false if locs.length < 2
-
-    first = locs.first
-    first_distant_location = locs[1..-1].find { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
-
-    not first_distant_location.nil?
+  def moving?
+    @_moving ||= (super or check_is_moving)
   end
 
-  def average_location
-    @_average_location ||= calculate_average_location
+  def newest_location
+    @_newest_location ||= user_locations.last
   end
+
+  def active?
+    newest_location.created_at > (DateTime.now - 10.seconds) rescue false
+  end
+
 
   private
 
-  def calculate_average_location
-    newest_locations = self.user_locations.newest
 
-    if newest_locations.empty?
-      nil
-    else
-      first = newest_locations.first
-      lat = first.lat
-      lng = first.lng
+  def check_is_moving
+    locs = self.user_locations
+    return false if locs.length < 2
 
-      newest_locations[1..-1].each do |loc|
-        lat = lat + AVERAGE_OLDER_WEIGHT * (loc.lat - lat)
-        lng = lng + AVERAGE_OLDER_WEIGHT * (loc.lng - lng)
-      end
+    first = locs.first
+    moving = locs[1..-1].any? { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
 
-      Location.new lat, lng, first.created_at
+    if moving
+      self.moving = true
+      self.save
     end
+    moving
   end
 end

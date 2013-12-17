@@ -8,7 +8,7 @@ class User
   field :u, as: :uuid, type: BSON::Binary
   field :m, as: :moving, type: Boolean, default: false
 
-  scope :recent, -> (age) { elem_match( :user_locations => { :created_at.gt => (DateTime.now - age) } ) }
+  scope :recent, -> (age) { elem_match( user_locations: { :created_at.gt => (DateTime.now - age) } ) }
 
   embeds_many :user_locations, inverse_of: :user
 
@@ -39,8 +39,12 @@ class User
     @_moving ||= (super or check_is_moving)
   end
 
-  def average_location
-    @_average_location ||= calculate_average_location
+  def newest_location
+    @_newest_location ||= user_locations.last
+  end
+
+  def active?
+    newest_location.created_at > (DateTime.now - 10.seconds) rescue false
   end
 
 
@@ -59,24 +63,5 @@ class User
       self.save
     end
     moving
-  end
-
-  def calculate_average_location
-    newest_locations = self.user_locations.newest
-
-    if newest_locations.empty?
-      nil
-    else
-      first = newest_locations.first
-      lat = first.lat
-      lng = first.lng
-
-      newest_locations[1..-1].each do |loc|
-        lat = lat + AVERAGE_OLDER_WEIGHT * (loc.lat - lat)
-        lng = lng + AVERAGE_OLDER_WEIGHT * (loc.lng - lng)
-      end
-
-      Location.new lat, lng, first.created_at
-    end
   end
 end

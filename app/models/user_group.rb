@@ -4,29 +4,33 @@ class UserGroup
 
   GROUP_RADIUS = 40 # metres
 
-  def self.create_groups(users)
-    groups = []
-    users.select(&:moving?).each do |user|
-      group = closest_group(groups, user) || (groups << UserGroup.new and groups.last)
-      group << user
-    end
-    groups
-  end
-
-  def self.closest_group(groups, user)
-    user_location = user.newest_location
-    closest = nil
-    closest_distance = Distanceable::EARTH_DIAMETER
-
-    groups.each do |group|
-      dist = user_location.distance_from group.newest_location
-      if dist < closest_distance and dist < GROUP_RADIUS
-        closest = group
-        closest_distance = dist
+  class << self
+    def create_groups(users)
+      groups = []
+      users.select{ |u| u.moving? and u.active? }.each do |user|
+        group = closest_group(groups, user) || (groups << UserGroup.new and groups.last)
+        group << user
       end
+      groups
     end
 
-    closest
+    private 
+
+    def closest_group(groups, user)
+      user_location = user.newest_location
+      closest = nil
+      closest_distance = Distanceable::EARTH_DIAMETER
+
+      groups.each do |group|
+        dist = user_location.distance_from group.location
+        if dist < closest_distance and dist < GROUP_RADIUS
+          closest = group
+          closest_distance = dist
+        end
+      end
+
+      closest
+    end
   end
 
   def initialize

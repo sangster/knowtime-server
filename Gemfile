@@ -9,6 +9,8 @@ gem 'rubyzip'
 gem 'uuidtools'
 gem 'dalli' # memcached
 gem 'jbuilder', '~> 1.2'
+gem 'airbrake'
+
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'

@@ -3,11 +3,13 @@ class BusEstimation
   attr_accessor :stop_number, :arrival, :lat, :lng
 
   class << self
-    def locations_and_next_stops(short_name, time, duration = nil)
-      next_stops = StopTime.next_stops short_name, time, duration
+    def locations_and_next_stops(short_name, time, opts = {})
+      opts.reverse_merge! duration: nil, bounds: nil
+
+      next_stops = StopTime.next_stops short_name, time, opts[:duration]
 
       users = User.where short_name: short_name
-      groups = UserGroup.create_groups users
+      groups = UserGroup.create_groups users, bounds: opts[:bounds]
 
       map_estimates groups, next_stops
     end

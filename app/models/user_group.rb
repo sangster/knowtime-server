@@ -16,7 +16,9 @@ class UserGroup
 
     private 
 
-    def closest_group(groups, user)
+    def closest_group(groups, user, opts={})
+      opts.reverse_merge! bounds: nil
+
       user_location = user.newest_location
       closest = nil
       closest_distance = Distanceable::EARTH_DIAMETER

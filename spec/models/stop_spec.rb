@@ -18,19 +18,19 @@ describe Stop do
   end
 
   context 'created programatically' do
-    it('check lat') { expect(subject.lat).to eq 44.669369 }
-    it('check lng') { expect(subject.lng).to eq -63.655807 }
+    it { expect( its :lat ).to eq 44.669369 }
+    it { expect( its :lng ).to eq -63.655807 }
   end
 
   describe :location do
     it 'should have correct lat/lng' do
-      expect(subject.location).to eq Location.new(44.669369, -63.655807, nil)
+      expect( its :location ).to eq Location.new(44.669369, -63.655807, nil)
     end
   end  
 
   it :change do 
     expect{ subject.location = Location.new(10, 20) }.
-    to change{ [subject.location.lat, subject.location.lng]}.
-    to [10, 20]
+      to change{[ its(:lat), its(:lng) ]}.
+      to [10, 20]
   end	
 end

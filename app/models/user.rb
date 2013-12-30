@@ -6,7 +6,7 @@ class User
 
   field :s, as: :short_name, type: String
   field :u, as: :uuid, type: BSON::Binary
-  field :m, as: :moving, type: Boolean, default: false
+  field :m, as: :moving_flag, type: Boolean, default: false
 
   scope :recent, -> (age) { elem_match( user_locations: { :created_at.gt => (DateTime.now - age) } ) }
 
@@ -18,14 +18,11 @@ class User
 
   def self.get(user_uuid_str)
     uuid = BSON::Binary.new UUIDTools::UUID.parse(user_uuid_str).raw, :uuid
-
-    #Rails.cache.fetch("user_#{user_uuid_str}", expires_in: 10.minutes) do
     where(uuid: uuid).first rescue nil
-    #end
   end
 
   def self.recent_users_bus_map(age)
-    User.recent(age).inject({}) do |map,user|
+    User.recent( age ).inject( {} ) do |map,user|
       (map[user.short_name] ||= []) << user unless user.user_locations.empty?
       map
     end
@@ -36,7 +33,7 @@ class User
   end
 
   def moving?
-    @_moving ||= (super or check_is_moving)
+    @_moving ||= (moving_flag or check_is_moving IS_MOVING_DELTA)
   end
 
   def newest_location
@@ -47,21 +44,40 @@ class User
     newest_location.created_at > (DateTime.now - 10.seconds) rescue false
   end
 
+  def within?(bounds)
+    bounds.cover? newest_location if newest_location
+  end
+
+  def closest_group(groups, radius)
+    closest = nil
+    closest_distance = Distanceable::EARTH_DIAMETER
+
+    groups.select(&:location).each do |group|
+      dist = newest_location.distance_from group.location
+      if dist < closest_distance and dist < radius
+        closest = group
+        closest_distance = dist
+      end
+    end
+
+    closest
+  end
+
 
   private
 
 
-  def check_is_moving
-    locs = self.user_locations
-    return false if locs.length < 2
+  def check_is_moving(delta)
+    return false if user_locations.length < 2
 
-    first = locs.first
-    moving = locs[1..-1].any? { |loc| loc.distance_from(first) > IS_MOVING_DELTA }
+    first = user_locations.first
+    moving = user_locations[1..-1].any? { |loc| loc.distance_from(first) > delta }
 
     if moving
-      self.moving = true
-      self.save
+      self.moving_flag = true
+      save
     end
+
     moving
   end
 end

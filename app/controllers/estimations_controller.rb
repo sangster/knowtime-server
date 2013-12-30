@@ -11,9 +11,8 @@ class EstimationsController < ApplicationController
     now = Time.zone.at( DateTime.now ).time
     short_name = params[:short_name]
 
-    loc_1 = Location.new params[:lat1].to_f, params[:lng1].to_f
-    loc_2 = Location.new params[:lat2].to_f, params[:lng2].to_f
-    bounds = LocationBounds.new( loc_1, loc_2 )
+    bounds = LocationBounds.new Location.new( params[:lat1].to_f, params[:lng1].to_f ),
+                                Location.new( params[:lat2].to_f, params[:lng2].to_f )
 
     @estimations = BusEstimation.locations_and_next_stops short_name, now, 
                      duration: 30.minutes, bounds: bounds

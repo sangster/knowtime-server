@@ -1,3 +1,5 @@
+float_regex = /[-+]?[0-9]*\.?[0-9]*/
+
 BustedRuby::Application.routes.draw do
 
   scope '/alpha_1/', {defaults: {format: 'json'}} do
@@ -36,6 +38,8 @@ BustedRuby::Application.routes.draw do
     get 'users', to: 'users#index'
 
     get 'estimates/short::short_name', to: 'estimations#index_for_short_name'
+    get 'estimates/short::short_name/:lat1::lng1/:lat2::lng2', to: 'estimations#index_for_short_name_within_area',
+      constraints: { lat1: float_regex, lng1: float_regex, lat2: float_regex, lng2: float_regex }
   end
 
 end

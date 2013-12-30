@@ -1,5 +1,17 @@
 class LocationBounds
+
   attr_accessor :lat_range, :lng_range
+
+
+  def self.each(step=1)
+    return enum_for(:each, step) unless block_given?
+
+    Location.each(step).each do |loc_1|
+      Location.each(step).each do |loc_2|
+        yield LocationBounds.new(loc_1, loc_2)
+      end
+    end
+  end
 
   def initialize(loc_1, loc_2)
     lats = [loc_1.lat, loc_2.lat]

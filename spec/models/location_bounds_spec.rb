@@ -10,8 +10,13 @@ describe LocationBounds do
 
     it{ expect( subject.lat_range ).to eq 0.0..0.0 }
     it{ expect( subject.lng_range ).to eq 0.0..0.0 }
-    it{ expect( subject ).to cover greenwich }
-    it{ expect( subject ).not_to cover ne_of_greenwich }
-    it{ expect( subject ).not_to cover sw_of_greenwich }
+    it{ is_expected.to cover greenwich }
+    it{ is_expected.not_to cover ne_of_greenwich }
+    it{ is_expected.not_to cover sw_of_greenwich }
   end
+end
+
+describe LocationBounds, '#each' do
+  it { expect(LocationBounds.each).to be_a_kind_of Enumerable }
+  it { expect(LocationBounds.each(60).count).to eq (28 * 28) }
 end

@@ -39,7 +39,7 @@ class RoutesController < ApplicationController
 
 
   def index_by_date_with_headsigns
-    date_str = "2013-#{params[:month]}-#{params[:day]}"
+    date_str = "#{params[:year]}-#{params[:month]}-#{params[:day]}"
     query_with_headsigns Calendar.for_date_params(params), 'date', date_str
   end
 

@@ -35,7 +35,7 @@ class Calendar
   end
 
   def self.for_date_params(params)
-    for_date Date.new(2013, params[:month].to_i, params[:day].to_i)
+    for_date Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
   end
 
   def self.for_date(date)
@@ -46,7 +46,7 @@ class Calendar
       criteria.where sunday: true
     else
       criteria.where weekday: true
-    end.to_a + for_date(date - 1.year)
+    end.to_a
   end
 
   def self.for_uuid(uuid_str)

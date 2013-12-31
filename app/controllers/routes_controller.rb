@@ -24,6 +24,7 @@ class RoutesController < ApplicationController
 
 
   def index_for_short_name_and_date
+    params[:year] = Date.today.strftime '%Y'
     @routes = Route.for_short_name_and_calendars params[:short_name], Calendar.for_date_params(params)
   end
 
@@ -34,23 +35,27 @@ class RoutesController < ApplicationController
 
 
   def index_by_query_with_headsigns
+    params[:year] = Date.today.strftime '%Y'
     query_with_headsigns Calendar.for_date_params(params), params[:key], params[:value]
   end
 
 
   def index_by_date_with_headsigns
+    params[:year] = Date.today.strftime '%Y'
     date_str = "#{params[:year]}-#{params[:month]}-#{params[:day]}"
     query_with_headsigns Calendar.for_date_params(params), 'date', date_str
   end
 
 
   def index_by_query_and_time_with_headsigns
+    params[:year] = Date.today.strftime '%Y'
     index_by_query_with_headsigns
     @minutes = params[:hours].to_i * 60 + params[:minutes].to_i
   end
 
 
   def index_by_date_and_time_with_headsigns
+    params[:year] = Date.today.strftime '%Y'
     index_by_date_with_headsigns
     @minutes = params[:hours].to_i * 60 + params[:minutes].to_i
   end

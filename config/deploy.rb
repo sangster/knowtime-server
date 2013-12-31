@@ -1,5 +1,5 @@
 set :application, 'busted-ruby'
-set :repo_url, 'jon@ertt.ca:git/busted-ruby.git'
+set :repo_url, 'git@github.com:sangster/knowtime-server'
 set :branch, 'master'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
@@ -45,6 +45,3 @@ namespace :deploy do
   after :finishing, 'deploy:cleanup'
 
 end
-
-        require './config/boot'
-        require 'airbrake/capistrano'

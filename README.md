@@ -15,7 +15,6 @@ This repository contains the code for the [KNOWtime](http://knowtime.ca) server.
 - [Ruby on Rails 3](http://rubyonrails.org/)
 - [MongoDB](http://www.mongodb.org/)
 - [Memcached](http://www.memcached.org/)
-- [Airbrake](https://www.airbrake.io/)
 
 ## Conventions
 

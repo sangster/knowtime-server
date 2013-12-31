@@ -46,7 +46,7 @@ class Calendar
       criteria.where sunday: true
     else
       criteria.where weekday: true
-    end.to_a
+    end.to_a + for_date(date - 1.year)
   end
 
   def self.for_uuid(uuid_str)

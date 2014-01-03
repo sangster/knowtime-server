@@ -9,6 +9,7 @@ gem 'rubyzip'
 gem 'uuidtools'
 gem 'dalli' # memcached
 gem 'jbuilder', '~> 1.2'
+gem 'newrelic_rpm'
 
 
 group :development, :test do

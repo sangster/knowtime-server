@@ -15,7 +15,10 @@ This repository contains the code for the [KNOWtime](http://knowtime.ca) server.
 - [Ruby on Rails 3](http://rubyonrails.org/)
 - [MongoDB](http://www.mongodb.org/)
 - [Memcached](http://www.memcached.org/)
-- [Airbrake](https://www.airbrake.io/)
+
+### Configuration
+
+There are some secret values and keys which we don't want to share publicly. Copy the file `config/development_secrets.yml` to your server's `/etc/knowtime_secrets.yml` file. Update this file with correct values.
 
 ## Conventions
 

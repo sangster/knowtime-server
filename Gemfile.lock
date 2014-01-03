@@ -188,6 +188,7 @@ GEM
     ruby_parser (3.2.2)
       sexp_processor (~> 4.1)
     rubyzip (1.1.0)
+    semver (1.0.1)
     sepastian-mongoid-rails4 (4.0.1.alpha)
       activemodel (~> 4.0.0)
       moped (~> 2.0.beta)
@@ -238,5 +239,6 @@ DEPENDENCIES
   rake
   rspec-rails (~> 3.0.0.beta)
   rubyzip
+  semver
   sepastian-mongoid-rails4 (~> 4.0.1.alpha)
   uuidtools

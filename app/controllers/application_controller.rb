@@ -29,6 +29,9 @@ class ApplicationController < ActionController::Base
       else
         'could not complete request'
     end
+  end
 
+  def correct_admin_uuid?
+    params[:admin_uuid] == SECRETS['knowtime']['admin_uuid']
   end
 end

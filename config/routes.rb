@@ -28,7 +28,7 @@ BustedRuby::Application.routes.draw do
     get 'calendars/:year-:month-:day', to: 'calendars#index_for_date'
 
     get 'pollrate', to: 'user_configurations#pollrate'
-    get 'check_remote_zip/e349aa6b-dc8d-37af-9695-75a9093e78e7', to: 'user_configurations#check_remote_zip'
+    get 'check_remote_zip/:admin_uuid', to: 'user_configurations#check_remote_zip'
 
     post 'users/new/:short_name', to: 'users#create'
     post 'user/:user_uuid', to: 'users#create_location'

@@ -13,6 +13,7 @@ gem 'newrelic_rpm'
 
 
 group :development, :test do
+  gem 'semver'
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'factory_girl_rails', '~> 4.3.0'
   gem 'metric_fu'

@@ -123,6 +123,7 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
+    newrelic_rpm (3.7.1.182)
     optionable (0.2.0)
     origin (1.1.0)
     parallel (0.9.1)
@@ -232,6 +233,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.3.0)
   jbuilder (~> 1.2)
   metric_fu
+  newrelic_rpm
   rails (= 4.0.1)
   rake
   rspec-rails (~> 3.0.0.beta)

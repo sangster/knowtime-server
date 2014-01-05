@@ -1,7 +1,7 @@
 class StopsController < ApplicationController
 
   def index
-    @stops = Stop.all.sort_by &:stop_number
+    @stops = Stop.all_by_stop_number
   end
 
   def show
@@ -15,8 +15,8 @@ class StopsController < ApplicationController
   private
 
   def get_stop_or_raise(stop_number)
-    stop = Stop.find stop_number
-    render_error :not_found, "no stop with number #{stop_number}" if stop.nil?
-    stop
+    Stop.find stop_number
+  rescue
+    render_error :not_found, "no stop with number #{stop_number}"
   end
 end

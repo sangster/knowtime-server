@@ -18,8 +18,8 @@ class Route
   end
 
   def self.names
-    # Rails.cache.fetch('route_names', expire_in: 1.hour) { uncached_names }
-    uncached_names
+    Rails.cache.fetch('route_names', expire_in: 1.hour) { uncached_names }
+    # uncached_names
   end
 
   def self.uncached_names

@@ -50,3 +50,20 @@ RSpec.configure do |config|
 
   config.before(:each) { DatabaseCleaner.clean }
 end
+
+module RSpec
+  module Core
+    module MemoizedHelpers
+      def is_expected
+        expect subject
+      end
+
+      def its(*method)
+        case method
+        when Symbol     then subject.send method
+        when Enumerable then method.inject(subject) { |obj, m| obj.send m }
+        end
+      end
+    end
+  end
+end

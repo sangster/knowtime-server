@@ -101,6 +101,7 @@ GEM
       fattr (>= 2.2.0)
       map (>= 5.1.0)
     map (6.5.1)
+    memcachier (0.0.2)
     metric_fu (4.6.0)
       cane (~> 2.5, >= 2.5.2)
       churn (~> 0.0.28)
@@ -243,6 +244,7 @@ DEPENDENCIES
   database_cleaner
   factory_girl_rails (~> 4.3.0)
   jbuilder (~> 1.2)
+  memcachier
   metric_fu
   newrelic_rpm
   rails (= 4.0.1)

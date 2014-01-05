@@ -8,7 +8,7 @@ class User
   field :u, as: :uuid, type: BSON::Binary
   field :m, as: :moving, type: Boolean, default: false
 
-  scope :recent, -> (age) { elem_match( user_locations: { :created_at.gt => (DateTime.now - age) } ) }
+  scope :recent, ->(age) { elem_match( user_locations: { :created_at.gt => (DateTime.now - age) } ) }
 
   embeds_many :user_locations, inverse_of: :user
 

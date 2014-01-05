@@ -2,82 +2,97 @@ require 'spec_helper'
 
 describe User do
   subject { create :user }
-  let(:uuid_str) { subject.uuid_str }
-  let(:db_moving_field) { subject.moving }
-  let(:newest_location) { subject.newest_location }
+  let(:uuid_regex) { /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ }
+  let(:group_radius) { Distanceable::EARTH_DIAMETER }
+
 
   context 'created programatically' do
-    it 'should have a short name' do
-      expect(subject.short_name.length).to be > 0
-    end
-
-    it { expect(subject).not_to be_moving }    
-    it { expect(subject).not_to be_active }
-
-    it 'should have a uuid' do
-      expect(subject.uuid_str).to match /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
-    end
+    it { is_expected.not_to be_moving }
+    it { is_expected.not_to be_active }
+    it { expect( its :short_name, :length ).to be > 0 }
+    it { expect( its :uuid_str ).to match uuid_regex }
+    it { expect( its :newest_location ).to be_nil }
+    it { expect( its :moving_flag ).to be_falsey }
 
     it 'should only create uuid_str once' do
-      expect(subject.uuid_str).to be subject.uuid_str
+      expect( its :uuid_str ).to be its :uuid_str
     end
 
     it 'should have an empty list of user locations' do
-      expect(subject.user_locations).to be_a_kind_of Array
+      expect( its :user_locations ).to be_a_kind_of Enumerable
+      expect( its :user_locations ).to be_empty
     end
 
-    it 'should have no newest location' do
-      expect(subject.newest_location).to be_nil
+    it 'should not be within any bounds' do
+      expect( LocationBounds.each(60).any? {|b| subject.within? b } ).to be_falsey
     end
 
-    it 'moving state not persisted' do
-      expect(subject.moving).to be false
+
+    context 'with no groups' do
+      let(:groups) { [] }
+      it { expect( subject.closest_group groups, group_radius ).to be_nil }
     end
+
 
     context 'with user locations' do
       subject { create :user_with_locations }
+      let(:close_group) do
+        lat = subject.newest_location.lat + 0.0001
+        lng = subject.newest_location.lng + 0.0001
+        build(:user_group).tap{|g| g << create(:user, lat: lat, lng: lng) }
+      end
+      let(:groups) do
+        [ close_group,
+          build(:user_group, count: 1),
+          build(:user_group, count: 2),
+          build(:user_group, count: 3) ]
+      end
 
-      it { expect(subject).to be_moving }
-      it { expect(subject).to be_active }
-      it { expect(newest_location).not_to be_nil }
+      it { is_expected.to be_moving }
+      it { is_expected.to be_active }
+      it { expect( its :newest_location ).not_to be_nil }
+
+      it 'should not be within some bounds' do
+        expect(LocationBounds.each(60).any? {|b| subject.within? b }).to be_truthy
+      end
+
+      it { expect( subject.closest_group groups, group_radius ).to eq close_group }
+
 
       context 'and is moving' do
-        it 'should have moving state persisted' do
-          expect{ subject.moving? }.to change(subject, :moving).from(false).to(true)
+        it 'should have moving state persisted to DB' do
+          expect{ subject.moving? }.to change(subject, :moving_flag).from(false).to(true)
         end
       end
+
 
       context 'that are old' do
         subject do 
-          user = create :user
-          create_list(:user_location, 10, :old, user: user)
-          user
+          create(:user).tap {|u| create_list :user_location, 10, :old, user: u }
         end
 
-        it { expect(subject).to be_moving }
-        it { expect(subject).not_to be_active }
+        it { is_expected.to be_moving }
+        it { is_expected.not_to be_active }
       end
+
 
       context 'that are in the same place' do
         subject do 
-          user = create :user
-          create_list(:user_location, 10, user: user, lat: 1, lng: 2)
-          user
+          create(:user).tap {|u| create_list :user_location, 10, user: u, lat: 1, lng: 2 }
         end      
 
-        it { expect(db_moving_field).to be_falsey }
-        it 'should have a newest location' do
-          expect(newest_location).not_to be_nil
-        end
+        it { expect( its :moving_flag ).to be_falsey }
+        it { expect( its :newest_location ).not_to be_nil }
       end
     end
   end
 
-  context 'from db' do
-    let(:user_from_db) { User.get(subject.uuid_str) }
+
+  context 'from DB' do
+    let(:user_from_db) { User.get subject.uuid_str }
 
     it 'should be fetched with uuid_str' do
-      expect(user_from_db.uuid_str).to eq uuid_str
+      expect( its :uuid_str ).to eq user_from_db.uuid_str
     end
   end
 end

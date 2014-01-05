@@ -27,6 +27,12 @@ class Stop
     end
   end
 
+  def self.all_by_stop_number
+    Rails.cache.fetch("all_stops", expire_in: 1.day) do
+      all.sort_by &:stop_number
+    end
+  end
+
   def find_visitors(calendars)
     Rails.cache.fetch("stop_#{id}_visitors_#{calendars.collect(&:id).join ','}", expires_in: 1.hour) do
       uncached_find_visitors calendars

@@ -1,7 +1,6 @@
 production:
   sessions:
     default:
-      database: busted
       uri: <%= ENV['MONGOHQ_URL'] %>
       options:
         skip_version_check: true

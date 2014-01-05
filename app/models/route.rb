@@ -18,14 +18,14 @@ class Route
   end
 
   def self.names
-    Rails.cache.fetch('route_names', expire_in: 1.hour) { uncached_names }
-    #uncached_names
+    # Rails.cache.fetch('route_names', expire_in: 1.hour) { uncached_names }
+    uncached_names
   end
 
   def self.uncached_names
-    names = Route.all.pluck(:short_name, :long_name).collect do |names|
+    names = Route.all.pluck(:short_name, :long_name).uniq.collect do |names|
       OpenStruct.new short_name: names[0], long_name: names[1]
-    end.uniq
+    end
 
     sort_by_names! names
   end

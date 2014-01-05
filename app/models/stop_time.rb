@@ -45,7 +45,6 @@ class StopTime
       true
     end
 
-
     def next_stops(short_name, time, duration = nil)
       minutes = time.seconds_since_midnight / 60
 
@@ -80,8 +79,8 @@ class StopTime
     def unsaved_stop_times(trip_id)
       if @@_id.nil? or @@_id != trip_id
         unless @@_unsaved_times.empty?
-          t = Trip.find(@_id)
-          t.stop_times = @_tr
+          t = Trip.find(@@_id)
+          t.stop_times = @@_unsaved_times
           t.save!
         end
         @@_unsaved_times.clear

@@ -13,7 +13,7 @@ class Location
 		end
 	end
 
-	def initialize(lat, lng, created_at = DateTime.now)
+	def initialize(lat, lng, created_at = Time.zone.now)
 		self.lat = lat
 		self.lng = lng
 		self.created_at = created_at

@@ -14,7 +14,7 @@ class Trip
     where('route.s' => short_name).where(:calendar.in => Calendar.for_date(time).to_a)
   end
 
-  def class << self
+  class << self
     def new_from_csv(row)
       {        _id: row[:trip_id],
           headsign: row[:trip_headsign],

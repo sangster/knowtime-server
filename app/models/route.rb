@@ -18,8 +18,7 @@ class Route
   end
 
   def self.names
-    Rails.cache.fetch('route_names', expire_in: 1.hour) { uncached_names }
-    # uncached_names
+    Rails.cache.fetch('route_names', expire_in: 6.hour) { uncached_names }
   end
 
   def self.uncached_names
@@ -70,7 +69,7 @@ class Route
                when 'stop'
                  Trip.where('stop_times.n' => val.to_i ).distinct(:route).collect {|r| Route.new r}.uniq
                when 'date'
-                 calendars = Calendar.for_date Date.parse(val)
+                 calendars = Calendar.for_date Time.zone.parse(val)
                  Trip.where(:calendar.in => calendars).distinct(:route).collect { |r| Route.new r }.uniq
                else
                  []

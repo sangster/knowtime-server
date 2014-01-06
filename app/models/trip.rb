@@ -14,24 +14,30 @@ class Trip
     where('route.s' => short_name).where(:calendar.in => Calendar.for_date(time).to_a)
   end
 
+  def class << self
+    def new_from_csv(row)
+      {        _id: row[:trip_id],
+          headsign: row[:trip_headsign],
+             route: Route.find(row[:route_id]),
+       calendar_id: row[:service_id],
+           path_id: row[:shape_id] }
+    end
 
-  def self.new_from_csv(row)
-    {_id: row[:trip_id], headsign: row[:trip_headsign],
-     route: Route.find(row[:route_id]), calendar_id: row[:service_id], path_id: row[:shape_id]}
-  end
+    def for_uuid(uuid_str)
+      key = Uuid.key_for uuid_str
+      Trip.find key unless key.nil?
+    end
 
-  def self.for_uuid(uuid_str)
-    key = Uuid.key_for uuid_str
-    Trip.find key unless key.nil?
-  end
+    def get(str)
+      Rails.cache.fetch "trip_#{str}", expires_in: 6.hours do
+        Uuid.get(Trip.uuid_namespace, str).idable
+      end
+    end
 
-  def self.get(str)
-    Rails.cache.fetch("trip_#{str}") { Uuid.get(Trip.uuid_namespace, str).idable }
-  end
-
-  def self.day_trips(short_name, time)
-    Rails.cache.fetch "day_trips_#{short_name}_#{time.strftime '%F_%R'}", expires_in: 1.hour do
-      Trip.route_day_trips short_name, time
+    def day_trips(short_name, time)
+      Rails.cache.fetch "day_trips_#{short_name}_#{time.strftime '%F_%R'}", expires_in: 1.hour do
+        Trip.route_day_trips short_name, time
+      end
     end
   end
 
@@ -43,7 +49,7 @@ class Trip
 
   def is_running?(time)
     minutes = case time
-                when Date
+                when Date, Time
                   time.hour * 60 + time.minute
                 else
                   time.to_i

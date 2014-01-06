@@ -19,16 +19,16 @@ class Calendar
 
   class << self
     def new_from_csv(row)
-      {_id: row[:service_id],
+      {       _id: row[:service_id],
        start_date: to_date(row[:start_date]),
-       end_date: to_date(row[:end_date]),
-       weekday: to_bool(row[:monday]),
-       saturday: to_bool(row[:saturday]),
-       sunday: to_bool(row[:sunday])}
+         end_date: to_date(row[:end_date]),
+          weekday: to_bool(row[:monday]),
+         saturday: to_bool(row[:saturday]),
+           sunday: to_bool(row[:sunday]) }
      end
 
      def for_date_params(params)
-      for_date Date.new(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+      for_date Time.zone.local(params[:year].to_i, params[:month].to_i, params[:day].to_i)
     end
 
     def for_date(date)
@@ -50,7 +50,7 @@ class Calendar
     private
 
     def to_date(str)
-      Date.strptime str, '%Y%m%d'
+      Time.zone.parse str
     end
 
     def to_bool(str)

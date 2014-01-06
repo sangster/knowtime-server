@@ -8,7 +8,7 @@ class User
   field :u, as: :uuid, type: BSON::Binary
   field :m, as: :moving_flag, type: Boolean, default: false
 
-  scope :recent, ->(age) { elem_match( user_locations: { :created_at.gt => (DateTime.now - age) } ) }
+  scope :recent, ->(age) { elem_match( user_locations: { :created_at.gt => (Time.zone.now - age) } ) }
 
   embeds_many :user_locations, inverse_of: :user
 
@@ -41,7 +41,7 @@ class User
   end
 
   def active?
-    newest_location.created_at > (DateTime.now - 10.seconds) rescue false
+    newest_location.created_at > (Time.zone.now - 10.seconds) rescue false
   end
 
   def within?(bounds)

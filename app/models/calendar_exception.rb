@@ -8,19 +8,24 @@ class CalendarException
 
   embedded_in :calendar
 
-  def self.new_from_csv(row)
-    Calendar.find(row[:service_id]).calendar_exceptions.create!(date: to_date(row[:date]))
-  end
+  class << self
+    def new_from_csv(row)
+      cal = Calendar.find(row[:service_id])
+      cal.calendar_exceptions.create! date: to_date(row[:date])
+    end
 
-  def self.to_date(str)
-    Date.strptime str, '%Y%m%d'
-  end
+    def skip_bulk_insert?
+      true
+    end
 
-  def self.skip_bulk_insert?
-    true
-  end
+    def skip_final_bulk_insert?
+      true
+    end
 
-  def self.skip_final_bulk_insert?
-    true
+    private
+
+    def to_date(str)
+      Time.zone.parse str
+    end
   end
 end

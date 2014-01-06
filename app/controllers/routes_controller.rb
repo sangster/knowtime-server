@@ -4,7 +4,6 @@ class RoutesController < ApplicationController
     render_error :not_found, "no route found for UUID: #{params[:route_uuid]}" if @route.nil?
   end
 
-
   def show_with_trips_on_date
     @route = Route.for_uuid params[:route_uuid]
     render_error :not_found, "no route found for UUID: #{params[:route_uuid]}" if @route.nil?
@@ -12,43 +11,35 @@ class RoutesController < ApplicationController
     @calendars = Calendar.for_date_params params
   end
 
-
   def index
     @routes = Route.all
   end
-
 
   def names
     @names = Route.names
   end
 
-
   def index_for_short_name_and_date
     @routes = Route.for_short_name_and_calendars params[:short_name], Calendar.for_date_params(params)
   end
-
 
   def index_by_query
     @routes = Route.simple_query params[:key], params[:value]
   end
 
-
   def index_by_query_with_headsigns
     query_with_headsigns Calendar.for_date_params(params), params[:key], params[:value]
   end
-
 
   def index_by_date_with_headsigns
     date_str = "#{params[:year]}-#{params[:month]}-#{params[:day]}"
     query_with_headsigns Calendar.for_date_params(params), 'date', date_str
   end
 
-
   def index_by_query_and_time_with_headsigns
     index_by_query_with_headsigns
     @minutes = params[:hours].to_i * 60 + params[:minutes].to_i
   end
-
 
   def index_by_date_and_time_with_headsigns
     index_by_date_with_headsigns
@@ -56,7 +47,6 @@ class RoutesController < ApplicationController
   end
 
   private
-
 
   def query_with_headsigns calendars, key, value
     @routes = Route.simple_query key, value

@@ -2,7 +2,7 @@ class UserConfigurationsController < ApplicationController
   include Rakeable
 
   def pollrate
-    @pollrate = 7
+    @pollrate = 6
   end
 
   def check_remote_zip

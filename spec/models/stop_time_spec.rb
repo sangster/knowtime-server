@@ -52,4 +52,29 @@ describe StopTime do
       end
     end
   end
+
+  describe '#next_stops' do
+    let(:stop_1) { create :stop_time, stop_time_row: build(:stop_time_row, stop_id: "10" ) }
+    let(:stop_2) { create :stop_time, stop_time_row: build(:stop_time_row, stop_id: "10" ) }
+    let(:route) { create :route }
+    let(:calendar) { create :calendar }
+    let(:time) { Time.zone.parse (calendar.start_date + 1.month).strftime('%c') }
+    let(:short_name) { route.short_name }
+
+    before do
+      build(:trip).tap do |t|
+        t.stop_times << stop_1
+        t.stop_times << stop_2
+        Trip.all.delete
+
+        t.route = route
+        calendar.trips << t
+        calendar.save!
+      end.save!
+    end
+
+    subject { StopTime.next_stops short_name, time }
+
+    it { expect( its :size ).to eq 1 }
+  end
 end

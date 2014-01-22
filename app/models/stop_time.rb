@@ -58,7 +58,7 @@ class StopTime
           trips.where(:'stop_times.d'.gte => minutes)
         end
 
-        trips.collect do |trip|
+        stops = trips.collect do |trip|
           trip.stop_times.select do |st|
             if duration
               range === st.departure
@@ -67,6 +67,16 @@ class StopTime
             end
           end
         end.flatten.sort_by! &:arrival
+
+        seen = Set.new
+        stops.select do |stop|
+          if seen.include? stop.stop_number
+            false
+          else
+            seen << stop.stop_number
+            true
+          end
+        end
       end
     end
 

@@ -12,6 +12,10 @@ class StopsController < ApplicationController
     @stop = get_stop_or_raise params[:stop_number]
   end
 
+  def next_stops
+    @next_stops = StopTime.next_stops params[:short_name], time_from_params
+  end
+
   private
 
   def get_stop_or_raise(stop_number)

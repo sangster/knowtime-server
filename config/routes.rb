@@ -6,6 +6,7 @@ BustedRuby::Application.routes.draw do
     get 'stop/:stop_number', to: 'stops#show'
     get 'stop/:stop_number/trips', to: 'stops#show_with_trip_uuids'
     get 'stops', to: 'stops#index'
+    get 'stops/:short_name/next', to: 'stops#next_stops'
 
     get 'stoptimes/:stop_number/:year-:month-:day', to: 'stop_times#visitors_for_stop_and_date'
 

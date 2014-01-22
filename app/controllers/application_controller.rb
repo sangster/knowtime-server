@@ -1,7 +1,4 @@
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
-  #protect_from_forgery with: :exception
 
   protected
 
@@ -9,6 +6,14 @@ class ApplicationController < ActionController::Base
     status = convert_status status
     message = default_message status if message.nil?
     render text: "{\"status\":\"#{status}\",\"error\":\"#{message.to_s}\"}", status: status
+  end
+
+  def time_from_params
+    begin
+      Time.zone.parse params[:time]
+    rescue
+      nil
+    end or Time.zone.now
   end
 
   private

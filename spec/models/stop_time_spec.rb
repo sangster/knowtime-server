@@ -52,4 +52,53 @@ describe StopTime do
       end
     end
   end
+
+  describe '#next_stops' do
+    let(:route) { create :route }
+    let(:calendar) { create :calendar }
+    let(:time) { Time.zone.parse (calendar.start_date + 1.month).strftime('%c') }
+    let(:short_name) { route.short_name }
+
+    subject { StopTime.next_stops short_name, time }
+
+    context 'with 2 stops at the same bus stop on different trips' do
+      let(:stop_1) { create :stop_time, stop_time_row: build(:stop_time_row, stop_id: "10" ) }
+      let(:stop_2) { create :stop_time, stop_time_row: build(:stop_time_row, stop_id: "10" ) }
+
+      before do
+        stop_1.trip.route = route
+        stop_1.trip.save!
+        stop_2.trip.route = route
+        stop_2.trip.save!
+
+        calendar.trips << stop_1.trip << stop_2.trip
+        calendar.save!
+      end
+
+      it { expect( its :size ).to eq 1 }
+      it { expect( its :first, :id ).to eq stop_1.id }
+      it { expect( its :first, :id ).not_to eq stop_2.id }
+    end
+
+    context 'with 2 stops on the same trip' do
+      let(:stop_1) { create :stop_time, stop_time_row: build(:stop_time_row) }
+      let(:stop_2) { create :stop_time, stop_time_row: build(:stop_time_row) }
+
+      before do
+        build(:trip).tap do |t|
+          t.stop_times << stop_1
+          t.stop_times << stop_2
+          Trip.all.delete # the factory StopTimes come with their own trips
+
+          t.route = route
+          calendar.trips << t
+          calendar.save!
+        end.save!
+      end
+
+      it { expect( its :size ).to eq 1 }
+      it { expect( its :first, :id ).to eq stop_1.id }
+      it { expect( its :first, :id ).not_to eq stop_2.id }
+    end
+  end
 end

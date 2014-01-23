@@ -54,13 +54,16 @@ describe StopTime do
   end
 
   describe '#next_stops' do
+    let(:route) { create :route }
+    let(:calendar) { create :calendar }
+    let(:time) { Time.zone.parse (calendar.start_date + 1.month).strftime('%c') }
+    let(:short_name) { route.short_name }
+
+    subject { StopTime.next_stops short_name, time }
+
     context 'with 2 stops at the same bus stop on different trips' do
       let(:stop_1) { create :stop_time, stop_time_row: build(:stop_time_row, stop_id: "10" ) }
       let(:stop_2) { create :stop_time, stop_time_row: build(:stop_time_row, stop_id: "10" ) }
-      let(:route) { create :route }
-      let(:calendar) { create :calendar }
-      let(:time) { Time.zone.parse (calendar.start_date + 1.month).strftime('%c') }
-      let(:short_name) { route.short_name }
 
       before do
         stop_1.trip.route = route
@@ -72,8 +75,6 @@ describe StopTime do
         calendar.save!
       end
 
-      subject { StopTime.next_stops short_name, time }
-
       it { expect( its :size ).to eq 1 }
       it { expect( its :first, :id ).to eq stop_1.id }
       it { expect( its :first, :id ).not_to eq stop_2.id }
@@ -82,10 +83,6 @@ describe StopTime do
     context 'with 2 stops on the same trip' do
       let(:stop_1) { create :stop_time, stop_time_row: build(:stop_time_row) }
       let(:stop_2) { create :stop_time, stop_time_row: build(:stop_time_row) }
-      let(:route) { create :route }
-      let(:calendar) { create :calendar }
-      let(:time) { Time.zone.parse (calendar.start_date + 1.month).strftime('%c') }
-      let(:short_name) { route.short_name }
 
       before do
         build(:trip).tap do |t|
@@ -98,8 +95,6 @@ describe StopTime do
           calendar.save!
         end.save!
       end
-
-      subject { StopTime.next_stops short_name, time }
 
       it { expect( its :size ).to eq 1 }
       it { expect( its :first, :id ).to eq stop_1.id }

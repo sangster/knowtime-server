@@ -16,6 +16,12 @@ describe Location do
 
     it { expect(subject.first).to eq subject.second }
   end
+
+  context 'one location with a time, one without' do
+    subject { [Location.new(1, 2), Location.new(1, 2, nil)] }
+
+    it { expect( its :first ).not_to eq its :second }
+  end
 end
 
 describe Location, '#each' do

@@ -45,6 +45,9 @@ class StopTime
       true
     end
 
+    # Return the StopTimes that are coming up next for buses on the given bus
+    # line. Will only return the first StopTime found for a invidual stop, and
+    # only the first StopTime for an individual trip.
     def next_stops(short_name, time, duration = nil)
       minutes = (time.seconds_since_midnight / 60).to_i
 
@@ -68,19 +71,26 @@ class StopTime
           end
         end.flatten.sort_by! &:arrival
 
-        seen = Set.new
-        stops.select do |stop|
-          if seen.include? stop.stop_number
-            false
-          else
-            seen << stop.stop_number
-            true
-          end
-        end
+        stops = select_first_match(stops) { |s| s.trip.id     }
+        stops = select_first_match(stops) { |s| s.stop_number }
       end
     end
 
-    private 
+    private
+
+
+    def select_first_match(stop_times, &block)
+      seen = Set.new
+
+      stop_times.select do |stop|
+        key = block.call stop
+        if seen.include? key
+          false
+        else
+          seen << key
+        end
+      end
+    end
 
     def to_minutes(str)
       str[0, 2].to_i * 60 + str[3, 2].to_i

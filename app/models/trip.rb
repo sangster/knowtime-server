@@ -58,6 +58,6 @@ class Trip
   end
 
   def stop_numbers
-    stop_times.collect &:stop_number
+    @stop_numbers ||= stop_times.collect &:stop_number
   end
 end

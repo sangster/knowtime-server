@@ -11,7 +11,10 @@ class CalendarsController < ApplicationController
 
   def table
     cal = Calendar.for_date( time_from_params ).first
+    @tables = {}
 
-    @groups = cal.trip_groups params[:short_name]
+    cal.trip_groups( params[:short_name] ).each_pair do |heading,trips|
+      @tables[heading] = CalendarTable.new heading, trips
+    end
   end
 end

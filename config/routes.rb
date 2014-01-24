@@ -28,6 +28,7 @@ BustedRuby::Application.routes.draw do
     get 'trip/:trip_uuid', to: 'trips#show'
 
     get 'calendar/:calendar_uuid', to: 'calendars#show'
+    get 'calendar/table/:short_name(.:format)', to: 'calendars#table'
     get 'calendars/:year-:month-:day', to: 'calendars#index_for_date'
 
     get 'pollrate', to: 'user_configurations#pollrate'

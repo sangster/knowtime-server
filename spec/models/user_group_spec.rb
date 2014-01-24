@@ -26,7 +26,7 @@ describe UserGroup do
       it { expect( its :location ).not_to be_nil }
       it { expect( its :lat ).to be subject.location.lat }
       it { expect( its :lng ).to be subject.location.lng }
-      it { expect{ subject << new_user }.to change(subject, :location) }
+      it { expect{ subject << new_user }.to change subject, :location }
     end
 
 

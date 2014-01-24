@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
   def time_from_params
     begin
-      Time.zone.parse( params[:time] ).tap do |time|
+      Time.zone.parse( params[:time] || params[:date] ).tap do |time|
         logger.info "Using user-provided '#{time}' instead of current time"
       end
     rescue

@@ -9,13 +9,15 @@ class Calendar
   field :u, as: :sunday, type: Boolean
 
   index start_date: 1
-  index end_dat: 1
-  index weekday: 1
-  index saturday: 1
-  index sunday: 1
+  index end_date:   1
+  index weekday:    1
+  index saturday:   1
+  index sunday:     1
 
   embeds_many :calendar_exceptions
   has_many :trips
+
+  scope :not_ferry, -> { where id: /^((?!fer).)*$/ }
 
   class << self
     def new_from_csv(row)
@@ -32,7 +34,7 @@ class Calendar
     end
 
     def for_date(date)
-      criteria = Calendar.where(:start_date.lte => date).where(:end_date.gte => date)
+      criteria = Calendar.not_ferry.where(:start_date.lte => date).where(:end_date.gte => date)
       if date.saturday?
         criteria.where saturday: true
       elsif date.sunday?
@@ -60,5 +62,20 @@ class Calendar
 
   def uuid
     Uuid.for self
+  end
+
+  def ferry?
+    id.include? 'fer'
+  end
+
+  def trip_groups(short_name)
+    Rails.cache.fetch "#{id}_#{short_name}" do
+      groups = Trip.where( calendar: self ).where( 'route.s' => short_name).group_by &:headsign
+
+      groups.each_key do |headsign|
+        groups[headsign] = groups[headsign].sort {|a,b| a.stop_times.first <=> b.stop_times.first }
+      end
+    end
+
   end
 end

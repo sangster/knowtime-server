@@ -1,0 +1,35 @@
+table.calendar {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 12px;
+  width: 480px;
+  text-align: left;
+  border-collapse: collapse;
+  border: 1px solid #6cf;
+  text-align: center;
+}
+
+table.calendar th {
+  font-weight: normal;
+  font-size: 13px;
+  color: #039;
+  text-transform: uppercase;
+  border-right: 1px solid #0865c2;
+  border-top: 1px solid #0865c2;
+  border-left: 1px solid #0865c2;
+  border-bottom: 1px solid #fff;
+  font-weight: bold;
+}
+
+table.calendar td {
+  color: #669;
+  border-right: 1px dashed #6cf;
+  padding: 0.25em 0.5em;
+}
+
+table.calendar tr:hover td {
+  background-color: #dff;
+}
+
+table.calendar td.guide {
+  background-color: #eeffff;
+}

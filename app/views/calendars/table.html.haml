@@ -1,0 +1,20 @@
+- @groups.each_key do |headsign|
+  - stop_numbers = @groups[headsign].first.stop_numbers
+
+  %h2= headsign
+  %table{ class: :calendar }
+    %thead
+      %tr
+        - stop_numbers.each do |stop_number|
+          %th{ class: cycle(nil, :guide) }= stop_number
+
+    %tbody
+      - @groups[headsign].each do |trip|
+        %tr
+          - reset_cycle
+          - trip.stop_times.each do |stop_time|
+            %td{ class: cycle(nil, :guide) }= stop_time.arrival_str
+
+    %tfoot
+      %tr
+        %td{ colspan: stop_numbers.size }= "Generated #{Time.zone.now}"

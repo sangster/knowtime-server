@@ -38,5 +38,7 @@ module BustedRuby
     end
     
     config.time_zone = 'America/Halifax'
+
+    config.assets.enabled = true
   end
 end

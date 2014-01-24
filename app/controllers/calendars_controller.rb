@@ -8,4 +8,10 @@ class CalendarsController < ApplicationController
   def index_for_date
     @calendars = Calendar.for_date_params params
   end
+
+  def table
+    cal = Calendar.for_date( time_from_params ).first
+
+    @groups = cal.trip_groups params[:short_name]
+  end
 end

@@ -118,6 +118,10 @@ class StopTime
     minutes_to_time departure
   end
 
+  def <=>(o)
+    arrival <=> o.arrival
+  end
+
   private
 
   def minutes_to_time(minutes)

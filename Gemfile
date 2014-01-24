@@ -11,6 +11,7 @@ gem 'sepastian-mongoid-rails4', '~> 4.0.1.alpha'
 gem 'rubyzip'
 gem 'uuidtools'
 gem 'jbuilder', '~> 1.2'
+gem 'haml-rails'
 gem 'newrelic_rpm'
 gem 'dalli'
 

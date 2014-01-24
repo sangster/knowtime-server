@@ -41,12 +41,6 @@ class Trip
     end
   end
 
-  #alias_method :uncached_stop_times, :stop_times
-  #
-  #def stop_times
-  #  Rails.cache.fetch("trip_#{id}_stop_times", expires_in: 1.hour) { uncached_stop_times }
-  #end
-
   def is_running?(time)
     minutes = case time
                 when Date, Time
@@ -61,5 +55,9 @@ class Trip
 
   def uuid
     Uuid.for self
+  end
+
+  def stop_numbers
+    @stop_numbers ||= stop_times.collect &:stop_number
   end
 end

@@ -1,4 +1,4 @@
-table.calendar {
+table.schedule {
   font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   font-size: 12px;
   width: 480px;
@@ -8,7 +8,7 @@ table.calendar {
   text-align: center;
 }
 
-table.calendar th {
+table.schedule th {
   font-weight: normal;
   font-size: 13px;
   color: #039;
@@ -20,16 +20,16 @@ table.calendar th {
   font-weight: bold;
 }
 
-table.calendar td {
+table.schedule td {
   color: #669;
   border-right: 1px dashed #6cf;
   padding: 0.25em 0.5em;
 }
 
-table.calendar tr:hover td {
+table.schedule tr:hover td {
   background-color: #dff;
 }
 
-table.calendar td.guide {
+table.schedule td.guide {
   background-color: #eeffff;
 }

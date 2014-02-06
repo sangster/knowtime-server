@@ -58,7 +58,7 @@ class BusEstimation
         end
       end
 
-      estimates.uniq! { |e| e.stop_number }
+      estimates.tap {|e| e.uniq! &:stop_number }
     end
   end
 

@@ -23,9 +23,9 @@ class ApplicationController < ActionController::Base
   def convert_status status
     case status
       when 404, :not_found
-        '404'
+        404
       else
-        '599'
+        599
     end
   end
 

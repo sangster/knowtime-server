@@ -76,6 +76,5 @@ class Calendar
         groups[headsign] = groups[headsign].sort {|a,b| a.stop_times.first <=> b.stop_times.first }
       end
     end
-
   end
 end

@@ -10,4 +10,9 @@ class SchedulesController < ApplicationController
       @schedules[heading] = CalendarTable.new heading, trips
     end
   end
+
+  def next_stops
+    @next_stops = StopTime.next_stops params[:short_name],
+                                      time_from_params, 10.minutes
+  end
 end

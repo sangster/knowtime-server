@@ -62,13 +62,13 @@ class BusEstimation
     end
   end
 
+
   def initialize(stop_number, arrival, lat, lng)
     self.stop_number = stop_number
     self.arrival = arrival
     self.lat = lat
     self.lng = lng
   end
-
 
   def arrival_str
     minutes_to_time arrival

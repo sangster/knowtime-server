@@ -44,6 +44,7 @@ BustedRuby::Application.routes.draw do
     get 'estimates/short::short_name', to: 'estimations#index_for_short_name'
     get 'estimates/short::short_name/:lat1::lng1/:lat2::lng2', to: 'estimations#index_for_short_name_within_area',
       constraints: { lat1: float_regex, lng1: float_regex, lat2: float_regex, lng2: float_regex }
+    get 'estimates/activelines', to: 'estimations#active_lines'
   end
 
 end

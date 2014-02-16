@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class V1::UsersController < V1::ApplicationController
   def show
     user = User.get params[:user_uuid]
 

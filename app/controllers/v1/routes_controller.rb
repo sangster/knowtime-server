@@ -1,4 +1,4 @@
-class RoutesController < ApplicationController
+class V1::RoutesController < V1::ApplicationController
   def show
     @route = Route.for_uuid params[:route_uuid]
     render_error :not_found, "no route found for UUID: #{params[:route_uuid]}" if @route.nil?

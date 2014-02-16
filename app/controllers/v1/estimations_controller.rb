@@ -1,4 +1,4 @@
-class EstimationsController < ApplicationController
+class V1::EstimationsController < V1::ApplicationController
   def index_for_short_name
     short_name = params[:short_name]
 

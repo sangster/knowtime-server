@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
     render text: "{\"status\":\"#{status}\",\"error\":\"#{message.to_s}\"}", status: status
   end
 
+  def time_params?
+    params.key? :time or params.key? :date
+  end
+
   def time_from_params
     begin
       Time.zone.parse( params[:time] || params[:date] ).tap do |time|

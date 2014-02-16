@@ -9,6 +9,9 @@ class User
   field :m, as: :moving_flag, type: Boolean, default: false
 
   scope :recent, ->(age) { elem_match( user_locations: { :created_at.gt => (Time.zone.now - age) } ) }
+  scope :with_locations_between, ->(range) do
+    elem_match user_locations: { :created_at.between => range }
+  end
 
   embeds_many :user_locations, inverse_of: :user
 

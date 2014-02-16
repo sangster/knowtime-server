@@ -3,6 +3,19 @@ class BusEstimation
   attr_accessor :stop_number, :arrival, :lat, :lng
 
   class << self
+    def active_lines(opts = {})
+      opts.reverse_merge! time: nil, duration: 5.minutes
+      users = if opts[:time]
+        time_end = opts[:time]
+        time_start = time_end - opts[:duration]
+        User.with_locations_between (time_start..time_end)
+      else
+        User.recent opts[:duration]
+      end
+
+      users.collect(&:short_name).uniq
+    end
+
     def locations_and_next_stops(short_name, time, opts = {})
       opts.reverse_merge! duration: nil, bounds: nil
 
@@ -62,13 +75,13 @@ class BusEstimation
     end
   end
 
+
   def initialize(stop_number, arrival, lat, lng)
     self.stop_number = stop_number
     self.arrival = arrival
     self.lat = lat
     self.lng = lng
   end
-
 
   def arrival_str
     minutes_to_time arrival

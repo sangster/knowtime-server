@@ -13,7 +13,7 @@ class BusEstimation
         User.recent opts[:duration]
       end
 
-      users.collect(:short_name).uniq
+      users.collect(&:short_name).uniq
     end
 
     def locations_and_next_stops(short_name, time, opts = {})

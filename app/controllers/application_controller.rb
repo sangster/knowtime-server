@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   def time_params?
-    params.key? :time || params.key? :date
+    params.key? :time or params.key? :date
   end
 
   def time_from_params

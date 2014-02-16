@@ -17,7 +17,8 @@ class EstimationsController < ApplicationController
   end
 
   def active_lines
-    time = time_params? ? time_from_params : nil
-    @lines = BusEstimation.active_lines time: time, duration: params[:duration]
+    ops = { time: time_params? ? time_from_params : nil, duration: params[:duration] }
+    opts.delete_if :nil?
+    @lines = BusEstimation.active_lines opts
   end
 end

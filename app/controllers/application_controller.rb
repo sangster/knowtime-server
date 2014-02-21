@@ -1,6 +1,10 @@
 class ApplicationController < ActionController::Base
 
+  after_filter :cors_set_access_control_headers
+
+
   protected
+
 
   def render_error status, message = nil
     status = convert_status status
@@ -45,4 +49,16 @@ class ApplicationController < ActionController::Base
   def correct_admin_uuid?
     params[:admin_uuid] == SECRETS['knowtime']['admin_uuid']
   end
+
+
+  private
+
+  
+  def cors_set_access_control_headers
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = '*'
+    headers['Access-Control-Allow-Headers'] = %w{Origin Accept Content-Type X-Requested-With X-CSRF-Token}.join(',')
+    headers['Access-Control-Max-Age'] = "1728000"
+  end
 end
+

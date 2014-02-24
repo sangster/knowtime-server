@@ -54,7 +54,6 @@ class DataPull
 
         if models.length == BULK_INSERT_SIZE
           model_class.create! models unless (model_class.skip_bulk_insert? rescue false)
-          #transaction { models.each &:save }
           total = total + models.length
           models.clear
           logger.info "Inserted #{BULK_INSERT_SIZE} objects for #{model_class} (total: #{total})"
@@ -64,7 +63,6 @@ class DataPull
 
     unless models.empty? # whatever is left
       model_class.create! models unless (model_class.skip_final_bulk_insert? rescue false)
-      #transaction { models.each &:save }
       logger.info "Inserted #{models.length} objects for #{model_class} (total: #{total + models.length})"
     end
   end

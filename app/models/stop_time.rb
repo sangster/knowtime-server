@@ -13,11 +13,16 @@ class StopTime
   embedded_in :trip, inverse_of: :stop_times
   belongs_to :stop, inverse_of: :stop_times, foreign_key: :n, index: true
 
+  MERGED_STOP_ID = /\d+_merged_(\d+)/
+
   class << self
     @@_unsaved_times = []
     @@_id = nil
 
     def new_from_csv(row)
+    merged = MERGED_STOP_ID.match row[:stop_id]
+    row[:stop_id] = merged[1] if merged
+
       tr = unsaved_stop_times row[:trip_id]
       tr << StopTime.new(stop_number: row[:stop_id].to_i, index: row[:stop_sequence],
        arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time]))

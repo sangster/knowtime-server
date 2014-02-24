@@ -8,13 +8,15 @@ class Stop
   field :t, as: :lat, type: Float
   field :g, as: :lng, type: Float
 
-  #has_many :stop_times, inverse_of: :stops, foreign_key: 'stop_number'
-
   TO_LOWER = %w(Bvld Dr Ave Rd St To Pk Terr Ct Pkwy Hwy Lane Way Entrance Entr)
+  MERGED_STOP_ID = /\d+_merged_(\d+)/
 
   alias_method :stop_number, :id
 
   def self.new_from_csv(row)
+    merged = MERGED_STOP_ID.match row[:stop_id]
+    row[:stop_id] = merged[1] if merged
+
     {_id: row[:stop_id],
      name: format_short_name(row[:stop_name]),
      lat: row[:stop_lat],

@@ -2,6 +2,13 @@ float_regex = /[-+]?[0-9]*\.?[0-9]*/
 
 BustedRuby::Application.routes.draw do
 
+  scope '/v2/', module: :v2, defaults: {format: :json} do
+    resources :bus_lines, only: [:index]
+    resources :calendars, only: [:index, :show]
+    resources :paths, only: [:show]
+  end
+
+
   scope '/alpha_1/', module: :v1, defaults: {format: 'json'} do
     get 'stop/:stop_number', to: 'stops#show'
     get 'stop/:stop_number/trips', to: 'stops#show_with_trip_uuids'

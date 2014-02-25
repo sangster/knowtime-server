@@ -1,4 +1,4 @@
-class UserConfigurationsController < ApplicationController
+class V1::UserConfigurationsController < V1::ApplicationController
   include Rakeable
 
   def pollrate

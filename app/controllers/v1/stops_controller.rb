@@ -1,4 +1,4 @@
-class StopsController < ApplicationController
+class V1::StopsController < V1::ApplicationController
 
   def index
     @stops = Stop.all_by_stop_number

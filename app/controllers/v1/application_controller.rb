@@ -1,4 +1,4 @@
-class ApplicationController < ActionController::Base
+class V1::ApplicationController < ActionController::Base
 
   after_filter :cors_set_access_control_headers
 

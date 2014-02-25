@@ -1,4 +1,4 @@
-class PathsController < ApplicationController
+class V1::PathsController < V1::ApplicationController
   respond_to :json
 
   def show

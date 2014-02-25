@@ -1,4 +1,4 @@
-class SchedulesController < ApplicationController
+class V1::SchedulesController < V1::ApplicationController
   def show
     @short_name = params[:short_name]
     @date = time_from_params

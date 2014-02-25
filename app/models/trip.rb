@@ -6,6 +6,7 @@ class Trip
 
   belongs_to :calendar
   belongs_to :path
+  belongs_to :trip_group
 
   embeds_one :route
   embeds_many :stop_times, inverse_of: :trip
@@ -15,12 +16,13 @@ class Trip
   end
 
   class << self
-    def new_from_csv(row)
-      {        _id: row[:trip_id],
-          headsign: row[:trip_headsign],
-             route: Route.find(row[:route_id]),
-       calendar_id: row[:service_id],
-           path_id: row[:shape_id] }
+    def from_gtfs(row)
+      create! _id: row.id,
+        trip_group_id: row.block_id,
+        headsign: row.headsign,
+        route: Route.find( row.route_id ),
+        calendar_id: row.service_id,
+        path_id: row.shape_id
     end
 
     def for_uuid(uuid_str)

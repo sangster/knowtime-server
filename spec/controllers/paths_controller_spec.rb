@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PathsController do
+describe V1::PathsController do
   render_views
 
   before { create :calendar }
@@ -86,12 +86,6 @@ describe PathsController do
         params = {year: 2014, month: 1, day: 1, route_uuid: 'bad-route'}
         get :index_for_route_and_date, params
         expect( json['error'] ).to match /no route found/
-      end
-
-      pending 'should return paths' do
-        # params = {year: 2014, month: 1, day: 1, route_uuid: @trips.first.route.uuid.to_s}
-        # get :index_for_route_and_date, params
-        # expect(json.length).to eq(2)
       end
     end    
   end

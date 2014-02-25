@@ -16,13 +16,13 @@ class Trip
   end
 
   class << self
-    def from_gtfs(row)
-      create! _id: row.id,
-        trip_group_id: row.block_id,
-        headsign: row.headsign,
-        route: Route.find( row.route_id ),
-        calendar_id: row.service_id,
-        path_id: row.shape_id
+    def new_from_csv(row)
+      {           _id: row[:trip_id],
+        trip_group_id: row[:block_id],
+             headsign: row[:trip_headsign],
+                route: Route.find(row[:route_id]),
+          calendar_id: row[:service_id],
+              path_id: row[:shape_id] }
     end
 
     def for_uuid(uuid_str)

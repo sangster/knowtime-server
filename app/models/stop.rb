@@ -13,25 +13,37 @@ class Stop
 
   alias_method :stop_number, :id
 
-  def self.new_from_csv(row)
-    merged = MERGED_STOP_ID.match row[:stop_id]
-    row[:stop_id] = merged[1] if merged
+  class << self
+    def from_gtfs(row)
+      id = row.id
+      merged = MERGED_STOP_ID.match id
+      id = merged[1] if merged
 
-    {_id: row[:stop_id],
-     name: format_short_name(row[:stop_name]),
-     lat: row[:stop_lat],
-     lng: row[:stop_lon]}
-  end
-
-  def self.get(stop_number)
-    Rails.cache.fetch("stop_#{stop_number}", expire_in: 1.day) do
-      Stop.find stop_number
+      create! _id: id,
+        name: format_stop_name( row.name ),
+        lat: row.lat,
+        lng: row.lon
     end
-  end
 
-  def self.all_by_stop_number
-    Rails.cache.fetch("all_stops", expire_in: 1.day) do
-      all.sort_by &:stop_number
+    def get(stop_number)
+      Rails.cache.fetch("stop_#{stop_number}", expire_in: 1.day) do
+        Stop.find stop_number
+      end
+    end
+
+    def all_by_stop_number
+      Rails.cache.fetch("all_stops", expire_in: 1.day) do
+        all.sort_by &:stop_number
+      end
+    end
+
+    private
+
+    def format_stop_name(str)
+      str.strip!
+      TO_LOWER.each { |lower| str.gsub! /\b#{lower}\b/, lower.downcase }
+      str[0] = str[0].upcase
+      str
     end
   end
 
@@ -64,13 +76,6 @@ class Stop
   end
 
   private
-
-  def self.format_short_name(str)
-    str.strip!
-    TO_LOWER.each { |lower| str.gsub! /\b#{lower}\b/, lower.downcase }
-    str[0] = str[0].upcase
-    str
-  end
 
   def trips_criteria
     Trip.where(:'stop_times.n' => self.stop_number)

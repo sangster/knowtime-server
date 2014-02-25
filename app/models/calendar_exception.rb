@@ -9,9 +9,9 @@ class CalendarException
   embedded_in :calendar
 
   class << self
-    def new_from_csv(row)
-      cal = Calendar.find(row[:service_id])
-      cal.calendar_exceptions.create! date: to_date(row[:date])
+    def from_gtfs(row)
+      cal = Calendar.find row.service_id
+      cal.calendar_exceptions.create! date: to_date( row.date )
     end
 
     def skip_bulk_insert?

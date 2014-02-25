@@ -3,12 +3,12 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 #ruby '1.9.3', engine: 'jruby', engine_version: '1.7.8'
 
-gem 'rails', '4.0.1'
+gem 'rails', '~> 4.0'
 gem 'rake'
 
 gem 'sepastian-mongoid-rails4', '~> 4.0.1.alpha'
 
-gem 'rubyzip'
+gem 'gtfs', '~> 0.2'
 gem 'uuidtools'
 gem 'jbuilder', '~> 1.2'
 gem 'haml-rails'

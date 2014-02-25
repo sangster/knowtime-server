@@ -14,8 +14,8 @@ class Path
   @@_id = nil
 
   def self.new_from_csv(row)
-    p = path row[:shape_id]
-    p << PathPoint.new(index: row[:shape_pt_sequence].to_i, lat: row[:shape_pt_lat].to_f, lng: row[:shape_pt_lon].to_f)
+    p = path row.id
+    p << PathPoint.new(index: row.pt_sequence.to_i, lat: row.pt_lat.to_f, lng: row.pt_lon.to_f)
   end
 
   def self.path(shape_id)

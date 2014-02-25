@@ -1,3 +1,5 @@
+require 'ostruct'
+
 FactoryGirl.define do
   factory :stop_time do
     ignore { stop_time_row strategy: :build }
@@ -18,8 +20,8 @@ FactoryGirl.define do
     end
 
     initialize_with do
-      { trip_id: trip_id, stop_id: stop_id, stop_sequence: stop_sequence,
-        arrival_time: arrival_time, departure_time: departure_time }
+      OpenStruct.new trip_id: trip_id, stop_id: stop_id, stop_sequence: stop_sequence,
+        arrival_time: arrival_time, departure_time: departure_time
     end
   end
 

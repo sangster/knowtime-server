@@ -1,7 +1,5 @@
 require 'net/http'
-require 'open-uri'
-require 'zip/filesystem'
-require 'csv'
+require 'gtfs'
 
 
 class DataPull
@@ -13,45 +11,35 @@ class DataPull
 
   BULK_INSERT_SIZE = 1024
 
-  # TODO replace with cron job
-  def self.remote_zip_new?
-    url = URI METRO_TRANSIT['zip_url']
+  class << self
 
-    logger.info "Checking remote zip #{url} for updates"
-    server_etag = fetch_remote_etag(url)[1..-2]
+    def update_from_remote_zip
+      url = METRO_TRANSIT['zip_url']
+      logger.info "Updating data from #{url}"
 
-    pull = DataPull.last
-    pull.nil? or pull.etag != server_etag
-  end
+      source = GTFS::Source.build url
 
-  def self.update_from_remote_zip
-    url = URI METRO_TRANSIT['zip_url']
-    logger.info "Updating data from #{url}"
-
-    DataPull.download_zip url do |zip|
-      bulk_insert_rows zip, 'stops.txt', Stop
-      bulk_insert_rows zip, 'shapes.txt', Path
-      bulk_insert_rows zip, 'routes.txt', Route
-      bulk_insert_rows zip, 'calendar.txt', Calendar
-      bulk_insert_rows zip, 'calendar_dates.txt', CalendarException
-      bulk_insert_rows zip, 'trips.txt', Trip
-      bulk_insert_rows zip, 'stop_times.txt', StopTime
+      source.each_stop &from_gtfs( Stop )
+      bulk_insert_rows source.shapes, Path
+      source.each_route &from_gtfs( Route )
+      source.each_calendar &from_gtfs( Calendar )
+      source.each_calendar_date &from_gtfs( CalendarException )
+      source.each_trip &from_gtfs( Trip )
+      bulk_insert_rows source.stop_times, StopTime
 
       TripGroup.create_groups
 
       DataPull.create! url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
       logger.info 'Finished reading CSV files'
     end
-  end
 
-  def self.bulk_insert_rows(zip, zip_filename, model_class)
-    logger.info "Deleting all rows from #{model_class}"
-    model_class.delete_all
+    def bulk_insert_rows(rows, model_class)
+      logger.info "Deleting all rows from #{model_class}"
+      model_class.delete_all
 
-    total = 0
-    models = []
-    zip.file.open(zip_filename) do |f|
-      CSV.new(f, :headers => true, :header_converters => :symbol).each do |row|
+      total = 0
+      models = []
+      rows.each do |row|
         models << model_class.new_from_csv(row)
 
         if models.length == BULK_INSERT_SIZE
@@ -61,23 +49,39 @@ class DataPull
           logger.info "Inserted #{BULK_INSERT_SIZE} objects for #{model_class} (total: #{total})"
         end
       end
+
+      unless models.empty? # whatever is left
+        model_class.create! models unless (model_class.skip_final_bulk_insert? rescue false)
+        logger.info "Inserted #{models.length} objects for #{model_class} (total: #{total + models.length})"
+      end
     end
 
-    unless models.empty? # whatever is left
-      model_class.create! models unless (model_class.skip_final_bulk_insert? rescue false)
-      logger.info "Inserted #{models.length} objects for #{model_class} (total: #{total + models.length})"
+    # TODO replace with cron job
+    def remote_zip_new?
+      url = METRO_TRANSIT['zip_url']
+
+      logger.info "Checking remote zip #{url} for updates"
+      server_etag = fetch_remote_etag(url)[1..-2]
+
+      pull = DataPull.last
+      pull.nil? or pull.etag != server_etag
+      true
     end
-  end
 
-  def self.fetch_remote_etag(url)
-    Net::HTTP.start(url.host) { |http| http.request_head(url.path)['etag'] }
-  end
+    private
 
-  def self.download_zip(url, &block)
-    file = Tempfile.new 'metro_transit'
-    file.binmode
-    file << open(url).read
-    Zip::File.open(file, &block)
-    file.delete
+    def from_gtfs(model)
+      model.delete_all
+      method = model.method :from_gtfs
+      Proc.new do |row|
+        obj = method.call row
+        # logger.info "Create #{model.name}: '#{obj.id}'"
+      end
+    end
+
+    def fetch_remote_etag(url_str)
+      url = URI url_str
+      Net::HTTP.start(url.host) { |http| http.request_head(url.path)['etag'] }
+    end
   end
 end

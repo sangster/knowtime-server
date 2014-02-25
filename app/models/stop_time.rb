@@ -20,12 +20,13 @@ class StopTime
     @@_id = nil
 
     def new_from_csv(row)
-    merged = MERGED_STOP_ID.match row[:stop_id]
-    row[:stop_id] = merged[1] if merged
+      stop_id = row.stop_id
+      merged = MERGED_STOP_ID.match stop_id
+      stop_id = merged[1] if merged
 
-      tr = unsaved_stop_times row[:trip_id]
-      tr << StopTime.new(stop_number: row[:stop_id].to_i, index: row[:stop_sequence],
-       arrival: to_minutes(row[:arrival_time]), departure: to_minutes(row[:departure_time]))
+      tr = unsaved_stop_times row.trip_id
+      tr << StopTime.new(stop_number: stop_id.to_i, index: row.stop_sequence,
+        arrival: to_minutes(row.arrival_time), departure: to_minutes(row.departure_time))
     end
 
     def for_stop_and_trips(stop, trips)

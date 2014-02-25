@@ -6,9 +6,8 @@ class TripGroup
 
   def self.create_groups
     delete_all
-
     Trip.distinct( :trip_group_id ).each do |group_id|
       TripGroup.create! _id: group_id
-    end
+    end 
   end
 end

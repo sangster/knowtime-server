@@ -35,10 +35,10 @@ describe User do
 
 
     context 'with user locations' do
-      subject(:user) { create :user_with_locations }
+      subject { create :user_with_locations }
       let(:close_group) do
-        lat = user.newest_location.lat + 0.0001
-        lng = user.newest_location.lng + 0.0001
+        lat = subject.newest_location.lat + 0.0001
+        lng = subject.newest_location.lng + 0.0001
         build(:user_group).tap{|g| g << create(:user, lat: lat, lng: lng) }
       end
       let(:groups) do
@@ -53,10 +53,10 @@ describe User do
       it { expect( its :newest_location ).not_to be_nil }
 
       it 'should not be within some bounds' do
-        expect(LocationBounds.each(60).any? {|b| user.within? b }).to be_truthy
+        expect(LocationBounds.each(60).any? {|b| subject.within? b }).to be_truthy
       end
 
-      it { expect( user.closest_group groups, group_radius ).to eq close_group }
+      it { expect( subject.closest_group groups, group_radius ).to eq close_group }
 
 
       context 'and is moving' do

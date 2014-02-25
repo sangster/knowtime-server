@@ -8,10 +8,8 @@ class Route
   index short_name: 1
 
 
-  def self.from_gtfs(row)
-    create! _id: row.id,
-      short_name: row.short_name,
-      long_name: row.long_name
+  def self.new_from_csv(row)
+    {_id: row[:route_id], short_name: row[:route_short_name], long_name: row[:route_long_name]}
   end
 
   def self.for_uuid(uuid_str)

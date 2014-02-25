@@ -20,13 +20,13 @@ class Calendar
   scope :not_ferry, -> { where id: /^((?!fer).)*$/ }
 
   class << self
-    def from_gtfs(row)
-      create! _id: row.service_id,
-       start_date: to_date( row.start_date ),
-         end_date: to_date( row.end_date ),
-          weekday: to_bool( row.monday ),
-         saturday: to_bool( row.saturday ),
-           sunday: to_bool( row.sunday )
+    def new_from_csv(row)
+      {       _id: row[:service_id],
+       start_date: to_date(row[:start_date]),
+         end_date: to_date(row[:end_date]),
+          weekday: to_bool(row[:monday]),
+         saturday: to_bool(row[:saturday]),
+           sunday: to_bool(row[:sunday]) }
      end
 
      def for_date_params(params)

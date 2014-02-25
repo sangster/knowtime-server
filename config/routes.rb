@@ -6,6 +6,8 @@ BustedRuby::Application.routes.draw do
     resources :bus_lines, only: [:index]
     resources :calendars, only: [:index, :show]
     resources :paths, only: [:show]
+    resources :trip_groups, only: [:index, :show]
+    resources :trips, only: [:show]
   end
 
 

@@ -11,6 +11,10 @@ class Trip
   embeds_one :route
   embeds_many :stop_times, inverse_of: :trip
 
+  index calendar_id: 1
+  index path_id: 1
+  index trip_group_id: 1
+
   scope :route_day_trips, ->(short_name, time) do
     where('route.s' => short_name).where(:calendar.in => Calendar.for_date(time).to_a)
   end

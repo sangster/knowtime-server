@@ -10,7 +10,7 @@ class CalendarException
 
   class << self
     def new_from_csv(row)
-      cal = Calendar.find(row[:service_id])
+      cal = Calendar.find row[:service_id]
       cal.calendar_exceptions.create! date: to_date(row[:date])
     end
 

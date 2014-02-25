@@ -10,7 +10,7 @@ FactoryGirl.define do
 		trait :from_csv do
 			initialize_with do
 				Stop.new Stop.new_from_csv(
-					stop_id: id,
+					stop_id: id.to_s,
 					stop_name: name,
 					stop_lat: lat,
 					stop_lon: lng)

@@ -8,4 +8,3 @@ json.array! @paths do |path|
 		end
 	end
 end
-# json.partial! partial: 'public', collection: @paths, as: :path

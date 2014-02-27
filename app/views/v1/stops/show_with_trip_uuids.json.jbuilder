@@ -8,6 +8,5 @@ json.trips do
     json.calendarId trip.calendar.uuid
     json.pathId trip.path.uuid
   end
-  #json.trips { json.array! @stop.trips, partial: 'trips/uuids_only', as: :trip }
 end
 

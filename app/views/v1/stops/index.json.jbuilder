@@ -7,4 +7,3 @@ json.array! @stops do |stop|
 		json.lng stop.lng
 	end
 end
-# json.partial! partial: 'public', collection: @stops, as: :stop

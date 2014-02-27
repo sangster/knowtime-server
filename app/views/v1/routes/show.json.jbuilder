@@ -8,5 +8,4 @@ json.trips do
     json.calendarId trip.calendar.uuid
     json.pathId trip.path.uuid
   end
-  #json.partial! partial: 'trips/uuids_only', collection: @route.trips, as: :trip
 end

@@ -1,6 +1,6 @@
 class V1::RoutesController < V1::ApplicationController
   def index
-    @routes = Route.all
+    @routes = Rails.cache.fetch("routes_index", eternal: true) { Route.all }
   end
 
   def headsigns_at_time
@@ -16,9 +16,9 @@ class V1::RoutesController < V1::ApplicationController
 
     @route_trips = {}
     @routes.each do |r|
-      trips = r.trips.where service_id: calendars.collect( &:service_id )
+      trips = r.trips.where service_id: calendars.pluck( :service_id )
+      trips = trips.includes :stop_times
 
-      puts "\n\n\n\n trips: #{trips.length}\n\n\n"
       @route_trips[r.id] = trips.sort! do |x, y|
         x_arrival = x.stop_times.first.arrival
         y_arrival = y.stop_times.first.arrival

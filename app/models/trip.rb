@@ -4,8 +4,7 @@ class Trip < ActiveRecord::Base
   scope :day_trips, ->(short_name, time) do
     rids = Route.where(route_short_name: short_name).distinct.pluck :route_id
     sids = Calendar.for_date(time).distinct.pluck :service_id
-    puts "\n\n\n\nsids: #{sids}\n\n\n"
-    where(route_id: rids).where(service_id: sids)
+    where(route_id: rids).where service_id: sids
   end
 
   belongs_to :route, inverse_of: :trips, shared_key: :route_id

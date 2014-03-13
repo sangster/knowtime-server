@@ -31,10 +31,7 @@ class BusEstimation
     private
 
     def map_estimates(groups, next_stops)
-      if next_stops.empty?
-        puts "\n\n next_stops is empty\n\n"
-        return []
-      end
+      return [] if next_stops.empty?
 
       estimates = []
       options = next_stops

@@ -33,6 +33,8 @@ class DataPull < ActiveRecord::Base
       DataPull.create! new_user_url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
       logger.info 'Finished reading CSV files'
     end
+
+    Rails.cache.clear
   end
 
   def self.bulk_insert_rows(zip, zip_filename, model_class)

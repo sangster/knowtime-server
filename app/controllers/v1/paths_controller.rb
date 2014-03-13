@@ -23,7 +23,6 @@ class V1::PathsController < V1::ApplicationController
                        service_id: calendars.collect(&:service_id) )
             .distinct.pluck :shape_id
 
-    puts sids
     @paths = sids.collect {|shape_id| Shape.path shape_id }
     respond_with @paths
   end

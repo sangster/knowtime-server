@@ -5,6 +5,7 @@ class Calendar < ActiveRecord::Base
   scope :date_is, ->(date) do
     where('start_date <= :date AND end_date >= :date', date: date)
   end
+
   scope :for_date, ->(date) do
     if date.saturday?
       where saturday: true
@@ -13,6 +14,10 @@ class Calendar < ActiveRecord::Base
     else
       weekday
     end.not_ferry.date_is date
+  end
+
+  scope :for_date_params, ->(params) do
+    for_date Time.zone.local(params[:year].to_i, params[:month].to_i, params[:day].to_i)
   end
 
   has_many :calendar_dates, inverse_of: :calendar, shared_key: :service_id
@@ -33,10 +38,6 @@ class Calendar < ActiveRecord::Base
               friday: to_bool(row[:monday]),
             saturday: to_bool(row[:saturday]),
               sunday: to_bool(row[:sunday])
-    end
-
-    def for_date_params(params)
-      for_date Time.zone.local(params[:year].to_i, params[:month].to_i, params[:day].to_i)
     end
 
     private

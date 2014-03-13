@@ -13,17 +13,17 @@ class V1::RoutesController < V1::ApplicationController
 
   def query_with_headsigns(calendars, name)
     @routes = Route.where route_short_name: name
+    sids = calendars.distinct.pluck( :service_id )
 
-    @route_trips = {}
-    @routes.each do |r|
-      trips = r.trips.where service_id: calendars.pluck( :service_id )
-      trips = trips.includes :stop_times
-
-      @route_trips[r.id] = trips.sort! do |x, y|
-        x_arrival = x.stop_times.first.arrival
-        y_arrival = y.stop_times.first.arrival
-        x_arrival <=> y_arrival
+    @route_trips =
+      Rails.cache.fetch "q_w_h_#{@routes.collect &:route_id}_#{sids}",
+                        eternal: true do
+        {}.tap do |rt|
+          @routes.each do |r|
+            trips = r.trips.where(service_id: sids).to_a
+            rt[r.id] = trips
+          end
+        end
       end
-    end
   end
 end

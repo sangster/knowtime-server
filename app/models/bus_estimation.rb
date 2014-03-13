@@ -5,15 +5,16 @@ class BusEstimation
   class << self
     def active_lines(opts = {})
       opts.reverse_merge! time: nil, duration: 5.minutes
-      users = if opts[:time]
-        time_end = opts[:time]
-        time_start = time_end - opts[:duration]
-        User.with_locations_between (time_start..time_end)
-      else
-        User.recent opts[:duration]
-      end
+      users =
+        if opts[:time]
+          time_end = opts[:time]
+          time_start = time_end - opts[:duration]
+          User.with_locations_between (time_start..time_end)
+        else
+          User.recent opts[:duration]
+        end
 
-      users.collect(&:short_name).uniq
+      users.distinct.pluck :route_short_name
     end
 
     def locations_and_next_stops(short_name, time, opts = {})
@@ -21,18 +22,19 @@ class BusEstimation
 
       next_stops = StopTime.next_stops short_name, time, opts[:duration]
 
-      users = User.where short_name: short_name
+      users = User.where route_short_name: short_name
       groups = UserGroup.create_groups users, bounds: opts[:bounds]
 
       map_estimates groups, next_stops
     end
 
-
     private
 
-
     def map_estimates(groups, next_stops)
-      return [] if next_stops.empty?
+      if next_stops.empty?
+        puts "\n\n next_stops is empty\n\n"
+        return []
+      end
 
       estimates = []
       options = next_stops

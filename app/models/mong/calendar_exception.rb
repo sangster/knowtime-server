@@ -1,4 +1,4 @@
-class CalendarException
+class CalendarDate
   include Mongoid::Document
 
   #belongs_to :calendar

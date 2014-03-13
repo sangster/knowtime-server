@@ -6,7 +6,7 @@ class V1::ApplicationController < ActionController::Base
   protected
 
 
-  def render_error status, message = nil
+  def render_error(status, message = nil)
     status = convert_status status
     message = default_message status if message.nil?
     render text: "{\"status\":\"#{status}\",\"error\":\"#{message.to_s}\"}", status: status

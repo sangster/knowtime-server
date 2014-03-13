@@ -1,7 +1,5 @@
 class LocationBounds
-
   attr_accessor :lat_range, :lng_range
-
 
   def self.each(step=1)
     return enum_for(:each, step) unless block_given?

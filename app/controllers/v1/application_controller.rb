@@ -1,10 +1,7 @@
 class V1::ApplicationController < ActionController::Base
-
   after_filter :cors_set_access_control_headers
 
-
   protected
-
 
   def render_error(status, message = nil)
     status = convert_status status
@@ -28,21 +25,21 @@ class V1::ApplicationController < ActionController::Base
 
   private
 
-  def convert_status status
+  def convert_status(status)
     case status
-      when 404, :not_found
-        404
-      else
-        599
+    when 404, :not_found
+      404
+    else
+      599
     end
   end
 
-  def default_message status
+  def default_message(status)
     case status
-      when 404, :not_found
-        'not found'
-      else
-        'could not complete request'
+    when 404, :not_found
+      'not found'
+    else
+      'could not complete request'
     end
   end
 

@@ -1,19 +1,31 @@
 FactoryGirl.define do
   factory :calendar do
-    sequence(:id) {|n| "test-calendar-id-#{n}"}
+    sequence(:service_id) {|n| "test-calendar-id-#{n}"}
     start_date DateTime.parse '2014-01-01'
     end_date DateTime.parse '2015-01-01'
-    weekday true
+    monday true
+    tuesday true
+    wednesday true
+    thursday true
+    friday true
     saturday false
     sunday false
 
     factory :calendar_for_saturday do
-      weekday false
+      monday false
+      tuesday false
+      wednesday false
+      thursday false
+      friday false
       saturday true
     end
     
     factory :calendar_for_sunday do
-      weekday false
+      monday false
+      tuesday false
+      wednesday false
+      thursday false
+      friday false
       sunday true
     end
   end

@@ -3,6 +3,6 @@
 json.array! @routes do |route|
   json.partial! 'public', route: route
   json.tripHeadsigns do
-    json.partial! partial: 'trips/start_and_end_stops', collection: @route_trips[route.id], as: :trip
+    json.partial! partial: 'v1/trips/start_and_end_stops', collection: @route_trips[route.id], as: :trip
   end
 end

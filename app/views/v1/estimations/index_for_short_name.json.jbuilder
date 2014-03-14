@@ -6,4 +6,3 @@ json.array! @estimations do |est|
 	json.nextStopNumber est.stop_number
 	json.estimateArrival est.arrival_str
 end
-#json.partial! partial: 'public', collection: @estimations, as: :est

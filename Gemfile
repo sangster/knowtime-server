@@ -12,6 +12,7 @@ gem 'uuidtools'
 gem 'jbuilder', '~> 1.2'
 gem 'haml-rails'
 gem 'dalli'
+gem 'rest-client', '~> 1.6'
 
 group :production do
   gem 'rails_12factor'
@@ -27,5 +28,4 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.3.0'
   gem 'metric_fu'
   gem 'database_cleaner'
-  gem 'rest-client', '~> 1.6'
 end

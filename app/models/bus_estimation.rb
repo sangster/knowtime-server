@@ -55,6 +55,7 @@ class BusEstimation
         estimates << BusEstimation.new(opt.stop_number, opt.arrival, group_loc.lat, group_loc.lng)
       end
 
+      options.compact!
       options.each do |opt|
         estimates << BusEstimation.new(opt.stop_number, opt.arrival, 0, 0)
       end

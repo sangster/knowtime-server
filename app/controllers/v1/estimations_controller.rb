@@ -3,7 +3,7 @@ class V1::EstimationsController < V1::ApplicationController
     short_name = params[:short_name]
 
     @estimations = BusEstimation.locations_and_next_stops short_name, time_from_params,
-                     duration: 5.minutes
+                     duration: 30.seconds
   end
 
   def active_lines

@@ -4,7 +4,7 @@ class BusEstimation
 
   class << self
     def active_lines(opts = {})
-      opts.reverse_merge! time: nil, duration: 5.minutes
+      opts.reverse_merge! time: nil, duration: 10.seconds
       users =
         if opts[:time]
           time_end = opts[:time]

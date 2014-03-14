@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   IS_MOVING_DELTA = 10 # metres
   AVERAGE_OLDER_WEIGHT = 0.25
+  ACTIVE_WINDOW = 10.seconds
 
   default_scope { includes :user_locations }
   scope :recent, ->(age) { where 'updated_at >= ?', (Time.zone.now - age) }
@@ -30,7 +31,7 @@ class User < ActiveRecord::Base
   end
 
   def active?
-    newest_location.created_at > (Time.zone.now - 10.seconds) rescue false
+    newest_location.created_at > (Time.zone.now - ACTIVE_WINDOW) rescue false
   end
 
   def closest_group(groups, radius)

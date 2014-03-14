@@ -52,10 +52,12 @@ class BusEstimation
         end
 
         opt = options.delete_at closest_index
-        estimates << BusEstimation.new(opt.stop_number, opt.arrival, group_loc.lat, group_loc.lng)
+        if opt
+          estimates << BusEstimation.new(opt.stop_number, opt.arrival,
+                                        group_loc.lat, group_loc.lng)
+        end
       end
 
-      options.compact!
       options.each do |opt|
         estimates << BusEstimation.new(opt.stop_number, opt.arrival, 0, 0)
       end

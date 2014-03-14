@@ -27,5 +27,5 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.3.0'
   gem 'metric_fu'
   gem 'database_cleaner'
-  gem 'rest-client', '~> 1.6', require: false
+  gem 'rest-client', '~> 1.6'
 end

@@ -17,15 +17,15 @@ class CalendarTable
     self.trips.length
   end
 
-  def each &block  
+  def each(&block)
     self.trips.each do |trip|
       times = arrival_times trip
       if block_given?
         block.call times
-      else  
+      else
         yield times
       end
-    end  
+    end
   end
 
   def [](i)

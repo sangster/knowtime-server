@@ -1,38 +1,25 @@
-require 'uuidtools'
-require 'ostruct'
-
-class User
-  include Mongoid::Document
-
-  field :s, as: :short_name, type: String
-  field :u, as: :uuid, type: BSON::Binary
-  field :m, as: :moving_flag, type: Boolean, default: false
-
-  scope :recent, ->(age) { elem_match( user_locations: { :created_at.gt => (Time.zone.now - age) } ) }
-  scope :with_locations_between, ->(range) do
-    elem_match user_locations: { :created_at.between => range }
-  end
-
-  embeds_many :user_locations, inverse_of: :user
-
+class User < ActiveRecord::Base
   IS_MOVING_DELTA = 10 # metres
   AVERAGE_OLDER_WEIGHT = 0.25
+  ACTIVE_WINDOW = 10.seconds
 
+  default_scope { includes :user_locations }
+  scope :recent, ->(age) { where 'updated_at >= ?', (Time.zone.now - age) }
+  scope :with_locations_between, ->(range) { where updated_at: range }
 
-  def self.get(user_uuid_str)
-    uuid = BSON::Binary.new UUIDTools::UUID.parse(user_uuid_str).raw, :uuid
-    where(uuid: uuid).first rescue nil
-  end
+  has_many :user_locations, inverse_of: :user
 
-  def self.recent_users_bus_map(age)
-    User.recent( age ).inject( {} ) do |map,user|
-      (map[user.short_name] ||= []) << user unless user.user_locations.empty?
-      map
+  alias_attribute :short_name, :route_short_name
+
+  class << self
+    def recent_users_bus_map(age)
+      recent( age ).inject( {} ) do |map, user|
+        unless user.user_locations.empty?
+          (map[user.short_name] ||= []) << user
+        end
+        map
+      end
     end
-  end
-
-  def uuid_str
-    @_uuid_str ||= UUIDTools::UUID.parse_raw(uuid.data).to_s
   end
 
   def moving?
@@ -44,11 +31,7 @@ class User
   end
 
   def active?
-    newest_location.created_at > (Time.zone.now - 10.seconds) rescue false
-  end
-
-  def within?(bounds)
-    bounds.cover? newest_location if newest_location
+    newest_location.created_at > (Time.zone.now - ACTIVE_WINDOW) rescue false
   end
 
   def closest_group(groups, radius)
@@ -66,9 +49,7 @@ class User
     closest
   end
 
-
   private
-
 
   def check_is_moving(delta)
     return false if user_locations.length < 2

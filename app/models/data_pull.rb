@@ -3,14 +3,7 @@ require 'open-uri'
 require 'zip/filesystem'
 require 'csv'
 
-
-class DataPull
-  include Mongoid::Document
-
-  field :url, type: String
-  field :etag, type: String
-
-
+class DataPull < ActiveRecord::Base
   BULK_INSERT_SIZE = 1024
 
   # TODO replace with cron job
@@ -30,18 +23,18 @@ class DataPull
 
     DataPull.download_zip url do |zip|
       bulk_insert_rows zip, 'stops.txt', Stop
-      bulk_insert_rows zip, 'shapes.txt', Path
+      bulk_insert_rows zip, 'shapes.txt', Shape
       bulk_insert_rows zip, 'routes.txt', Route
       bulk_insert_rows zip, 'calendar.txt', Calendar
-      bulk_insert_rows zip, 'calendar_dates.txt', CalendarException
+      bulk_insert_rows zip, 'calendar_dates.txt', CalendarDate
       bulk_insert_rows zip, 'trips.txt', Trip
       bulk_insert_rows zip, 'stop_times.txt', StopTime
 
-      TripGroup.create_groups
-
-      DataPull.create! url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
+      DataPull.create! new_user_url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
       logger.info 'Finished reading CSV files'
     end
+
+    Rails.cache.clear
   end
 
   def self.bulk_insert_rows(zip, zip_filename, model_class)
@@ -51,11 +44,11 @@ class DataPull
     total = 0
     models = []
     zip.file.open(zip_filename) do |f|
-      CSV.new(f, :headers => true, :header_converters => :symbol).each do |row|
+      CSV.new(f, headers: true, header_converters: :symbol).each do |row|
         models << model_class.new_from_csv(row)
 
         if models.length == BULK_INSERT_SIZE
-          model_class.create! models unless (model_class.skip_bulk_insert? rescue false)
+          model_class.import models
           total = total + models.length
           models.clear
           logger.info "Inserted #{BULK_INSERT_SIZE} objects for #{model_class} (total: #{total})"
@@ -64,7 +57,7 @@ class DataPull
     end
 
     unless models.empty? # whatever is left
-      model_class.create! models unless (model_class.skip_final_bulk_insert? rescue false)
+      model_class.import models
       logger.info "Inserted #{models.length} objects for #{model_class} (total: #{total + models.length})"
     end
   end

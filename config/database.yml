@@ -1,0 +1,10 @@
+development: &dev
+  adapter: postgresql
+  encoding: unicode
+  database: knowtime
+  pool: 5
+  username: knowtime
+
+test:
+  <<: *dev
+

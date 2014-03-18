@@ -1,5 +1,5 @@
 json.array! @stops do |stop|
-	json.stopNumber stop.stop_number
+	json.stopNumber stop.stop_id.to_i
 	json.name stop.name
 
 	json.location do

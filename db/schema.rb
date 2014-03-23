@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140312033625) do
+ActiveRecord::Schema.define(version: 20140323013962) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,112 @@ ActiveRecord::Schema.define(version: 20140312033625) do
   end
 
   add_index "data_pulls", ["url"], name: "index_data_pulls_on_url", using: :btree
+
+  create_table "gtfs_engine_calendar_dates", force: true do |t|
+    t.string  "service_id",     null: false
+    t.date    "date",           null: false
+    t.integer "exception_type", null: false
+    t.integer "data_set_id",    null: false
+  end
+
+  add_index "gtfs_engine_calendar_dates", ["data_set_id"], name: "index_gtfs_engine_calendar_dates_on_data_set_id", using: :btree
+
+  create_table "gtfs_engine_calendars", force: true do |t|
+    t.string  "service_id",  null: false
+    t.boolean "monday",      null: false
+    t.boolean "tuesday",     null: false
+    t.boolean "wednesday",   null: false
+    t.boolean "thursday",    null: false
+    t.boolean "friday",      null: false
+    t.boolean "saturday",    null: false
+    t.boolean "sunday",      null: false
+    t.date    "start_date",  null: false
+    t.date    "end_date",    null: false
+    t.integer "data_set_id", null: false
+  end
+
+  add_index "gtfs_engine_calendars", ["data_set_id"], name: "index_gtfs_engine_calendars_on_data_set_id", using: :btree
+
+  create_table "gtfs_engine_data_sets", force: true do |t|
+    t.string   "name",       null: false
+    t.string   "url",        null: false
+    t.string   "etag",       null: false
+    t.datetime "created_at", null: false
+  end
+
+  create_table "gtfs_engine_routes", force: true do |t|
+    t.string  "route_id",         null: false
+    t.string  "agency_id"
+    t.string  "route_short_name", null: false
+    t.string  "route_long_name",  null: false
+    t.string  "route_desc"
+    t.integer "route_type",       null: false
+    t.string  "route_color"
+    t.string  "route_text_color"
+    t.integer "data_set_id",      null: false
+  end
+
+  add_index "gtfs_engine_routes", ["data_set_id"], name: "index_gtfs_engine_routes_on_data_set_id", using: :btree
+
+  create_table "gtfs_engine_shapes", force: true do |t|
+    t.string  "shape_id",            null: false
+    t.float   "shape_pt_lat",        null: false
+    t.float   "shape_pt_lon",        null: false
+    t.integer "shape_pt_sequence",   null: false
+    t.float   "shape_dist_traveled"
+    t.integer "data_set_id",         null: false
+  end
+
+  add_index "gtfs_engine_shapes", ["data_set_id"], name: "index_gtfs_engine_shapes_on_data_set_id", using: :btree
+
+  create_table "gtfs_engine_stop_times", force: true do |t|
+    t.string  "stop_id",             null: false
+    t.string  "trip_id",             null: false
+    t.integer "arrival_time",        null: false
+    t.integer "departure_time",      null: false
+    t.integer "stop_sequence",       null: false
+    t.string  "stop_headsign"
+    t.integer "pickup_type"
+    t.integer "drop_off_type"
+    t.float   "shape_dist_traveled"
+    t.integer "data_set_id",         null: false
+  end
+
+  add_index "gtfs_engine_stop_times", ["data_set_id"], name: "index_gtfs_engine_stop_times_on_data_set_id", using: :btree
+
+  create_table "gtfs_engine_stops", force: true do |t|
+    t.string  "stop_id",             null: false
+    t.string  "stop_code"
+    t.string  "stop_name",           null: false
+    t.string  "stop_desc"
+    t.float   "stop_lat",            null: false
+    t.float   "stop_lon",            null: false
+    t.string  "zone_id"
+    t.string  "stop_url"
+    t.integer "location_type"
+    t.integer "parent_station"
+    t.string  "stop_timezone"
+    t.integer "wheelchair_boarding"
+    t.integer "data_set_id",         null: false
+  end
+
+  add_index "gtfs_engine_stops", ["data_set_id"], name: "index_gtfs_engine_stops_on_data_set_id", using: :btree
+
+  create_table "gtfs_engine_trips", force: true do |t|
+    t.string  "trip_id",               null: false
+    t.string  "service_id",            null: false
+    t.string  "trip_headsign"
+    t.string  "trip_short_name"
+    t.integer "direction_id"
+    t.string  "block_id"
+    t.string  "route_id",              null: false
+    t.string  "shape_id"
+    t.integer "wheelchair_accessible"
+    t.integer "bikes_allowed"
+    t.integer "data_set_id",           null: false
+  end
+
+  add_index "gtfs_engine_trips", ["data_set_id"], name: "index_gtfs_engine_trips_on_data_set_id", using: :btree
 
   create_table "routes", force: true do |t|
     t.string   "route_id"

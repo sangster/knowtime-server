@@ -2,6 +2,9 @@ source 'https://rubygems.org'
 
 ruby '2.0.0'
 
+gem 'gtfs-engine', path: '../gtfs-engine'
+gem 'gtfs-reader', path: '../gtfs-reader'
+
 gem 'rails', '~> 4.0'
 gem 'rake'
 gem 'pg'

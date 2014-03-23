@@ -1,6 +1,6 @@
-float_regex = /[-+]?[0-9]*\.?[0-9]*/
-
 BustedRuby::Application.routes.draw do
+  mount GtfsEngine::Engine, at: '/gtfs'
+
   scope '/v2/', module: :v2, defaults: {format: :json} do
     resources :bus_lines, only: [:index]
     resources :calendars, only: [:index, :show]

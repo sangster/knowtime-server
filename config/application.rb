@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 Bundler.require :default, Rails.env
 require File.expand_path('../knowtime', __FILE__)
+require 'gtfs_engine'
 
 module BustedRuby
   class Application < Rails::Application

@@ -1,4 +1,4 @@
-json.stopNumber stop.stop_number
+json.stopNumber stop.stop_number.to_i
 json.name stop.name
 
 json.location do

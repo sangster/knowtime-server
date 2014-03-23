@@ -1,17 +1,11 @@
-class UserLocation
-  include Mongoid::Document
-  include Mongoid::Timestamps::Created
+class UserLocation < ActiveRecord::Base
   include Distanceable
 
-  field :t, as: :lat, type: Float
-  field :g, as: :lng, type: Float
-
-  embedded_in :user, inverse_of: :user_locations
-
-  scope :newer_than, ->(age) { where :created_at.gt => (Time.zone.now - age) }
+  default_scope { order :created_at }
+  scope :newer_than, ->(age) { where "created_at > ?", (Time.zone.now - age) }
   scope :newest, -> { newer_than 30.seconds }
 
-  def to_s
-    "<UserLocation: lat: #{lat}, lng: #{lng}>"
-  end
+  belongs_to :user, inverse_of: :user_locations, touch: true
+
+  alias_attribute :lng, :lon
 end

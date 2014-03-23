@@ -30,7 +30,7 @@ class DataPull < ActiveRecord::Base
       bulk_insert_rows zip, 'trips.txt', Trip
       bulk_insert_rows zip, 'stop_times.txt', StopTime
 
-      DataPull.create! new_user_url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
+      DataPull.create! url: METRO_TRANSIT['zip_url'], etag: fetch_remote_etag(url)[1..-2]
       logger.info 'Finished reading CSV files'
     end
 

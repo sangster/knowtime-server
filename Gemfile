@@ -8,7 +8,6 @@ gem 'gtfs-reader', path: '../gtfs-reader'
 gem 'rails', '~> 4.0'
 gem 'rake'
 gem 'pg'
-gem 'activerecord-import'
 
 gem 'rubyzip'
 gem 'uuidtools'

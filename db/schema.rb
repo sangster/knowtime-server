@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323013962) do
+ActiveRecord::Schema.define(version: 20140401033021) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,20 @@ ActiveRecord::Schema.define(version: 20140323013962) do
 
   add_index "data_pulls", ["url"], name: "index_data_pulls_on_url", using: :btree
 
+  create_table "gtfs_engine_agencies", force: true do |t|
+    t.string  "agency_id"
+    t.string  "agency_name",     null: false
+    t.string  "agency_url",      null: false
+    t.string  "agency_timezone", null: false
+    t.string  "agency_lang"
+    t.string  "agency_fare_url"
+    t.string  "agency_phone"
+    t.integer "data_set_id",     null: false
+  end
+
+  add_index "gtfs_engine_agencies", ["agency_id"], name: "index_gtfs_engine_agencies_on_agency_id", using: :btree
+  add_index "gtfs_engine_agencies", ["data_set_id"], name: "index_gtfs_engine_agencies_on_data_set_id", using: :btree
+
   create_table "gtfs_engine_calendar_dates", force: true do |t|
     t.string  "service_id",     null: false
     t.date    "date",           null: false
@@ -56,6 +70,8 @@ ActiveRecord::Schema.define(version: 20140323013962) do
   end
 
   add_index "gtfs_engine_calendar_dates", ["data_set_id"], name: "index_gtfs_engine_calendar_dates_on_data_set_id", using: :btree
+  add_index "gtfs_engine_calendar_dates", ["date"], name: "index_gtfs_engine_calendar_dates_on_date", using: :btree
+  add_index "gtfs_engine_calendar_dates", ["service_id"], name: "index_gtfs_engine_calendar_dates_on_service_id", using: :btree
 
   create_table "gtfs_engine_calendars", force: true do |t|
     t.string  "service_id",  null: false
@@ -72,13 +88,20 @@ ActiveRecord::Schema.define(version: 20140323013962) do
   end
 
   add_index "gtfs_engine_calendars", ["data_set_id"], name: "index_gtfs_engine_calendars_on_data_set_id", using: :btree
+  add_index "gtfs_engine_calendars", ["end_date"], name: "index_gtfs_engine_calendars_on_end_date", using: :btree
+  add_index "gtfs_engine_calendars", ["service_id"], name: "index_gtfs_engine_calendars_on_service_id", using: :btree
+  add_index "gtfs_engine_calendars", ["start_date"], name: "index_gtfs_engine_calendars_on_start_date", using: :btree
 
   create_table "gtfs_engine_data_sets", force: true do |t|
     t.string   "name",       null: false
     t.string   "url",        null: false
     t.string   "etag",       null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
+
+  add_index "gtfs_engine_data_sets", ["name"], name: "index_gtfs_engine_data_sets_on_name", using: :btree
+  add_index "gtfs_engine_data_sets", ["url"], name: "index_gtfs_engine_data_sets_on_url", using: :btree
 
   create_table "gtfs_engine_routes", force: true do |t|
     t.string  "route_id",         null: false
@@ -93,6 +116,8 @@ ActiveRecord::Schema.define(version: 20140323013962) do
   end
 
   add_index "gtfs_engine_routes", ["data_set_id"], name: "index_gtfs_engine_routes_on_data_set_id", using: :btree
+  add_index "gtfs_engine_routes", ["route_id"], name: "index_gtfs_engine_routes_on_route_id", using: :btree
+  add_index "gtfs_engine_routes", ["route_short_name"], name: "index_gtfs_engine_routes_on_route_short_name", using: :btree
 
   create_table "gtfs_engine_shapes", force: true do |t|
     t.string  "shape_id",            null: false
@@ -104,6 +129,9 @@ ActiveRecord::Schema.define(version: 20140323013962) do
   end
 
   add_index "gtfs_engine_shapes", ["data_set_id"], name: "index_gtfs_engine_shapes_on_data_set_id", using: :btree
+  add_index "gtfs_engine_shapes", ["shape_id"], name: "index_gtfs_engine_shapes_on_shape_id", using: :btree
+  add_index "gtfs_engine_shapes", ["shape_pt_lat"], name: "index_gtfs_engine_shapes_on_shape_pt_lat", using: :btree
+  add_index "gtfs_engine_shapes", ["shape_pt_lon"], name: "index_gtfs_engine_shapes_on_shape_pt_lon", using: :btree
 
   create_table "gtfs_engine_stop_times", force: true do |t|
     t.string  "stop_id",             null: false
@@ -118,7 +146,11 @@ ActiveRecord::Schema.define(version: 20140323013962) do
     t.integer "data_set_id",         null: false
   end
 
+  add_index "gtfs_engine_stop_times", ["arrival_time"], name: "index_gtfs_engine_stop_times_on_arrival_time", using: :btree
   add_index "gtfs_engine_stop_times", ["data_set_id"], name: "index_gtfs_engine_stop_times_on_data_set_id", using: :btree
+  add_index "gtfs_engine_stop_times", ["departure_time"], name: "index_gtfs_engine_stop_times_on_departure_time", using: :btree
+  add_index "gtfs_engine_stop_times", ["stop_id"], name: "index_gtfs_engine_stop_times_on_stop_id", using: :btree
+  add_index "gtfs_engine_stop_times", ["trip_id"], name: "index_gtfs_engine_stop_times_on_trip_id", using: :btree
 
   create_table "gtfs_engine_stops", force: true do |t|
     t.string  "stop_id",             null: false
@@ -137,6 +169,11 @@ ActiveRecord::Schema.define(version: 20140323013962) do
   end
 
   add_index "gtfs_engine_stops", ["data_set_id"], name: "index_gtfs_engine_stops_on_data_set_id", using: :btree
+  add_index "gtfs_engine_stops", ["stop_code"], name: "index_gtfs_engine_stops_on_stop_code", using: :btree
+  add_index "gtfs_engine_stops", ["stop_id"], name: "index_gtfs_engine_stops_on_stop_id", using: :btree
+  add_index "gtfs_engine_stops", ["stop_lat"], name: "index_gtfs_engine_stops_on_stop_lat", using: :btree
+  add_index "gtfs_engine_stops", ["stop_lon"], name: "index_gtfs_engine_stops_on_stop_lon", using: :btree
+  add_index "gtfs_engine_stops", ["zone_id"], name: "index_gtfs_engine_stops_on_zone_id", using: :btree
 
   create_table "gtfs_engine_trips", force: true do |t|
     t.string  "trip_id",               null: false
@@ -152,7 +189,12 @@ ActiveRecord::Schema.define(version: 20140323013962) do
     t.integer "data_set_id",           null: false
   end
 
+  add_index "gtfs_engine_trips", ["block_id"], name: "index_gtfs_engine_trips_on_block_id", using: :btree
   add_index "gtfs_engine_trips", ["data_set_id"], name: "index_gtfs_engine_trips_on_data_set_id", using: :btree
+  add_index "gtfs_engine_trips", ["route_id"], name: "index_gtfs_engine_trips_on_route_id", using: :btree
+  add_index "gtfs_engine_trips", ["service_id"], name: "index_gtfs_engine_trips_on_service_id", using: :btree
+  add_index "gtfs_engine_trips", ["shape_id"], name: "index_gtfs_engine_trips_on_shape_id", using: :btree
+  add_index "gtfs_engine_trips", ["trip_id"], name: "index_gtfs_engine_trips_on_trip_id", using: :btree
 
   create_table "routes", force: true do |t|
     t.string   "route_id"

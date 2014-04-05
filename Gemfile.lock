@@ -1,7 +1,7 @@
 PATH
   remote: ../gtfs-engine
   specs:
-    gtfs-engine (0.1.7)
+    gtfs-engine (0.1.8)
       activerecord-import
       gtfs-reader
       rails (~> 4.0)
@@ -9,7 +9,7 @@ PATH
 PATH
   remote: ../gtfs-reader
   specs:
-    gtfs-reader (0.1.4)
+    gtfs-reader (0.1.6)
       colorize (~> 0.7)
       log4r (~> 1.1)
       rubyzip (~> 1.1)
@@ -109,7 +109,7 @@ GEM
     map (6.5.3)
     memcachier (0.0.2)
     method_source (0.8.2)
-    metric_fu (4.9.0)
+    metric_fu (4.10.0)
       cane (~> 2.5, >= 2.5.2)
       churn (~> 0.0.35)
       code_metrics (~> 0.1)
@@ -232,20 +232,21 @@ GEM
       rack
       raindrops (~> 0.7)
     uuidtools (2.1.4)
+    yajl-ruby (1.2.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   dalli
-  database_cleaner
+  database_cleaner (~> 1.2)
   factory_girl_rails (~> 4.3.0)
   gtfs-engine!
   gtfs-reader!
   haml-rails
   jbuilder (~> 1.2)
   memcachier
-  metric_fu
+  metric_fu (~> 4.10)
   newrelic_rpm
   pg
   pry-rails
@@ -258,3 +259,4 @@ DEPENDENCIES
   semver
   unicorn (~> 4.8)
   uuidtools
+  yajl-ruby (~> 1.2)

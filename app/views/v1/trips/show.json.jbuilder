@@ -1,1 +1,0 @@
-json.partial! 'uuids_only', trip: @trip

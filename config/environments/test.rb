@@ -33,6 +33,4 @@ BustedRuby::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
-
-  config.active_support.encode_big_decimal_as_string = false
 end

@@ -2,10 +2,13 @@ require File.expand_path('../boot', __FILE__)
 require 'rails/all'
 Bundler.require :default, Rails.env
 require File.expand_path('../knowtime', __FILE__)
+require 'gtfs_engine'
 
 module BustedRuby
   class Application < Rails::Application
-    to_remove = %W(ActionDispatch::RequestId)
+    config.autoload_paths += Dir["#{config.root}/app/models/v*/"]
+
+    to_remove = %W(ActionDispatch::RequestId )
     to_remove.each { |w| config.middleware.delete w }
     config.action_dispatch.default_headers = {}
 

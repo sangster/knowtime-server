@@ -1,15 +1,17 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
+ruby '2.1.2'
 
-gem 'rails', '~> 4.0'
+gem 'gtfs-engine', path: '../gtfs-engine'
+
+gem 'rails', '~> 4.1'
 gem 'rake'
 gem 'pg'
-gem 'activerecord-import'
 
 gem 'rubyzip'
 gem 'uuidtools'
 gem 'jbuilder', '~> 1.2'
+gem 'yajl-ruby', '~> 1.2'
 gem 'haml-rails'
 gem 'dalli'
 gem 'rest-client', '~> 1.6'
@@ -26,6 +28,6 @@ group :development, :test do
   gem 'semver'
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'factory_girl_rails', '~> 4.3.0'
-  gem 'metric_fu'
-  gem 'database_cleaner'
+  gem 'metric_fu', '~> 4.10'
+  gem 'database_cleaner', '~> 1.2'
 end

@@ -18,3 +18,5 @@
 /.idea
 
 /*.sublime*
+*gtfs_engine*
+

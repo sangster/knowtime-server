@@ -1,2 +1,0 @@
-module StopTimesHelper
-end

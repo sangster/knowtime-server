@@ -6,7 +6,9 @@ require 'gtfs_engine'
 
 module BustedRuby
   class Application < Rails::Application
-    config.autoload_paths += Dir["#{config.root}/app/models/v*/"]
+    # config.autoload_paths += Dir["#{config.root}/app/contexts"]
+    # config.autoload_paths += Dir["#{config.root}/app/roles/**/"]
+    # puts "\n\n\n#{config.autoload_paths}\n\n\n"
 
     to_remove = %W(ActionDispatch::RequestId )
     to_remove.each { |w| config.middleware.delete w }
@@ -19,7 +21,7 @@ module BustedRuby
       javascripts         false
       fixture_replacement :factory_girl, dir: 'spec/factories'
     end
-    
+
     config.time_zone = 'America/Halifax'
     config.assets.enabled = true
   end

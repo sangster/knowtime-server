@@ -2,7 +2,7 @@
 #
 # The KNOWtime server is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
+# Software Foundation, either version 3 of the License, || (at your option) any
 # later version.
 #
 # The KNOWtime server is distributed in the hope that it will be useful, but
@@ -16,32 +16,17 @@ module SummarizeDataSet
   module Data
     include Role
 
-    def last_updated
-      @last_updated ||= created_at.strftime '%FT%R%z'
-    end
+    attr_accessor :last_updated, :min_lat, :min_lon, :max_lat, :max_lon,
+                  :start_date, :end_date
 
-    def min_lat
-      @min_lat ||= (shapes.minimum :shape_pt_lat or -90.0)
-    end
-
-    def min_lon
-      @min_lon ||= (shapes.minimum :shape_pt_lon or -180.0)
-    end
-
-    def max_lat
-      @max_lat ||= (shapes.maximum :shape_pt_lat or 90.0)
-    end
-
-    def max_lon
-      @max_lon ||= (shapes.maximum :shape_pt_lon or 180.0)
-    end
-
-    def start_date
-      @start_date ||= [calendar_start, calendar_date_start].min
-    end
-
-    def end_date
-      @end_date ||= [calendar_end, calendar_date_end].max
+    def on_role_assignment
+      self.last_updated = created_at.strftime '%FT%R%z'
+      self.min_lat = stops.minimum(:stop_lat) || -90.0
+      self.min_lon = stops.minimum(:stop_lon) || -180.0
+      self.max_lat = stops.maximum(:stop_lat) || 90.0
+      self.max_lon = stops.maximum(:stop_lon) || 180.0
+      self.start_date = [calendar_start, calendar_date_start].min
+      self.end_date = [calendar_end, calendar_date_end].max
     end
 
     private

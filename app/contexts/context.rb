@@ -17,13 +17,27 @@ module Context
     base.extend ClassMethods
   end
 
+  module HashMethods
+    def method_missing(name, *args)
+      name = name.to_s
+      if has_key? name
+        fetch name
+      else
+        super
+      end
+    end
+
+    end
+
   module ClassMethods
     def role(name, role_class=nil)
       role_names << name
 
       define_method :"set_#{name}" do |obj|
         obj.extend role_class unless role_class.nil?
+        obj.extend HashMethods if Hash === obj
         obj.context = self if obj.respond_to? :context=
+        obj.on_role_assignment if obj.respond_to? :on_role_assignment
         roles[name] = obj
         self
       end

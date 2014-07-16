@@ -17,11 +17,11 @@ module GetStopsWithinBounds
     include Role
 
     def between(south, north, west, east)
-      @between ||= begin
+      # @between ||= begin
         # where 'stop_lat BETWEEN (?, ?) AND stop_lon BETWEEN (?, ?)',
         #       south, north, west, east
-        where stop_lat: south..north, stop_lon: west..east
-      end
+        where(stop_lat: south..north, stop_lon: west..east).to_a
+      # end
     end
   end
 end

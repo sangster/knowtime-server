@@ -1,13 +1,11 @@
 class StopsController < ApplicationController
   def within_bounds
-    @collection = GetStopsWithinBoundsContext.new \
+    @records = GetStopsWithinBoundsContext.new \
       .set_stops(data.stops)
       .set_bounds(within_params) \
       .call
 
-    respond_to do |format|
-      format.json { render 'gtfs_engine/gtfs/index' }
-    end
+    respond_with @records
   end
 
   def within_params

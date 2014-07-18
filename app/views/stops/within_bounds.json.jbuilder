@@ -19,7 +19,7 @@ json.data do
   json.set! controller_name do
     json.array! @stops do |record|
       json.extract! record,
-        *%i{id code name desc lat lon zone_id location_type parent_station
+        *%i{stop_id code name desc lat lon zone_id location_type parent_station
                stop_timezone wheelchair_boarding}
     end
   end

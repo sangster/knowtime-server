@@ -16,7 +16,9 @@ BustedRuby::Application.routes.draw do
   scope '/v2/', defaults: {format: :json} do
     mount GtfsEngine::Engine, at: '/gtfs'
 
-    resources :data_sets, only: [:index, :show] do
+    resources :data_sets, only: [:index, :show]
+
+    scope ':data_set_id' do
       resources :stops, only: [] do
         collection do
           post :within_bounds
@@ -25,7 +27,7 @@ BustedRuby::Application.routes.draw do
 
       resources :routes, only:[] do
         collection do
-          get ':date/stop/:stop_id', action: :for_stop
+          get ':date/stop/:stop_id', action: :for_stop, as: :routes_for_stop
         end
       end
     end

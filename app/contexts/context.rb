@@ -13,9 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
 module Context
-  def self.included(base)
-    base.extend ClassMethods
-  end
+  extend ActiveSupport::Concern
 
   module HashMethods
     def method_missing(name, *args)
@@ -26,8 +24,8 @@ module Context
         super
       end
     end
+  end
 
-    end
 
   module ClassMethods
     def role(name, role_class=nil)
@@ -42,13 +40,14 @@ module Context
         self
       end
 
-      protected define_method(name) { roles[name] }
+      define_method(name) { roles[name] }
     end
 
     def role_names
       @role_names ||= []
     end
   end
+
 
   def call
     unfilled = unfilled_roles

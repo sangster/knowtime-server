@@ -1,8 +1,9 @@
 PATH
   remote: ../gtfs-engine
   specs:
-    gtfs-engine (0.2.3)
+    gtfs-engine (0.2.4)
       activerecord-import
+      activesupport (~> 4.0)
       gtfs-reader (~> 0.2)
       rails (~> 4.1)
 

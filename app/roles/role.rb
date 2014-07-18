@@ -13,5 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
 module Role
-  attr_accessor :context
+  extend ActiveSupport::Concern
+
+  included do
+    attr_accessor :context
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140714050725) do
+ActiveRecord::Schema.define(version: 20140719031961) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -188,8 +188,8 @@ ActiveRecord::Schema.define(version: 20140714050725) do
   create_table "gtfs_engine_stop_times", force: true do |t|
     t.string  "stop_id",             null: false
     t.string  "trip_id",             null: false
-    t.integer "arrival_time",        null: false
-    t.integer "departure_time",      null: false
+    t.string  "arrival_time",        null: false
+    t.string  "departure_time",      null: false
     t.integer "stop_sequence",       null: false
     t.string  "stop_headsign"
     t.integer "pickup_type"

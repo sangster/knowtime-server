@@ -12,8 +12,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-GtfsEngine.send_aliased_keys = true
-
 GtfsEngine.sources do |s|
   s.halifax_localhost do
     title 'Halifax Metro (test)'

@@ -30,4 +30,5 @@ group :development, :test do
   gem 'factory_girl_rails', '~> 4.3.0'
   gem 'metric_fu', '~> 4.10'
   gem 'database_cleaner', '~> 1.2'
+  gem 'better_errors', '~> 1.0'
 end

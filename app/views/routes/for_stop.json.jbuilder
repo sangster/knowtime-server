@@ -19,8 +19,15 @@ json.data do
   json.set! controller_name do
     json.array! @routes do |route|
       json.extract! route,
-        *%i{route_id agency_id route_short_name route_long_name route_desc
-            route_type route_url route_color route_text_color}
+                    :route_id,
+                    :agency_id,
+                    :route_short_name,
+                    :route_long_name,
+                    :route_desc,
+                    :route_type,
+                    :route_url,
+                    :route_color,
+                    :route_text_color
     end
   end
 end

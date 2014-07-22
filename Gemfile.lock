@@ -1,8 +1,8 @@
 PATH
   remote: ../gtfs-engine
   specs:
-    gtfs-engine (0.2.4)
-      activerecord-import
+    gtfs-engine (1.0.1)
+      activerecord-import (~> 0.5)
       activesupport (~> 4.0)
       gtfs-reader (~> 0.2)
       rails (~> 4.1)
@@ -42,6 +42,9 @@ GEM
     arel (5.0.1.20140414130214)
     arrayfields (4.9.2)
     awesome_print (1.2.0)
+    better_errors (1.1.0)
+      coderay (>= 1.0.0)
+      erubis (>= 2.6.6)
     builder (3.2.2)
     cane (2.6.2)
       parallel
@@ -242,6 +245,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  better_errors (~> 1.0)
   dalli
   database_cleaner (~> 1.2)
   factory_girl_rails (~> 4.3.0)

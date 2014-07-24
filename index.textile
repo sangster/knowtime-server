@@ -11,9 +11,11 @@ Users of our iOS and Android apps provide their own GPS locations when they are 
 
 h2. Sub-Components
 
-This project includes the "rails engine":rails-engine, "GTFS Engine":gtfs-engine. This engine is mounted at @/gtfs@ and provides all its actions under that directory. For example, to fetch all the stops for the @halifax@ data source, the path would be:
+This project includes the "rails engine":rails-engine: "GTFS Engine":gtfs-engine. This engine is mounted at 
 
-bc. /gtfs/halifax/stops
+bc. /gtfs
+
+All the resources listed in that project are provided under that directory. For example, to fetch all the stops for the @halifax@ data source, the path would be: @/gtfs/halifax/stops@
 
 
 h2. JSend

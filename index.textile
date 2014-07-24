@@ -1,0 +1,28 @@
+---
+title: KnowTime Server
+layout: default
+---
+
+h2. Introduction
+
+The KnowTime server provides GTFS(General Transit Feed Specification) data from mutliple data sets via a RESTful interface. I main intention of KnowTime is to provide the real location of individual buses using crowdsourced GPS data.
+
+Users of our iOS and Android apps provide their own GPS locations when they are on the bus, and we use that data to inform other users where buses are and (hopefully) more accurate estimates on when the bus will arrive at the next bus stop.
+
+h2. Sub-Components
+
+This project includes the "rails engine":rails-engine, "GTFS Engine":gtfs-engine. This engine is mounted at @/gtfs@ and provides all its actions under that directory. For example, to fetch all the stops for the @halifax@ data source, the path would be:
+
+bc. /gtfs/halifax/stops
+
+
+h2. JSend
+
+The KnowTime Server currently returns only one type of content: "JSON(JavaScript Object Notation)":wiki-json; moreover, the returned data is wrapped in a "JSend-compliant response":jsend
+
+
+[rails-engine]{{ site.data.urls.rails_engine }}
+[wiki-json]{{ site.data.urls.wiki_json }}
+[jsend]{{ site.data.urls.jsend }}
+[gtfs-engine]{{ site.data.urls.gtfs_engine_git }}
+

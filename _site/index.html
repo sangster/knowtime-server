@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>GTFS Engine | gtfs-engine</title>
+
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/styles.css">
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/models.css">
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/pygment_trac.css">
+    <script src="/gtfs-engine/javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/gtfs-engine">gtfs-engine</a></h1>
+        <p>A RESTful interface for GTFS data.</p>
+        <p class="view"><a href="https://github.com/sangster/gtfs-engine">View the Project on GitHub <small>sangster/gtfs-engine</small></a></p>
+        <ul>
+          <li><a href="https://github.com/sangster/gtfs-engine/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/sangster/gtfs-engine/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/sangster/gtfs-engine">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+
+<section>
+<h2>Introduction</h2>
+<p>This &#8220;<acronym title="General Transit Feed Specification"><span class="caps">GTFS</span></acronym> Engine&#8221; is a <a href="//guides.rubyonrails.org/engines.html">Rails Engine</a> which will allow your Rails application to process <span class="caps">GTFS</span> feeds and model their associations through <i>ActiveRecord</i> objects.</p>
+<p>This project is currently a sub-component of the <a href="//github.com/sangster/knowtime-git">KnowTime Server</a> project, but hopefully can of use to others projects. This project also depends on another GitHub project, <a href="//github.com/sangster/gtfs-reader"><span class="caps">GTFS</span> Reader</a>, to actually process the <i>.zip</i> files in which <span class="caps">GTFS</span> feeds are contained.</p>
+<h2>Models</h2>
+<ul>
+	<li><a href="/gtfs-engine/models/data_set">DataSet</a></li>
+</ul>
+<ul>
+	<li><a href="/gtfs-engine/models/agency">Agency</a></li>
+	<li><a href="/gtfs-engine/models/stop">Stop</a></li>
+	<li><a href="/gtfs-engine/models/route">Route</a></li>
+	<li><a href="/gtfs-engine/models/trip">Trip</a></li>
+	<li><a href="/gtfs-engine/models/stop_time">StopTime</a></li>
+	<li><a href="/gtfs-engine/models/calendar">Calendar</a></li>
+	<li><a href="/gtfs-engine/models/calendar_date">CalendarDate</a></li>
+	<li><a href="/gtfs-engine/models/fare_attribute">FareAttribute</a></li>
+	<li><a href="/gtfs-engine/models/fare_rule">FareRule</a></li>
+	<li><a href="/gtfs-engine/models/shape">Shape</a></li>
+	<li><a href="/gtfs-engine/models/frequency">Frequency</a></li>
+	<li><a href="/gtfs-engine/models/transfer">Transfer</a></li>
+	<li><a href="/gtfs-engine/models/feed_info">FeedInfo</a></li>
+</ul>
+<h2>JSend</h2>
+<p>The <span class="caps">GTFS</span> Engine currently returns only one type of content: <a href="//en.wikipedia.org/wiki/JSON" title="JavaScript Object Notation"><span class="caps">JSON</span></a>; moreover, the returned data is wrapped in a <a href="http://labs.omniti.com/labs/jsend">JSend-compliant response</a></p>
+
+
+
+
+</section>
+
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/sangster">sangster</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>

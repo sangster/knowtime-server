@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>DataSet | gtfs-engine</title>
+
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/styles.css">
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/models.css">
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/pygment_trac.css">
+    <script src="/gtfs-engine/javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+      <script src="/gtfs-engine/javascripts/table_of_contents.js"></script>
+      <script type="text/javascript">
+        //<![CDATA[
+        document.addEventListener( 'DOMContentLoaded', function() {
+          prependTableOfContent( document.querySelector( 'div.wrapper section' ) );
+        } );
+        //]]>
+      </script>
+    
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/gtfs-engine">gtfs-engine</a></h1>
+        <p>A RESTful interface for GTFS data.</p>
+        <p class="view"><a href="https://github.com/sangster/gtfs-engine">View the Project on GitHub <small>sangster/gtfs-engine</small></a></p>
+        <ul>
+          <li><a href="https://github.com/sangster/gtfs-engine/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/sangster/gtfs-engine/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/sangster/gtfs-engine">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+
+<section>
+<h2>DataSet</h2>
+<p>The <i>DataSet</i> model is not a <span class="caps">GTFS</span> model, but describes a single set of such models, all of which were obtained from a single zip file.</p>
+<h3>Resources</h3>
+<h4>id <span>(required; unique)</span></h4>
+<p>The <strong>id</strong> field contains an ID that uniquely identifies a DataSet. The <strong>id</strong> is dataset unique.</p>
+<h4>name <span>(required)</span></h4>
+<p>The <strong>name</strong> of the source which this DataSet came from.</p>
+<h4>url <span>(required)</span></h4>
+<p>The <strong>url</strong> where the data came from.</p>
+<h4>etag <span>(required)</span></h4>
+<p>The <span class="caps">HTTP</span> header, <strong>etag</strong>, is used to determine when the DataSet at the <strong>url</strong> has been updated. During an update, if the <strong>etag</strong> at the remote location has not changed, the update will be skipped.</p>
+<h4>created_at <span>(required)</span></h4>
+<p>The time this DataSet was downloaded from the <strong>url</strong>.</p>
+<h3>Actions</h3>
+<h4>All DataSets</h4>
+<pre class="get"><code class="get">GET /</code></pre>
+<p>Returns every <code>DataSet</code> in the database. The returned data is a <span class="caps">JSON</span> object where each key is the <code>name</code> of a data source, and the value is the list of DataSets from that source.</p>
+<h5>Example Response</h5>
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;data_sets&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;halifax&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;halifax&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Halifax Metro&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.example.com/metrotransit/google_transit.zip&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;etag&quot;</span><span class="p">:</span> <span class="s2">&quot;3a5cb3-4f31f92da3617&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-03-09T00:20:11.998-03:00&quot;</span>
+          <span class="p">}</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;halifax&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Halifax Metro&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.example.com/metrotransit/google_transit.zip&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;etag&quot;</span><span class="p">:</span> <span class="s2">&quot;ac43f674eaa0cf1:0&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-07-19T00:25:55.512-03:00&quot;</span>
+          <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="nt">&quot;edmonton&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;edmonton&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Edmonton Transit System&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.example.com/etsdatafeed.zip&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;etag&quot;</span><span class="p">:</span> <span class="s2">&quot;52699964659bcf1:0&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-07-19T00:31:46.242-03:00&quot;</span>
+          <span class="p">}</span>
+        <span class="p">],</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="single">A Single DataSet</h4>
+<pre class="get"><code class="get">GET /:id</code></pre>
+<p>Returns the <code>DataSet</code> with the given <code>:id</code>.</p>
+<p>The returned resource also supplies an additional field: <strong>details</strong>. This field lists a count of how many resources of each type are available from the DataSet, and the list of filters that can be used to refine a request.</p>
+<h5>Example Response</h5>
+<div class="highlight"><pre><code class="json"><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;data_set&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;halifax&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;Halifax Metro&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;http://www.example.com/metrotransit/google_transit.zip&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;etag&quot;</span><span class="p">:</span> <span class="s2">&quot;ac43f674eaa0cf1:0&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-07-19T00:25:55.512-03:00&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;agencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;agency_name&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;agency_url&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;agency_timezone&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;agency_lang&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;calendars&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;monday&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;tuesday&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;wednesday&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;thursday&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;friday&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;saturday&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;sunday&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;start_date&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;end_date&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;calendar_dates&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">26</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;date&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;exception_type&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;fare_attributes&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;price&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;currency_type&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;payment_method&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;transfers&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;transfer_duration&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;fare_rules&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;route_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;origin_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;destination_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;contains_id&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;feed_infos&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;feed_publisher_name&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;feed_publisher_url&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;feed_lang&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;feed_start_date&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;feed_end_date&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;feed_version&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;frequencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;start_time&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;end_time&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;headway_secs&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;exact_times&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;routes&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">156</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;agency_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;route_short_name&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;route_long_name&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;route_type&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;agency&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;shapes&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">124191</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;shape_pt_lat&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;shape_pt_lon&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;shape_pt_sequence&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;stops&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">2468</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;stop_code&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;stop_name&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;stop_desc&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;stop_lat&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;stop_lon&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;zone_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;location_type&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;parent_station&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;stop_timezone&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;wheelchair_boarding&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;stop_times&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">588376</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;arrival_time&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;departure_time&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;stop_sequence&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;stop_headsign&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;pickup_type&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;drop_off_type&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;transfers&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;transfer_type&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;min_transfer_time&quot;</span>
+            <span class="p">]</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;trips&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;count&quot;</span><span class="p">:</span> <span class="mi">14853</span><span class="p">,</span>
+            <span class="nt">&quot;filters&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;service_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;trip_headsign&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;trip_short_name&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;direction_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;block_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;route_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;shape_id&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;wheelchair_accessible&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;bikes_allowed&quot;</span>
+            <span class="p">]</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div><h4>The newest DataSet for a source</h4>
+<pre class="get"><code class="get">GET /:name</code></pre>
+<p>Typically, an application will only be interested in the most current data. This action will return the newest DataSet with the given <code>:name</code>.</p>
+<p>See <a href="#single">A Single DataSet</a></p>
+</section>
+
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/sangster">sangster</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>

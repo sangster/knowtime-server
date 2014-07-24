@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>CalendarDate | gtfs-engine</title>
+
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/styles.css">
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/models.css">
+    <link rel="stylesheet" href="/gtfs-engine/stylesheets/pygment_trac.css">
+    <script src="/gtfs-engine/javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="/gtfs-engine">gtfs-engine</a></h1>
+        <p>A RESTful interface for GTFS data.</p>
+        <p class="view"><a href="https://github.com/sangster/gtfs-engine">View the Project on GitHub <small>sangster/gtfs-engine</small></a></p>
+        <ul>
+          <li><a href="https://github.com/sangster/gtfs-engine/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/sangster/gtfs-engine/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/sangster/gtfs-engine">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+
+<section>
+<h2>CalendarDate</h2>
+<blockquote class="subtitle">
+<p class="subtitle">Exceptions for the service IDs defined in the calendar.txt file. If calendar_dates.txt includes <span class="caps">ALL</span> dates of service, this file may be specified instead of calendar.txt.</p>
+</blockquote>
+<blockquote>
+<p>The calendar_dates table allows you to explicitly activate or disable service IDs by date. You can use it in two ways.</p>
+</blockquote>
+<dl>
+	<dt>Recommended</dt>
+	<dd>Use calendar_dates.txt in conjunction with calendar.txt, where calendar_dates.txt defines any exceptions to the default service categories defined in the calendar.txt file. If your service is generally regular, with a few changes on explicit dates (for example, to accomodate special event services, or a school schedule), this is a good approach.</dd>
+	<dt>Alternate</dt>
+	<dd>Omit calendar.txt, and include <span class="caps">ALL</span> dates of service in calendar_dates.txt. If your schedule varies most days of the month, or you want to programmatically output service dates without specifying a normal weekly schedule, this approach may be preferable.</dd>
+</dl>
+<h3>Fields</h3>
+<h4>service_id <span>(required)</span></h4>
+<blockquote>
+<p>The <strong>service_id</strong> contains an ID that uniquely identifies a set of dates when a service exception is available for one or more routes. Each (<strong>service_id</strong>, date) pair can only appear once in calendar_dates.txt. If the a <strong>service_id</strong> value appears in both the calendar.txt and calendar_dates.txt files, the information in calendar_dates.txt modifies the service information specified in calendar.txt. This field is referenced by the trips.txt file.</p>
+</blockquote>
+<h4>date <span>(required)</span></h4>
+<blockquote>
+<p>The date field specifies a particular date when service availability is different than the norm. You can use the <strong>exception_type</strong> field to indicate whether service is available on the specified date.</p>
+<p>The date field&#8217;s value should be in <span class="caps">YYYYMMDD</span> format.</p>
+</blockquote>
+<h4>exception_type <span>(required)</span></h4>
+<blockquote>
+<p>The <strong>exception_type</strong> indicates whether service is available on the date specified in the date field.</p>
+</blockquote>
+<dl>
+	<dt>1</dt>
+	<dd>Indicates that service has been added for the specified date.</dd>
+	<dt>2</dt>
+	<dd>Indicates that service has been removed for the specified date.</dd>
+</dl>
+<blockquote>
+<p>For example, suppose a route has one set of trips available on holidays and another set of trips available on all other days. You could have one <strong>service_id</strong> that corresponds to the regular service schedule and another <strong>service_id</strong> that corresponds to the holiday schedule. For a particular holiday, you would use the calendar_dates.txt file to add the holiday to the holiday <strong>service_id</strong> and to remove the holiday from the regular <strong>service_id</strong> schedule.</p>
+</blockquote>
+</section>
+
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/sangster">sangster</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+      
+        <div class="cite_google"><em>Portions of this page are modifications based on work created and <a href="https://developers.google.com/readme/policies/">shared by Google</a> and used according to terms described in the <a href="http://creativecommons.org/licenses/by/3.0">Creative Commons 3.0 Attribution License</a>.</em>
+
+</div>
+      
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+  </body>
+</html>

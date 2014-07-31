@@ -16,20 +16,18 @@ json.ignore_nil! true
 
 json.status 'success'
 json.data do
-  json.set! controller_name do
-    json.array! @stops do |record|
-      json.extract! record,
-                    :stop_id,
-                    :stop_code,
-                    :stop_name,
-                    :stop_desc,
-                    :stop_lat,
-                    :stop_lon,
-                    :zone_id,
-                    :location_type,
-                    :parent_station,
-                    :stop_timezone,
-                    :wheelchair_boarding
-    end
+  json.array! @stops do |record|
+    json.extract! record,
+                  :stop_id,
+                  :stop_code,
+                  :stop_name,
+                  :stop_desc,
+                  :stop_lat,
+                  :stop_lon,
+                  :zone_id,
+                  :location_type,
+                  :parent_station,
+                  :stop_timezone,
+                  :wheelchair_boarding
   end
 end

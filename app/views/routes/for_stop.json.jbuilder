@@ -16,18 +16,16 @@ json.ignore_nil! true
 
 json.status 'success'
 json.data do
-  json.set! controller_name do
-    json.array! @routes do |route|
-      json.extract! route,
-                    :route_id,
-                    :agency_id,
-                    :route_short_name,
-                    :route_long_name,
-                    :route_desc,
-                    :route_type,
-                    :route_url,
-                    :route_color,
-                    :route_text_color
-    end
+  json.array! @routes do |route|
+    json.extract! route,
+                  :route_id,
+                  :agency_id,
+                  :route_short_name,
+                  :route_long_name,
+                  :route_desc,
+                  :route_type,
+                  :route_url,
+                  :route_color,
+                  :route_text_color
   end
 end

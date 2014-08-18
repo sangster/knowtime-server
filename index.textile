@@ -11,7 +11,7 @@ Users of our iOS and Android apps provide their own GPS locations when they are 
 
 h2. Sub-Components
 
-This project includes the "rails engine":rails-engine: "GTFS Engine":gtfs-engine. This engine is mounted at 
+This project includes the "rails engine":rails-engine: "GTFS Engine":gtfs_engine. This engine is mounted at 
 
 bc. /gtfs
 
@@ -26,5 +26,5 @@ The KnowTime Server currently returns only one type of content: "JSON(JavaScript
 [rails-engine]{{ site.data.urls.rails_engine }}
 [wiki-json]{{ site.data.urls.wiki_json }}
 [jsend]{{ site.data.urls.jsend }}
-[gtfs-engine]{{ site.data.urls.gtfs_engine_git }}
+[gtfs_engine]{{ site.data.urls.gtfs_engine_git }}
 

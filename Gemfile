@@ -8,6 +8,7 @@ gem 'rails', '~> 4.1'
 gem 'rake', '~> 10.3'
 gem 'pg', '~> 0.17'
 gem 'activerecord-import', '~> 0.5'
+gem 'yajl-ruby'
 
 gem 'rubyzip', '~> 1.1'
 gem 'uuidtools', '~> 2.1'

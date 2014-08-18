@@ -16,12 +16,47 @@ module GetStopsWithinBounds
   module Stops
     include Role
 
+    BLOCK_LENGTH = 0.005 # in degrees
+    FRACTIONS    = (1 / BLOCK_LENGTH).round
+
     def between(south, north, west, east)
-      # @between ||= begin
-        # where 'stop_lat BETWEEN (?, ?) AND stop_lon BETWEEN (?, ?)',
-        #       south, north, west, east
+      south = floor south
+      north = ceil  north
+      west  = floor west
+      east  = ceil  east
+
+      (south...north).map do |lat|
+        (west...east).map do |lng|
+          get_block lat, lng
+        end
+      end.flatten
+    end
+
+    private
+
+    def get_block(lat, lng)
+      Rails.cache.fetch "#{lat}x#{lng}" do
+        south = to_f lat
+        north = to_f lat + 1
+        west  = to_f lng
+        east  = to_f lng + 1
+
         where(stop_lat: south..north, stop_lon: west..east).to_a
-      # end
+      end
+    end
+
+    #@return [Float] the given value to the previous 0.005
+    def floor(x)
+      (x * FRACTIONS).floor
+    end
+
+    #@return [Float] the given value to the previous 0.005
+    def ceil(x)
+      (x * FRACTIONS).ceil
+    end
+
+    def to_f(x)
+      x * BLOCK_LENGTH
     end
   end
 end

@@ -12,8 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-GtfsEngine::DataSet.has_many :users, inverse_of: :data_set, class_name: '::User'
+json.ignore_nil! true
 
-class User < ActiveRecord::Base
-  belongs_to :data_set, inverse_of: :users, class_name: 'GtfsEngine::DataSet'
+json.status 'success'
+json.data do
+  json.id @user.uuid
+  json.extract! @user, :data_set_id, :active, :seems_valid, :trip_id
 end

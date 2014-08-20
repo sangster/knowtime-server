@@ -12,8 +12,26 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-GtfsEngine::DataSet.has_many :users, inverse_of: :data_set, class_name: '::User'
+class RecreateUsers < ActiveRecord::Migration
+  def up
+    drop_table :users
 
-class User < ActiveRecord::Base
-  belongs_to :data_set, inverse_of: :users, class_name: 'GtfsEngine::DataSet'
+    create_table :users do |t|
+      t.integer :data_set_id
+      t.uuid    :uuid,        default: 'uuid_generate_v4()',              unique: true
+      t.boolean :active,      default: false,                null: false
+      t.boolean :seems_valid, default: false,                null: false
+      t.string  :trip_id,     default: nil
+
+      t.timestamps
+    end
+
+    add_index :users, :data_set_id
+    add_index :users, :uuid
+  end
+
+  def down
+    drop_table :users
+    CreateUsers.new.migrate :up # go back to the previous version of this table
+  end
 end

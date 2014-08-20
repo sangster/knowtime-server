@@ -12,8 +12,24 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-GtfsEngine::DataSet.has_many :users, inverse_of: :data_set, class_name: '::User'
+class UsersController < ApplicationController
+  def show
+    raw_user = data.users.find_by! uuid: params[:id]
 
-class User < ActiveRecord::Base
-  belongs_to :data_set, inverse_of: :users, class_name: 'GtfsEngine::DataSet'
+    @user = GetUserContext.new \
+              .set_user(raw_user) \
+              .set_data(data) \
+              .call
+
+    respond_with @user
+  end
+
+  def create
+    @user = CreateUserContext.new \
+              .set_data(data) \
+              .set_url_provider(self) \
+              .call
+
+    respond_with @user, status: 201, location: @user.location
+  end
 end

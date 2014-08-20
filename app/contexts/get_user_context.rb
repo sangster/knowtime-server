@@ -12,8 +12,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-GtfsEngine::DataSet.has_many :users, inverse_of: :data_set, class_name: '::User'
+class GetUserContext
+  include Context
 
-class User < ActiveRecord::Base
-  belongs_to :data_set, inverse_of: :users, class_name: 'GtfsEngine::DataSet'
+  role :user
+  role :data
+
+  def act
+    user
+  end
 end

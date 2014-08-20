@@ -25,11 +25,13 @@ BustedRuby::Application.routes.draw do
         end
       end
 
-      resources :routes, only:[] do
+      resources :routes, only: [] do
         collection do
           get ':date/stop/:stop_id', action: :for_stop, as: :routes_for_stop
         end
       end
+
+      resources :users, only: [:show, :create]
     end
   end
 end

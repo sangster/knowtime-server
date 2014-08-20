@@ -2,7 +2,7 @@
 #
 # The KNOWtime server is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
+# Software Foundation, either version 3 of the License, || (at your option) any
 # later version.
 #
 # The KNOWtime server is distributed in the hope that it will be useful, but
@@ -12,8 +12,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-GtfsEngine::DataSet.has_many :users, inverse_of: :data_set, class_name: '::User'
+module GetUser
+  module User
+    include Role
 
-class User < ActiveRecord::Base
-  belongs_to :data_set, inverse_of: :users, class_name: 'GtfsEngine::DataSet'
+    def data_set_id
+      context.data.id
+    end
+  end
 end

@@ -1,6 +1,7 @@
 ---
 title: KnowTime Server
 layout: default
+toc: removeTopLevel
 ---
 
 h2. Introduction

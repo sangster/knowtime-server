@@ -17,6 +17,9 @@ bc. /gtfs
 
 All the resources listed in that project are provided under that directory. For example, to fetch all the stops for the @halifax@ data source, the path would be: @/gtfs/halifax/stops@
 
+h2. Resources
+
+* "DataSet":{{ site.url }}/resources/data_set
 
 h2. JSend
 

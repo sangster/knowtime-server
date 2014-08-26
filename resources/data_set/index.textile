@@ -1,0 +1,75 @@
+---
+title: Data Set
+layout: default
+toc: removeTopLevel
+---
+
+h2. Data Set
+
+These routes add additional statistical information to the results returned from "@GET /gtfs/ and GET /gtfs/:id@":gtfs_engine_data_set.
+
+h3. Routes
+
+- Get all Data Sets :=
+bc(get). GET /v2/data_sets
+=:
+- Get a Single Data Set :=
+bc(get). GET /v2/data_sets/:id
+=:
+
+h4. Example Response
+
+{% highlight json %}
+{
+  "status": "success":,
+  "data": {
+    "id": 2,
+    "name": "halifax",
+    "title": "Halifax Metro",
+    "last_updated": "2014-07-30T19:19-0300",
+    "min": {
+      "lat": 44.479168,
+      "lon": -63.85817
+    }
+    "max": {
+      "lat": 44.903736,
+      "lon": -63.255867
+    }
+    "dates": {
+      "start": "2014-07-24",
+      "end": "2014-11-29"
+    }
+  }
+}
+{% endhighlight %}
+
+
+h3. Fields
+
+h4. id %(required; unique)%
+
+The *id* field contains an ID that uniquely identifies a DataSet. The *id* is dataset unique.
+
+h4. name %(required)%
+
+The *name* of the source which this DataSet came from. This name is a very short identifier for the data set. It will serve as the key for list of data sets returned for this source.
+
+h4. title %(required)%
+
+A more verbose version of *name* which describes the data set. This text is more free-form, but still be a proper noun phrase. For instance, if the *name* is @"halifax"@, the *title* could be @"Halifax Metro Transit"@.
+
+h4. last_updated %(required)%
+
+The time this DataSet was downloaded from the *url*.
+
+h4. min / max %(required)%
+
+@min@ and @max@ represent the north-west and south-east limits of the data set, respectively. These bounds are determined by the set of "Stops":gtfs_engine_stop in the data set. The buses may drive outside of these bounds while driving between stops.
+
+h4. dates %(required)%
+
+These dates represent the first and last date this data set will be relevant.
+
+[gtfs_engine_data_set]https://sangster.github.io/gtfs_engine/resources/data_set
+[gtfs_engine_stop]https://sangster.github.io/gtfs_engine/resources/stop
+

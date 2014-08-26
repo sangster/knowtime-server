@@ -19,7 +19,8 @@
       <script type="text/javascript">
         //<![CDATA[
         document.addEventListener( 'DOMContentLoaded', function() {
-          prependTableOfContent( document.querySelector( '{{ page.toc }}' ) );
+          var elem = document.querySelector( 'div.wrapper section' );
+          createToc( elem, '{{ page.toc }}' === 'removeTopLevel' );
         } );
         //]]>
       </script>

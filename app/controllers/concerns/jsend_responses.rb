@@ -34,6 +34,7 @@ module JsendResponses
     end
   end
 
+
   class JsendFail
     attr_accessor :data
 

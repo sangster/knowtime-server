@@ -19,9 +19,7 @@ class DataSetsController < ApplicationController
     @data_sets = Rails.cache.fetch "data_set_summaries" do
       sets = {}
       GtfsEngine::DataSet.order(:created_at).collect do |data_set|
-        SummarizeDataSetContext.new \
-          .set_data(data_set) \
-          .call
+        SummarizeDataSetContext.call { |ctx| ctx.set_data data_set }
       end.each do |data_set|
         sets[data_set.name] = data_set
       end

@@ -1,0 +1,5 @@
+json.array! @locations do |location|
+  json.lat  location.lat
+  json.lon  location.lon
+  json.time location.created_at.strftime('%H:%M:%S')
+end

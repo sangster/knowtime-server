@@ -19,7 +19,7 @@ class UserLocation < ActiveRecord::Base
   scope :newer_than, ->(age) { where "created_at > ?", (Time.zone.now - age) }
   scope :newest, -> { newer_than 30.seconds }
 
-  belongs_to :user, inverse_of: :user_locations, touch: true
+  belongs_to :user, inverse_of: :locations
 
   alias_attribute :lng, :lon
 end

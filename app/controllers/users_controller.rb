@@ -16,19 +16,21 @@ class UsersController < ApplicationController
   def show
     raw_user = data.users.find_by! uuid: params[:id]
 
-    @user = GetUserContext.new \
-              .set_user(raw_user) \
-              .set_data(data) \
-              .call
+    @user =
+      GetUserContext.call do |ctx|
+        ctx.set_user raw_user
+        ctx.set_data data
+      end
 
     respond_with @user
   end
 
   def create
-    @user = CreateUserContext.new \
-              .set_data(data) \
-              .set_url_provider(self) \
-              .call
+    @user =
+      CreateUserContext.call do |ctx|
+        ctx.set_data data
+        ctx.set_url_provider self
+      end
 
     respond_with @user, status: 201, location: @user.location
   end

@@ -16,10 +16,10 @@ class StopsController < ApplicationController
   # Returns a list of stops within a given area. The area is delimited by two
   # GPS points POSTed with 4 params: (:lat1, :lon1), (:lat2, :lon2)
   def within_bounds
-    @stops = GetStopsWithinBoundsContext.new \
-      .set_stops(data.stops)
-      .set_bounds(within_params) \
-      .call
+    @stops = GetStopsWithinBoundsContext.call do |ctx|
+      ctx.set_stops data.stops
+      ctx.set_bounds within_params
+    end
 
     respond_with @stops
   end

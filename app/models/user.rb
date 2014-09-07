@@ -16,4 +16,5 @@ GtfsEngine::DataSet.has_many :users, inverse_of: :data_set, class_name: '::User'
 
 class User < ActiveRecord::Base
   belongs_to :data_set, inverse_of: :users, class_name: 'GtfsEngine::DataSet'
+  has_many :locations, inverse_of: :user, class_name: 'UserLocation'
 end

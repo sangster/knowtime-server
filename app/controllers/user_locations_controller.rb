@@ -12,33 +12,33 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-BustedRuby::Application.routes.draw do
-  scope '/v2/', defaults: {format: :json} do
-    mount GtfsEngine::Engine, at: '/gtfs'
-
-    resources :data_sets, only: [:index, :show]
-
-    scope ':data_set_id' do
-      resources :stops, only: [] do
-        collection do
-          post :within_bounds
-        end
+class UserLocationsController < ApplicationController
+  def index
+    @locations =
+      GetUserLocationsContext.call do |ctx|
+        ctx.set_user user
       end
+  end
 
-      resources :routes, only: [] do
-        collection do
-          get ':date/stop/:stop_id', action: :for_stop, as: :routes_for_stop
-        end
-      end
+  def create
+    CreateUserLocationContext.call do |ctx|
+      ctx.set_user user
+      ctx.set_location location_params
+    end
 
-      resources :users, only: [:show, :create] do
-        # member do
-        #   get  :locations
-        #   post :locations
-        # end
-        resources :locations, only: [:index, :create],
-                  controller: :user_locations
-      end
+    render nothing: true, status: :created
+  end
+
+private
+
+  def user
+    User.find_by! uuid: params[:user_id], data_set_id: data.id
+  end
+
+  def location_params
+    params.tap do |p|
+      p.require :lat
+      p.require :lon
     end
   end
 end

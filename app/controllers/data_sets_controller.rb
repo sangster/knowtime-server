@@ -16,7 +16,7 @@ class DataSetsController < ApplicationController
   def index
     expires_in 3.hours
 
-    @data_sets = Rails.cache.fetch "data_set_summaries" do
+    @data_sets = Rails.cache.fetch 'data_set_summaries' do
       sets = {}
       GtfsEngine::DataSet.order(:created_at).collect do |data_set|
         SummarizeDataSetContext.call { |ctx| ctx.set_data data_set }
@@ -30,6 +30,15 @@ class DataSetsController < ApplicationController
   end
 
   def show
+    expires_in 3.hours
 
+    @data_set =
+      Rails.cache.fetch "data_set_summary_#{params[:id]}" do
+        SummarizeDataSetContext.call do |ctx|
+          ctx.set_data GtfsEngine::DataSet.find(params[:id])
+        end
+      end
+
+    respond_with @data_set
   end
 end

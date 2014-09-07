@@ -14,8 +14,21 @@
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
 json.ignore_nil! true
 
-json.status 'success'
-json.data do
-  json.id @user.uuid
-  json.extract! @user, :data_set_id, :active, :seems_valid, :trip_id
+json.extract! @data_set, *%i(id name title)
+json.last_updated @data_set.last_updated
+
+json.min do
+  json.lat @data_set.min_lat
+  json.lon @data_set.min_lon
+end
+json.max do
+  json.lat @data_set.max_lat
+  json.lon @data_set.max_lon
+end
+
+unless @data_set.start_date.nil? || @data_set.end_date.nil?
+  json.dates do
+    json.start @data_set.start_date
+    json.end @data_set.end_date
+  end
 end

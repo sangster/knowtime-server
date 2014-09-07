@@ -24,5 +24,9 @@ module BustedRuby
 
     config.time_zone = 'America/Halifax'
     config.assets.enabled = true
+
+    config.middleware.delete 'ActionDispatch::Cookies'
+    config.middleware.delete 'ActionDispatch::Session::CookieStore'
+    config.middleware.delete 'ActionDispatch::Flash'
   end
 end

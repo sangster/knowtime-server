@@ -12,28 +12,26 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-class RoutesController < ApplicationController
-  # rescue_from GtfsEngine::DateFormatError, with: :jsend_fail_bad_date
+class RecreateUsers < ActiveRecord::Migration
+  def up
+    drop_table :users
 
-  # Returns a list of routes which stop at the given stop on the given date
-  def for_stop
-    expires_in 3.hours
+    create_table :users do |t|
+      t.integer :data_set_id
+      t.uuid    :uuid,        default: 'uuid_generate_v4()',              unique: true
+      t.boolean :active,      default: false,                null: false
+      t.boolean :seems_valid, default: false,                null: false
+      t.string  :trip_id,     default: nil
 
-    @routes =
-      data_cache "[#{params[:date]}]_routes_for_stop[#{params[:stop_id]}]" do
-        GetRoutesForStopContext.call do |ctx|
-          ctx.set_calendars params
-          ctx.set_stop GtfsEngine::Stop.new stop_id: params[:stop_id]
-          ctx.set_routes data.routes
-          ctx.set_data data
-        end
-      end
-    respond_with @routes
+      t.timestamps
+    end
+
+    add_index :users, :data_set_id
+    add_index :users, :uuid
   end
 
-  private
-
-  def jsend_fail_bad_date
-    jsend_fail data: {date: 'not in expected format: YYYY-MM-DD'}
+  def down
+    drop_table :users
+    CreateUsers.new.migrate :up # go back to the previous version of this table
   end
 end

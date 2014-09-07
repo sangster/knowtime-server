@@ -28,6 +28,12 @@ module Context
 
 
   module ClassMethods
+    def call
+      context = new
+      yield context if block_given?
+      context.call
+    end
+
     def role(name, role_class=nil)
       role_names << name
 

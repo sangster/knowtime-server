@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140719031961) do
+ActiveRecord::Schema.define(version: 20140820043128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -336,15 +336,16 @@ ActiveRecord::Schema.define(version: 20140719031961) do
   add_index "user_locations", ["user_id"], name: "index_user_locations_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.uuid     "uuid",             default: "uuid_generate_v4()"
-    t.string   "route_short_name"
-    t.boolean  "moving_flag",      default: false
+    t.uuid     "uuid",        default: "uuid_generate_v4()"
+    t.boolean  "active",      default: false,                null: false
+    t.boolean  "seems_valid", default: false,                null: false
+    t.string   "trip_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "data_set_id"
   end
 
-  add_index "users", ["moving_flag"], name: "index_users_on_moving_flag", using: :btree
-  add_index "users", ["route_short_name"], name: "index_users_on_route_short_name", using: :btree
+  add_index "users", ["data_set_id"], name: "index_users_on_data_set_id", using: :btree
   add_index "users", ["uuid"], name: "index_users_on_uuid", using: :btree
 
 end

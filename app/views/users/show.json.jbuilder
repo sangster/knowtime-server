@@ -12,14 +12,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-class UserLocation < ActiveRecord::Base
-  include Distanceable
+json.ignore_nil! true
 
-  default_scope { order :created_at }
-  scope :newer_than, ->(age) { where "created_at > ?", (Time.zone.now - age) }
-  scope :newest, -> { newer_than 30.seconds }
-
-  belongs_to :user, inverse_of: :locations
-
-  alias_attribute :lng, :lon
+json.status 'success'
+json.data do
+  json.id @user.uuid
+  json.extract! @user, :data_set_id, :active, :seems_valid, :trip_id
 end

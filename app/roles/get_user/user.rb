@@ -2,7 +2,7 @@
 #
 # The KNOWtime server is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
-# Software Foundation, either version 3 of the License, or (at your option) any
+# Software Foundation, either version 3 of the License, || (at your option) any
 # later version.
 #
 # The KNOWtime server is distributed in the hope that it will be useful, but
@@ -12,14 +12,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-class UserLocation < ActiveRecord::Base
-  include Distanceable
+module GetUser
+  module User
+    include Role
 
-  default_scope { order :created_at }
-  scope :newer_than, ->(age) { where "created_at > ?", (Time.zone.now - age) }
-  scope :newest, -> { newer_than 30.seconds }
-
-  belongs_to :user, inverse_of: :locations
-
-  alias_attribute :lng, :lon
+    def data_set_id
+      context.data.id
+    end
+  end
 end

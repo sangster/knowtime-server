@@ -12,28 +12,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with the KNOWtime server.  If not, see <http://www.gnu.org/licenses/>.
-class RoutesController < ApplicationController
-  # rescue_from GtfsEngine::DateFormatError, with: :jsend_fail_bad_date
+class CreateUserLocationContext
+  include Context
 
-  # Returns a list of routes which stop at the given stop on the given date
-  def for_stop
-    expires_in 3.hours
+  role :user
+  role :location
 
-    @routes =
-      data_cache "[#{params[:date]}]_routes_for_stop[#{params[:stop_id]}]" do
-        GetRoutesForStopContext.call do |ctx|
-          ctx.set_calendars params
-          ctx.set_stop GtfsEngine::Stop.new stop_id: params[:stop_id]
-          ctx.set_routes data.routes
-          ctx.set_data data
-        end
-      end
-    respond_with @routes
-  end
-
-  private
-
-  def jsend_fail_bad_date
-    jsend_fail data: {date: 'not in expected format: YYYY-MM-DD'}
+  def act
+    UserLocation.create! user_id: user.id, lat: location.lat, lon: location.lon
   end
 end
